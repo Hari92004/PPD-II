@@ -1,0 +1,10 @@
+Project Overview
+We are developing an offline autonomous driving support system designed for unpredictable and unstructured Indian road conditions.
+Main Objectives:
+	• Understand the surroundings using Camera, LiDAR, and mmWave Radar. 
+	• Detect and track objects such as cars, bikes, pedestrians, animals, auto-rickshaws, trucks, and potholes. 
+	• Predict future movement of nearby dynamic objects. 
+	• Estimate collision risk using distance, relative speed, and Time-to-Collision (TTC). 
+	• Generate safe local paths around obstacles. 
+	• Adapt vehicle speed, steering, and braking according to the situation. 
+	• Move from reactive obstacle avoidance to predictive and risk-aware decision-making.

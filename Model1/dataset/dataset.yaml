@@ -1,0 +1,13 @@
+# SIH 2026: Model 1 Indian Road Traffic Dataset Config
+path: D:/SIH26/Model1/dataset
+train: images/train
+val: images/val
+
+names:
+  0: auto_rickshaw
+  1: cow_cattle
+  2: pedestrian
+  3: two_wheeler
+  4: pothole
+  5: truck_bus
+  6: car
