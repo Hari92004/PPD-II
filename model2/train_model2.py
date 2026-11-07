@@ -15,23 +15,21 @@ from dataset_loader import NuScenesLidarDataset
 from pointpillars_net import PointPillars3DDetector, compute_model2_loss
 
 def train_model2(epochs=15, batch_size=8, lr=0.001, num_points=16384,
-                 data_root=r"D:\SIH26\dataset mini\v1.0-mini",
-                 save_dir=r"D:\SIH26\model2"):
+                 data_root=r"D:\PPD2\dataset mini\v1.0-mini",
+                 save_dir=r"D:\PPD2\model2"):
     
     os.makedirs(save_dir, exist_ok=True)
     print("=" * 65)
     print("   MODEL 2: 3D LIDAR OBJECT DETECTOR TRAINING PIPELINE")
     print("=" * 65)
     
-    # 1. Device Setup
-    if torch.cuda.is_available():
-        device = torch.device('cuda')
-        gpu_name = torch.cuda.get_device_name(0)
-        vram_gb = torch.cuda.get_device_properties(0).total_memory / 1e9
-        print(f"[ACCELERATION] CUDA Enabled ({gpu_name} - {vram_gb:.1f} GB VRAM)")
-    else:
-        device = torch.device('cpu')
-        print(f"[ACCELERATION] CPU Mode (Multi-threaded)")
+    # 1. Device Setup (Strict GPU Mode)
+    if not torch.cuda.is_available():
+        raise RuntimeError("[ERROR] NVIDIA GPU not detected! CPU execution is strictly disabled.")
+    device = torch.device('cuda')
+    gpu_name = torch.cuda.get_device_name(0)
+    vram_gb = torch.cuda.get_device_properties(0).total_memory / 1e9
+    print(f"[ACCELERATION] CUDA Enabled ({gpu_name} - {vram_gb:.1f} GB VRAM) - STRICT GPU MODE")
         
     # 2. Dataset Preparation
     print(f"\n[1/4] Loading nuScenes dataset from: {data_root}...")

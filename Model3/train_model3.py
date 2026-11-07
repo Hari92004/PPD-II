@@ -16,7 +16,7 @@ from trajectory_dataset import get_trajectory_loaders
 from trajectory_net import IndianTrajectoryPredictorNet, compute_trajectory_loss
 
 def train_model3(epochs=25, batch_size=64, lr=0.002,
-                 save_dir=r"D:\SIH26\model3"):
+                 save_dir=r"D:\PPD2\Model3"):
                  
     os.makedirs(save_dir, exist_ok=True)
     print("=" * 65)

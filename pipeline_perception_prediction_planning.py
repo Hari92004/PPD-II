@@ -63,6 +63,49 @@ CLASSES_MODEL1 = ['auto_rickshaw', 'cow_cattle', 'pedestrian', 'two_wheeler', 'p
 CLASSES_MODEL2 = ['Vehicle', 'Pedestrian', 'Cyclist']
 
 # --------------------------------------------------------------------------------------------------
+# CACHED METADATA FOR ULTRA-FAST MULTI-FRAME INGESTION
+# --------------------------------------------------------------------------------------------------
+_METADATA_CACHE = None
+
+def get_cached_metadata():
+    global _METADATA_CACHE
+    if _METADATA_CACHE is None:
+        with open(os.path.join(META_DIR, "sample.json"), "r") as f:
+            samples = json.load(f)
+        with open(os.path.join(META_DIR, "sample_data.json"), "r") as f:
+            sample_data_list = json.load(f)
+        with open(os.path.join(META_DIR, "calibrated_sensor.json"), "r") as f:
+            calib = {c["token"]: c for c in json.load(f)}
+        with open(os.path.join(META_DIR, "ego_pose.json"), "r") as f:
+            ego_poses = {ep["token"]: ep for ep in json.load(f)}
+        with open(os.path.join(META_DIR, "category.json"), "r") as f:
+            categories = {c["token"]: c["name"] for c in json.load(f)}
+        with open(os.path.join(META_DIR, "instance.json"), "r") as f:
+            instances = {inst["token"]: inst["category_token"] for inst in json.load(f)}
+        with open(os.path.join(META_DIR, "sample_annotation.json"), "r") as f:
+            all_anns = json.load(f)
+
+        sd_map = {}
+        for sd in sample_data_list:
+            if sd["is_key_frame"]:
+                stk = sd["sample_token"]
+                fname = sd["filename"].replace("\\", "/")
+                if stk not in sd_map:
+                    sd_map[stk] = {}
+                if "samples/CAM_FRONT/" in fname:
+                    sd_map[stk]["cam"] = sd
+                elif "samples/LIDAR_TOP/" in fname:
+                    sd_map[stk]["lidar"] = sd
+
+        ann_map = {}
+        for ann in all_anns:
+            stk = ann["sample_token"]
+            ann_map.setdefault(stk, []).append(ann)
+
+        _METADATA_CACHE = (samples, sd_map, calib, ego_poses, categories, instances, ann_map)
+    return _METADATA_CACHE
+
+# --------------------------------------------------------------------------------------------------
 # GEOMETRY & COORDINATE TRANSFORMATION UTILITIES
 # --------------------------------------------------------------------------------------------------
 def quaternion_to_rotation_matrix(q):
@@ -428,7 +471,7 @@ def plan_frenet_optimal_trajectory(ego_state, obstacles, target_speed_mps=11.1, 
 # --------------------------------------------------------------------------------------------------
 # MAIN MULTIMODAL PIPELINE EXECUTION
 # --------------------------------------------------------------------------------------------------
-def run_autonomous_pipeline(sample_idx=12, save_dashboard=True, ego_memory=None, tracker=None, output_filename=None):
+def run_autonomous_pipeline(sample_idx=12, save_dashboard=True, ego_memory=None, tracker=None, output_filename=None, camera_only=False):
     print("=" * 85)
     print("      AUTONOMOUS DRIVING MULTIMODAL PERCEPTION, PREDICTION & PLANNING PIPELINE")
     print("                        (nuScenes v1.0-mini Real Dataset)")
@@ -443,20 +486,7 @@ def run_autonomous_pipeline(sample_idx=12, save_dashboard=True, ego_memory=None,
     t0 = time.time()
     print(f"\n[STEP 1] Ingesting Environment Sensor Data (Scenario Sample {sample_idx})...")
 
-    with open(os.path.join(META_DIR, "sample.json"), "r") as f:
-        samples = json.load(f)
-    with open(os.path.join(META_DIR, "sample_data.json"), "r") as f:
-        sample_data_list = json.load(f)
-    with open(os.path.join(META_DIR, "calibrated_sensor.json"), "r") as f:
-        calib = {c["token"]: c for c in json.load(f)}
-    with open(os.path.join(META_DIR, "ego_pose.json"), "r") as f:
-        ego_poses = {ep["token"]: ep for ep in json.load(f)}
-    with open(os.path.join(META_DIR, "category.json"), "r") as f:
-        categories = {c["token"]: c["name"] for c in json.load(f)}
-    with open(os.path.join(META_DIR, "instance.json"), "r") as f:
-        instances = {inst["token"]: inst["category_token"] for inst in json.load(f)}
-    with open(os.path.join(META_DIR, "sample_annotation.json"), "r") as f:
-        all_anns = json.load(f)
+    samples, sd_map, calib, ego_poses, categories, instances, ann_map = get_cached_metadata()
 
     if sample_idx >= len(samples):
         sample_idx = 0
@@ -464,14 +494,8 @@ def run_autonomous_pipeline(sample_idx=12, save_dashboard=True, ego_memory=None,
     s_token = sample["token"]
     frame_timestamp = sample["timestamp"] / 1e6 # in seconds
 
-    cam_sd, lidar_sd = None, None
-    for sd in sample_data_list:
-        if sd["sample_token"] == s_token and sd["is_key_frame"]:
-            fname = sd["filename"].replace("\\", "/")
-            if "samples/CAM_FRONT/" in fname:
-                cam_sd = sd
-            elif "samples/LIDAR_TOP/" in fname:
-                lidar_sd = sd
+    cam_sd = sd_map[s_token].get("cam")
+    lidar_sd = sd_map[s_token].get("lidar")
 
     cam_calib = calib[cam_sd["calibrated_sensor_token"]]
     lidar_calib = calib[lidar_sd["calibrated_sensor_token"]]
@@ -506,18 +530,37 @@ def run_autonomous_pipeline(sample_idx=12, save_dashboard=True, ego_memory=None,
         img_arr = np.array(img_resized, dtype=np.float32) / 255.0
         inp1 = np.transpose(img_arr, (2, 0, 1))[np.newaxis, ...]
 
-        preds1 = sess1.run(None, {"camera_frame": inp1})[0]
-        for box in preds1[0]:
-            conf = float(box[11])
-            if conf > 0.30:
-                cls_id = int(np.argmax(box[4:11]))
-                cls_name = CLASSES_MODEL1[cls_id] if cls_id < len(CLASSES_MODEL1) else "obstacle"
-                xc, yc, bw, bh = box[0] * cam_image.width, box[1] * cam_image.height, box[2] * cam_image.width, box[3] * cam_image.height
-                model1_detections.append({
-                    "bbox": [xc - bw/2, yc - bh/2, bw, bh],
-                    "class": cls_name,
-                    "confidence": conf
-                })
+        inp_name = sess1.get_inputs()[0].name
+        preds1 = sess1.run(None, {inp_name: inp1})[0]
+        
+        # Dual Support: YOLO26 Dual-Head NMS-Free format [1, 300, 6] or Legacy format [1, 25, 12]
+        if len(preds1.shape) == 3 and preds1.shape[-1] == 6:
+            for box in preds1[0]:
+                conf = float(box[4])
+                if conf > 0.25:
+                    cls_id = int(box[5])
+                    cls_name = CLASSES_MODEL1[cls_id] if cls_id < len(CLASSES_MODEL1) else "obstacle"
+                    x1, y1, x2, y2 = float(box[0]), float(box[1]), float(box[2]), float(box[3])
+                    sx = cam_image.width / 640.0
+                    sy = cam_image.height / 640.0
+                    bx, by, bw, bh = x1 * sx, y1 * sy, (x2 - x1) * sx, (y2 - y1) * sy
+                    model1_detections.append({
+                        "bbox": [bx, by, bw, bh],
+                        "class": cls_name,
+                        "confidence": conf
+                    })
+        else:
+            for box in preds1[0]:
+                conf = float(box[11])
+                if conf > 0.30:
+                    cls_id = int(np.argmax(box[4:11]))
+                    cls_name = CLASSES_MODEL1[cls_id] if cls_id < len(CLASSES_MODEL1) else "obstacle"
+                    xc, yc, bw, bh = box[0] * cam_image.width, box[1] * cam_image.height, box[2] * cam_image.width, box[3] * cam_image.height
+                    model1_detections.append({
+                        "bbox": [xc - bw/2, yc - bh/2, bw, bh],
+                        "class": cls_name,
+                        "confidence": conf
+                    })
         print(f"  * Model 1 ONNX Executed: Detected {len(model1_detections)} candidate obstacles.")
     timings['Model 1 (Camera YOLO)'] = (time.time() - t0) * 1000
 
@@ -583,7 +626,7 @@ def run_autonomous_pipeline(sample_idx=12, save_dashboard=True, ego_memory=None,
     img_mask = (u >= 0) & (u < cam_image.width) & (v >= 0) & (v < cam_image.height)
     u_proj, v_proj, depths_proj = u[img_mask], v[img_mask], depths[img_mask]
 
-    sample_anns = [a for a in all_anns if a["sample_token"] == s_token]
+    sample_anns = ann_map.get(s_token, [])
     raw_obstacles = []
     r_ego = quaternion_to_rotation_matrix(lidar_ego["rotation"])
     t_ego = np.array(lidar_ego["translation"], dtype=np.float32)
@@ -753,182 +796,278 @@ def run_autonomous_pipeline(sample_idx=12, save_dashboard=True, ego_memory=None,
     out_file = output_filename if output_filename else os.path.join(BASE_DIR, "autonomous_pipeline_dashboard.png")
     if save_dashboard:
         print("\n[STEP 8] Rendering Visual Dashboard...")
-        fig = plt.figure(figsize=(24, 14), facecolor='#0B0F19')
-        gs = GridSpec(2, 2, figure=fig, hspace=0.22, wspace=0.18, left=0.05, right=0.96, top=0.91, bottom=0.06)
+        if camera_only:
+            fig = plt.figure(figsize=(16, 9), facecolor='#0B0F19', dpi=120)
+            suptitle_text = (
+                f"Scenario Keyframe: #{sample_idx} | Ego Speed: {ego_speed_mps*3.6:.1f} km/h | Target Speed: {rec_speed_kmh:.1f} km/h | "
+                f"Steering: {steer_deg:+.1f}° | Decision: {planner_decision}"
+            )
+            fig.suptitle(suptitle_text, fontsize=14, fontweight='bold', color='#58A6FF', y=0.96)
+            ax1 = fig.add_axes([0.04, 0.04, 0.92, 0.86])
+            ax1.imshow(cam_image)
 
-        total_time_ms = sum(timings.values())
-        suptitle_text = (
-            f"AUTONOMOUS DRIVING MULTIMODAL PERCEPTION, PREDICTION & OPTIMAL PATH PLANNING PIPELINE\n"
-            f"Scenario Keyframe: #{sample_idx} | Ego Speed: {ego_speed_mps*3.6:.1f} km/h | Target Speed: {rec_speed_kmh:.1f} km/h | "
-            f"Steering: {steer_deg:+.1f}° | Threat: {threat_level} | Latency: {total_time_ms:.1f} ms"
-        )
-        fig.suptitle(suptitle_text, fontsize=15, fontweight='bold', color='#58A6FF', y=0.97)
+            # 1. Calibrated LiDAR Depth Overlay
+            if len(u_proj) > 0:
+                scatter = ax1.scatter(u_proj, v_proj, c=depths_proj, cmap='turbo', s=2.2, alpha=0.7)
+                cbar = fig.colorbar(scatter, ax=ax1, fraction=0.025, pad=0.015)
+                cbar.set_label('LiDAR Depth (meters)', color='white', fontsize=11, fontweight='bold')
+                cbar.ax.yaxis.set_tick_params(color='white')
+                plt.setp(cbar.ax.get_yticklabels(), color='white')
 
-        # ------------------------------------------------------------------------------------------
-        # PANEL 1: CAMERA VISION + MODEL 1 DETECTIONS + LIDAR OVERLAY
-        # ------------------------------------------------------------------------------------------
-        ax1 = fig.add_subplot(gs[0, 0])
-        ax1.imshow(cam_image)
-        scatter = ax1.scatter(u_proj, v_proj, c=depths_proj, cmap='turbo', s=1.8, alpha=0.65)
-        cbar = fig.colorbar(scatter, ax=ax1, fraction=0.03, pad=0.01)
-        cbar.set_label('LiDAR Depth (meters)', color='white', fontsize=10)
-        cbar.ax.yaxis.set_tick_params(color='white')
-        plt.setp(cbar.ax.get_yticklabels(), color='white')
+            # 2. AR HUD: Project Frenet Candidate Trajectories (Cyan / Blue Fan)
+            for p in all_paths:
+                if p.is_valid:
+                    p_u, p_v = [], []
+                    for xi, yi in zip(p.x, p.y):
+                        if xi >= 4.0:
+                            p_ego = np.array([xi, yi, -0.75], dtype=np.float32)
+                            p_cam = r_cam.T @ (p_ego - t_cam)
+                            if p_cam[2] > 1.0:
+                                ui = (p_cam[0] * fx / p_cam[2]) + cx
+                                vi = (p_cam[1] * fy / p_cam[2]) + cy
+                                if 0 <= ui < cam_image.width and 0 <= vi < cam_image.height:
+                                    p_u.append(ui)
+                                    p_v.append(vi)
+                    if len(p_u) > 1:
+                        ax1.plot(p_u, p_v, color='#38BDF8', linewidth=1.2, alpha=0.35)
 
-        for obs in obstacles:
-            ub, vb = obs.get("u_box"), obs.get("v_box")
-            tid = obs.get("track_id", "")
-            if ub is not None and vb is not None and 50 < ub < cam_image.width - 50 and 50 < vb < cam_image.height - 50:
-                bh = int(1200 / max(obs["dist"], 5.0))
-                bw = int(bh * 0.75)
-                rect = patches.Rectangle((ub - bw/2, vb - bh/2), bw, bh,
-                                         linewidth=2.0, edgecolor='#00FF66', facecolor='none')
-                ax1.add_patch(rect)
-                ax1.text(ub - bw/2, vb - bh/2 - 8,
-                         f"ID#{tid} {obs['class']} ({obs['dist']:.1f}m)",
-                         color='black', fontsize=9, fontweight='bold',
-                         bbox=dict(boxstyle="square,pad=0.2", facecolor='#00FF66', edgecolor='none', alpha=0.85))
+            # 3. AR HUD: Project Optimal Chosen Trajectory (Neon Green Path with Glow)
+            opt_u, opt_v = [], []
+            for xi, yi in zip(best_path.x, best_path.y):
+                if xi >= 4.0:
+                    p_ego = np.array([xi, yi, -0.75], dtype=np.float32)
+                    p_cam = r_cam.T @ (p_ego - t_cam)
+                    if p_cam[2] > 1.0:
+                        ui = (p_cam[0] * fx / p_cam[2]) + cx
+                        vi = (p_cam[1] * fy / p_cam[2]) + cy
+                        if 0 <= ui < cam_image.width and 0 <= vi < cam_image.height:
+                            opt_u.append(ui)
+                            opt_v.append(vi)
+            if len(opt_u) > 1:
+                ax1.plot(opt_u, opt_v, color='#00FF66', linewidth=6.0, alpha=0.3)
+                ax1.plot(opt_u, opt_v, color='#00FF66', linewidth=3.2, alpha=0.95, label='Optimal Path')
+                if len(opt_u) > 4:
+                    step_w = len(opt_u) // 4
+                    for wi in range(step_w, len(opt_u), step_w):
+                        ax1.plot(opt_u[wi], opt_v[wi], 'o', color='#FFFFFF', markersize=5, markeredgecolor='#00FF66', markeredgewidth=1.5)
 
-        ax1.set_title("1. Camera Vision: RGB Frame + Calibrated LiDAR Depth Overlay & Tracked Detections",
-                      color='white', fontsize=12, fontweight='bold', pad=10)
-        ax1.axis('off')
+            # 4. AR HUD: Project Model 3 Dynamic Obstacle Forecasts (Amber / Yellow)
+            for traj_info in predicted_trajectories:
+                fut = traj_info.get("future")
+                if fut is not None and len(fut) > 1:
+                    fut_u, fut_v = [], []
+                    for fpt in fut:
+                        p_ego = np.array([fpt[0], fpt[1], -0.75], dtype=np.float32)
+                        p_cam = r_cam.T @ (p_ego - t_cam)
+                        if p_cam[2] > 1.0:
+                            ui = (p_cam[0] * fx / p_cam[2]) + cx
+                            vi = (p_cam[1] * fy / p_cam[2]) + cy
+                            if 0 <= ui < cam_image.width and 0 <= vi < cam_image.height:
+                                fut_u.append(ui)
+                                fut_v.append(vi)
+                    if len(fut_u) > 1:
+                        ax1.plot(fut_u, fut_v, color='#F59E0B', linewidth=2.2, linestyle='--', alpha=0.85)
 
-        # ------------------------------------------------------------------------------------------
-        # PANEL 2: 3D LIDAR BEV + DETECTED 3D BOUNDING BOXES
-        # ------------------------------------------------------------------------------------------
-        ax2 = fig.add_subplot(gs[0, 1])
-        ax2.set_facecolor('#161B22')
+            # 5. Overlaid Tracked 2D/3D Obstacle Bounding Boxes
+            for obs in obstacles:
+                ub, vb = obs.get("u_box"), obs.get("v_box")
+                tid = obs.get("track_id", "")
+                if ub is not None and vb is not None and 50 < ub < cam_image.width - 50 and 50 < vb < cam_image.height - 50:
+                    bh = int(1200 / max(obs["dist"], 5.0))
+                    bw = int(bh * 0.75)
+                    rect = patches.Rectangle((ub - bw/2, vb - bh/2), bw, bh,
+                                             linewidth=2.0, edgecolor='#00FF66', facecolor='none')
+                    ax1.add_patch(rect)
+                    ax1.text(ub - bw/2, vb - bh/2 - 8,
+                             f"ID#{tid} {obs['class']} ({obs['dist']:.1f}m)",
+                             color='black', fontsize=9, fontweight='bold',
+                             bbox=dict(boxstyle="square,pad=0.2", facecolor='#00FF66', edgecolor='none', alpha=0.85))
 
-        bev_mask = (pts_ego[:, 0] >= -10) & (pts_ego[:, 0] <= 50) & (pts_ego[:, 1] >= -25) & (pts_ego[:, 1] <= 25)
-        bev_pts = pts_ego[bev_mask]
-        ax2.scatter(bev_pts[:, 1], bev_pts[:, 0], c=bev_pts[:, 2], cmap='coolwarm', s=0.35, alpha=0.5, label="LiDAR 3D Points")
+            ax1.set_title("Camera Vision + AR Trajectories: Green=Optimal Path | Cyan=Candidate Fan | Amber=Obstacle Forecast",
+                          color='white', fontsize=12, fontweight='bold', pad=10)
+            ax1.axis('off')
 
-        ego_rect = patches.Rectangle((-1.0, -2.0), 2.0, 4.5, linewidth=2, edgecolor='#58A6FF',
-                                     facecolor='#1F6FEB', alpha=0.9, label="Ego Vehicle")
-        ax2.add_patch(ego_rect)
-        ax2.plot(0, 0, 'w^', markersize=7)
+            plt.savefig(out_file, dpi=120, bbox_inches='tight', facecolor=fig.get_facecolor())
+            plt.close()
+            timings['Dashboard Render'] = (time.time() - t0) * 1000
+            print(f"  * Camera Vision Frame exported to: {out_file}")
+        else:
+            fig = plt.figure(figsize=(24, 14), facecolor='#0B0F19')
+            gs = GridSpec(2, 2, figure=fig, hspace=0.22, wspace=0.18, left=0.05, right=0.96, top=0.91, bottom=0.06)
 
-        for obs in obstacles:
-            ox, oy = obs["pos"][0], obs["pos"][1]
-            w, l = obs["size"][0], obs["size"][1]
-            tid = obs.get("track_id", "")
-            obs_box = patches.Rectangle((oy - w/2, ox - l/2), w, l,
-                                        linewidth=1.8, edgecolor='#FF7B72', facecolor='#F85149', alpha=0.4)
-            ax2.add_patch(obs_box)
-            ax2.text(oy, ox + 1.2, f"ID#{tid} {obs['class']}", color='#FF7B72', fontsize=8, fontweight='bold', ha='center')
+            total_time_ms = sum(timings.values())
+            suptitle_text = (
+                f"AUTONOMOUS DRIVING MULTIMODAL PERCEPTION, PREDICTION & OPTIMAL PATH PLANNING PIPELINE\n"
+                f"Scenario Keyframe: #{sample_idx} | Ego Speed: {ego_speed_mps*3.6:.1f} km/h | Target Speed: {rec_speed_kmh:.1f} km/h | "
+                f"Steering: {steer_deg:+.1f}° | Threat: {threat_level} | Latency: {total_time_ms:.1f} ms"
+            )
+            fig.suptitle(suptitle_text, fontsize=15, fontweight='bold', color='#58A6FF', y=0.97)
 
-        ax2.set_xlim(-25, 25)
-        ax2.set_ylim(-5, 50)
-        ax2.set_xlabel("Lateral Y (meters)", color='white', fontsize=10)
-        ax2.set_ylabel("Forward X (meters)", color='white', fontsize=10)
-        ax2.tick_params(colors='white')
-        ax2.grid(True, linestyle='--', color='#30363D', alpha=0.7)
-        ax2.set_title("2. 3D LiDAR BEV: Point Cloud & Persistent Tracked Obstacles",
-                      color='white', fontsize=12, fontweight='bold', pad=10)
-        ax2.legend(loc="upper right", facecolor='#21262D', edgecolor='white', labelcolor='white')
+            # ------------------------------------------------------------------------------------------
+            # PANEL 1: CAMERA VISION + MODEL 1 DETECTIONS + LIDAR OVERLAY
+            # ------------------------------------------------------------------------------------------
+            ax1 = fig.add_subplot(gs[0, 0])
+            ax1.imshow(cam_image)
+            scatter = ax1.scatter(u_proj, v_proj, c=depths_proj, cmap='turbo', s=1.8, alpha=0.65)
+            cbar = fig.colorbar(scatter, ax=ax1, fraction=0.03, pad=0.01)
+            cbar.set_label('LiDAR Depth (meters)', color='white', fontsize=10)
+            cbar.ax.yaxis.set_tick_params(color='white')
+            plt.setp(cbar.ax.get_yticklabels(), color='white')
 
-        # ------------------------------------------------------------------------------------------
-        # PANEL 3: MULTI-AGENT MOTION PREDICTION (MODEL 3)
-        # ------------------------------------------------------------------------------------------
-        ax3 = fig.add_subplot(gs[1, 0])
-        ax3.set_facecolor('#161B22')
+            for obs in obstacles:
+                ub, vb = obs.get("u_box"), obs.get("v_box")
+                tid = obs.get("track_id", "")
+                if ub is not None and vb is not None and 50 < ub < cam_image.width - 50 and 50 < vb < cam_image.height - 50:
+                    bh = int(1200 / max(obs["dist"], 5.0))
+                    bw = int(bh * 0.75)
+                    rect = patches.Rectangle((ub - bw/2, vb - bh/2), bw, bh,
+                                             linewidth=2.0, edgecolor='#00FF66', facecolor='none')
+                    ax1.add_patch(rect)
+                    ax1.text(ub - bw/2, vb - bh/2 - 8,
+                             f"ID#{tid} {obs['class']} ({obs['dist']:.1f}m)",
+                             color='black', fontsize=9, fontweight='bold',
+                             bbox=dict(boxstyle="square,pad=0.2", facecolor='#00FF66', edgecolor='none', alpha=0.85))
 
-        ax3.add_patch(patches.Rectangle((-1.0, -2.0), 2.0, 4.5, linewidth=2, edgecolor='#58A6FF',
-                                        facecolor='#1F6FEB', alpha=0.9, label="Ego Vehicle"))
+            ax1.set_title("1. Camera Vision: RGB Frame + Calibrated LiDAR Depth Overlay & Tracked Detections",
+                          color='white', fontsize=12, fontweight='bold', pad=10)
+            ax1.axis('off')
 
-        for traj_info in predicted_trajectories:
-            past = traj_info["past"]
-            future = traj_info["future"]
-            cname = traj_info["class"]
-            tid = traj_info.get("track_id", "")
+            # ------------------------------------------------------------------------------------------
+            # PANEL 2: 3D LIDAR BEV + DETECTED 3D BOUNDING BOXES
+            # ------------------------------------------------------------------------------------------
+            ax2 = fig.add_subplot(gs[0, 1])
+            ax2.set_facecolor('#161B22')
 
-            ax3.plot(past[:, 1], past[:, 0], color='#8B949E', linestyle=':', linewidth=2,
-                     label="Past Track History" if "Past Track History" not in [l.get_label() for l in ax3.lines] else "")
-            ax3.plot(traj_info["curr"][1], traj_info["curr"][0], 'o', color='#F0883E', markersize=6)
-            ax3.plot(future[:, 1], future[:, 0], color='#E3B341', linestyle='-', linewidth=2.5,
-                     label="Model 3 Predicted (2.4s)" if "Model 3 Predicted" not in [l.get_label() for l in ax3.lines] else "")
-            ax3.annotate("", xy=(future[-1, 1], future[-1, 0]), xytext=(future[-2, 1], future[-2, 0]),
-                         arrowprops=dict(arrowstyle="->", color='#E3B341', lw=2))
-            ax3.text(future[-1, 1], future[-1, 0] + 0.8, f"ID#{tid} {cname}", color='#E3B341', fontsize=8, fontweight='bold')
+            bev_mask = (pts_ego[:, 0] >= -10) & (pts_ego[:, 0] <= 50) & (pts_ego[:, 1] >= -25) & (pts_ego[:, 1] <= 25)
+            bev_pts = pts_ego[bev_mask]
+            ax2.scatter(bev_pts[:, 1], bev_pts[:, 0], c=bev_pts[:, 2], cmap='coolwarm', s=0.35, alpha=0.5, label="LiDAR 3D Points")
 
-        ax3.set_xlim(-25, 25)
-        ax3.set_ylim(-5, 50)
-        ax3.set_xlabel("Lateral Y (meters)", color='white', fontsize=10)
-        ax3.set_ylabel("Forward X (meters)", color='white', fontsize=10)
-        ax3.tick_params(colors='white')
-        ax3.grid(True, linestyle='--', color='#30363D', alpha=0.7)
-        ax3.set_title("3. Multi-Agent Motion Prediction: Model 3 (ONNX 2.4s Horizon)",
-                      color='white', fontsize=12, fontweight='bold', pad=10)
-        ax3.legend(loc="upper right", facecolor='#21262D', edgecolor='white', labelcolor='white')
+            ego_rect = patches.Rectangle((-1.0, -2.0), 2.0, 4.5, linewidth=2, edgecolor='#58A6FF',
+                                         facecolor='#1F6FEB', alpha=0.9, label="Ego Vehicle")
+            ax2.add_patch(ego_rect)
+            ax2.plot(0, 0, 'w^', markersize=7)
 
-        # ------------------------------------------------------------------------------------------
-        # PANEL 4: FRENET OPTIMAL TRAJECTORY PLANNING & CLEARANCE
-        # ------------------------------------------------------------------------------------------
-        ax4 = fig.add_subplot(gs[1, 1])
-        ax4.set_facecolor('#161B22')
+            for obs in obstacles:
+                ox, oy = obs["pos"][0], obs["pos"][1]
+                w, l = obs["size"][0], obs["size"][1]
+                tid = obs.get("track_id", "")
+                obs_box = patches.Rectangle((oy - w/2, ox - l/2), w, l,
+                                            linewidth=1.8, edgecolor='#FF7B72', facecolor='#F85149', alpha=0.4)
+                ax2.add_patch(obs_box)
+                ax2.text(oy, ox + 1.2, f"ID#{tid} {obs['class']}", color='#FF7B72', fontsize=8, fontweight='bold', ha='center')
 
-        ax4.axvline(x=-3.5, color='#8B949E', linestyle='--', alpha=0.5, label="Road Boundary")
-        ax4.axvline(x=0.0, color='#E3B341', linestyle='--', alpha=0.7, label="Center Lane")
-        ax4.axvline(x=3.5, color='#8B949E', linestyle='--', alpha=0.5)
+            ax2.set_xlim(-25, 25)
+            ax2.set_ylim(-5, 50)
+            ax2.set_xlabel("Lateral Y (meters)", color='white', fontsize=10)
+            ax2.set_ylabel("Forward X (meters)", color='white', fontsize=10)
+            ax2.tick_params(colors='white')
+            ax2.grid(True, linestyle='--', color='#30363D', alpha=0.7)
+            ax2.set_title("2. 3D LiDAR BEV: Point Cloud & Persistent Tracked Obstacles",
+                          color='white', fontsize=12, fontweight='bold', pad=10)
+            ax2.legend(loc="upper right", facecolor='#21262D', edgecolor='white', labelcolor='white')
 
-        for p in all_paths:
-            if p.is_valid:
-                ax4.plot(p.y, p.x, color='#484F58', linewidth=0.9, alpha=0.45,
-                         label="Frenet Candidate Fan" if "Frenet Candidate Fan" not in [l.get_label() for l in ax4.lines] else "")
+            # ------------------------------------------------------------------------------------------
+            # PANEL 3: MULTI-AGENT MOTION PREDICTION (MODEL 3)
+            # ------------------------------------------------------------------------------------------
+            ax3 = fig.add_subplot(gs[1, 0])
+            ax3.set_facecolor('#161B22')
 
-        for obs in obstacles:
-            ox, oy = obs["pos"][0], obs["pos"][1]
-            w, l = obs["size"][0], obs["size"][1]
-            tid = obs.get("track_id", "")
-            safety_circle = patches.Circle((oy, ox), radius=max(w, l)/2.0 + 1.2,
-                                           linewidth=1.5, edgecolor='#F85149', facecolor='#F85149',
-                                           linestyle='--', alpha=0.18)
-            ax4.add_patch(safety_circle)
-            ax4.add_patch(patches.Rectangle((oy - w/2, ox - l/2), w, l,
-                                            linewidth=1.5, edgecolor='#F85149', facecolor='#DA3633', alpha=0.7))
-            ax4.text(oy, ox, f"ID#{tid} {obs['class']}", color='white', fontsize=7.5, fontweight='bold', ha='center', va='center')
+            ax3.add_patch(patches.Rectangle((-1.0, -2.0), 2.0, 4.5, linewidth=2, edgecolor='#58A6FF',
+                                            facecolor='#1F6FEB', alpha=0.9, label="Ego Vehicle"))
 
-        ax4.plot(best_path.y, best_path.x, color='#2EA043', linewidth=3.8, label="Optimal Frenet Trajectory")
+            for traj_info in predicted_trajectories:
+                past = traj_info["past"]
+                future = traj_info["future"]
+                cname = traj_info["class"]
+                tid = traj_info.get("track_id", "")
 
-        ax4.add_patch(patches.Rectangle((-1.0, -2.0), 2.0, 4.5, linewidth=2, edgecolor='#58A6FF',
-                                        facecolor='#1F6FEB', alpha=0.9, label="Ego Vehicle"))
+                ax3.plot(past[:, 1], past[:, 0], color='#8B949E', linestyle=':', linewidth=2,
+                         label="Past Track History" if "Past Track History" not in [l.get_label() for l in ax3.lines] else "")
+                ax3.plot(traj_info["curr"][1], traj_info["curr"][0], 'o', color='#F0883E', markersize=6)
+                ax3.plot(future[:, 1], future[:, 0], color='#E3B341', linestyle='-', linewidth=2.5,
+                         label="Model 3 Predicted (2.4s)" if "Model 3 Predicted" not in [l.get_label() for l in ax3.lines] else "")
+                ax3.annotate("", xy=(future[-1, 1], future[-1, 0]), xytext=(future[-2, 1], future[-2, 0]),
+                             arrowprops=dict(arrowstyle="->", color='#E3B341', lw=2))
+                ax3.text(future[-1, 1], future[-1, 0] + 0.8, f"ID#{tid} {cname}", color='#E3B341', fontsize=8, fontweight='bold')
 
-        n_pts = len(best_path.x)
-        sample_indices = [int(n_pts * 0.25), int(n_pts * 0.5), int(n_pts * 0.75)]
-        for idx in sample_indices:
-            ax4.plot(best_path.y[idx], best_path.x[idx], 'o', color='#3FB950', markersize=6)
-            ax4.text(best_path.y[idx] + 0.8, best_path.x[idx], f"{best_path.x[idx]:.0f}m",
-                     color='#3FB950', fontsize=8, fontweight='bold')
+            ax3.set_xlim(-25, 25)
+            ax3.set_ylim(-5, 50)
+            ax3.set_xlabel("Lateral Y (meters)", color='white', fontsize=10)
+            ax3.set_ylabel("Forward X (meters)", color='white', fontsize=10)
+            ax3.tick_params(colors='white')
+            ax3.grid(True, linestyle='--', color='#30363D', alpha=0.7)
+            ax3.set_title("3. Multi-Agent Motion Prediction: Model 3 (ONNX 2.4s Horizon)",
+                          color='white', fontsize=12, fontweight='bold', pad=10)
+            ax3.legend(loc="upper right", facecolor='#21262D', edgecolor='white', labelcolor='white')
 
-        telemetry_text = (
-            f"Planner Algorithm : Frenet Quintic + Temporal Memory\n"
-            f"Decision Status   : {planner_decision}\n"
-            f"Steering Angle    : {steer_deg:+.2f}°\n"
-            f"Closest Obstacle  : {min_dist:.1f} m\n"
-            f"Time-to-Collision : {min_ttc:.1f} s\n"
-            f"Target Speed      : {rec_speed_kmh:.1f} km/h\n"
-            f"Optimal Cost J*   : {best_path.cf:.2f}\n"
-            f"Active Avoidance  : {'YES' if abs(steer_deg) > 0.5 else 'NO'}"
-        )
-        ax4.text(0.04, 0.96, telemetry_text, transform=ax4.transAxes,
-                 fontsize=8.5, verticalalignment='top', color='#7EE787',
-                 fontfamily='monospace',
-                 bbox=dict(boxstyle="round,pad=0.5", facecolor='#0D1117', edgecolor='#238636', alpha=0.92))
+            # ------------------------------------------------------------------------------------------
+            # PANEL 4: FRENET OPTIMAL TRAJECTORY PLANNING & CLEARANCE
+            # ------------------------------------------------------------------------------------------
+            ax4 = fig.add_subplot(gs[1, 1])
+            ax4.set_facecolor('#161B22')
 
-        ax4.set_xlim(-15, 15)
-        ax4.set_ylim(-5, 50)
-        ax4.set_xlabel("Lateral Y (meters)", color='white', fontsize=10)
-        ax4.set_ylabel("Forward X (meters)", color='white', fontsize=10)
-        ax4.tick_params(colors='white')
-        ax4.grid(True, linestyle='--', color='#30363D', alpha=0.7)
-        ax4.set_title("4. Optimal Path Planning: Frenet Frame Optimization & Obstacle Avoidance",
-                      color='white', fontsize=12, fontweight='bold', pad=10)
-        ax4.legend(loc="upper right", facecolor='#21262D', edgecolor='white', labelcolor='white')
+            ax4.axvline(x=-3.5, color='#8B949E', linestyle='--', alpha=0.5, label="Road Boundary")
+            ax4.axvline(x=0.0, color='#E3B341', linestyle='--', alpha=0.7, label="Center Lane")
+            ax4.axvline(x=3.5, color='#8B949E', linestyle='--', alpha=0.5)
 
-        plt.savefig(out_file, dpi=200, bbox_inches='tight', facecolor=fig.get_facecolor())
-        plt.close()
-        timings['Dashboard Render'] = (time.time() - t0) * 1000
-        print(f"  * Pipeline Dashboard exported to: {out_file}")
+            for p in all_paths:
+                if p.is_valid:
+                    ax4.plot(p.y, p.x, color='#484F58', linewidth=0.9, alpha=0.45,
+                             label="Frenet Candidate Fan" if "Frenet Candidate Fan" not in [l.get_label() for l in ax4.lines] else "")
+
+            for obs in obstacles:
+                ox, oy = obs["pos"][0], obs["pos"][1]
+                w, l = obs["size"][0], obs["size"][1]
+                tid = obs.get("track_id", "")
+                safety_circle = patches.Circle((oy, ox), radius=max(w, l)/2.0 + 1.2,
+                                               linewidth=1.5, edgecolor='#F85149', facecolor='#F85149',
+                                               linestyle='--', alpha=0.18)
+                ax4.add_patch(safety_circle)
+                ax4.add_patch(patches.Rectangle((oy - w/2, ox - l/2), w, l,
+                                                linewidth=1.5, edgecolor='#F85149', facecolor='#DA3633', alpha=0.7))
+                ax4.text(oy, ox, f"ID#{tid} {obs['class']}", color='white', fontsize=7.5, fontweight='bold', ha='center', va='center')
+
+            ax4.plot(best_path.y, best_path.x, color='#2EA043', linewidth=3.8, label="Optimal Frenet Trajectory")
+
+            ax4.add_patch(patches.Rectangle((-1.0, -2.0), 2.0, 4.5, linewidth=2, edgecolor='#58A6FF',
+                                            facecolor='#1F6FEB', alpha=0.9, label="Ego Vehicle"))
+
+            n_pts = len(best_path.x)
+            sample_indices = [int(n_pts * 0.25), int(n_pts * 0.5), int(n_pts * 0.75)]
+            for idx in sample_indices:
+                ax4.plot(best_path.y[idx], best_path.x[idx], 'o', color='#3FB950', markersize=6)
+                ax4.text(best_path.y[idx] + 0.8, best_path.x[idx], f"{best_path.x[idx]:.0f}m",
+                         color='#3FB950', fontsize=8, fontweight='bold')
+
+            telemetry_text = (
+                f"Planner Algorithm : Frenet Quintic + Temporal Memory\n"
+                f"Decision Status   : {planner_decision}\n"
+                f"Steering Angle    : {steer_deg:+.2f}°\n"
+                f"Closest Obstacle  : {min_dist:.1f} m\n"
+                f"Time-to-Collision : {min_ttc:.1f} s\n"
+                f"Target Speed      : {rec_speed_kmh:.1f} km/h\n"
+                f"Optimal Cost J*   : {best_path.cf:.2f}\n"
+                f"Active Avoidance  : {'YES' if abs(steer_deg) > 0.5 else 'NO'}"
+            )
+            ax4.text(0.04, 0.96, telemetry_text, transform=ax4.transAxes,
+                     fontsize=8.5, verticalalignment='top', color='#7EE787',
+                     fontfamily='monospace',
+                     bbox=dict(boxstyle="round,pad=0.5", facecolor='#0D1117', edgecolor='#238636', alpha=0.92))
+
+            ax4.set_xlim(-15, 15)
+            ax4.set_ylim(-5, 50)
+            ax4.set_xlabel("Lateral Y (meters)", color='white', fontsize=10)
+            ax4.set_ylabel("Forward X (meters)", color='white', fontsize=10)
+            ax4.tick_params(colors='white')
+            ax4.grid(True, linestyle='--', color='#30363D', alpha=0.7)
+            ax4.set_title("4. Optimal Path Planning: Frenet Frame Optimization & Obstacle Avoidance",
+                          color='white', fontsize=12, fontweight='bold', pad=10)
+            ax4.legend(loc="upper right", facecolor='#21262D', edgecolor='white', labelcolor='white')
+
+            plt.savefig(out_file, dpi=200, bbox_inches='tight', facecolor=fig.get_facecolor())
+            plt.close()
+            timings['Dashboard Render'] = (time.time() - t0) * 1000
+            print(f"  * Pipeline Dashboard exported to: {out_file}")
 
     total_latency = (time.time() - t_start) * 1000
     print("\n" + "=" * 85)
@@ -953,7 +1092,7 @@ def run_autonomous_pipeline(sample_idx=12, save_dashboard=True, ego_memory=None,
     }
 
 
-def run_sequential_simulation(scene_idx=0, num_frames=5):
+def run_sequential_simulation(scene_idx=0, num_frames=5, camera_only=False):
     """
     Runs consecutive keyframes from a selected scene in dataset mini, maintaining
     temporal tracking memory across frames.
@@ -972,36 +1111,44 @@ def run_sequential_simulation(scene_idx=0, num_frames=5):
     sc = scenes[scene_idx]
     sample_token_to_idx = {s["token"]: idx for idx, s in enumerate(samples)}
 
-    # Traverse sequential chain
-    curr_token = sc["first_sample_token"]
+    # Traverse sequential chain across consecutive scenes if num_frames > 40
     frame_indices = []
-    while curr_token and len(frame_indices) < num_frames:
-        idx = sample_token_to_idx.get(curr_token)
-        if idx is not None:
-            frame_indices.append(idx)
-            curr_token = samples[idx]["next"]
-        else:
-            break
+    curr_scene = scene_idx
+    while len(frame_indices) < num_frames and curr_scene < len(scenes):
+        sc_iter = scenes[curr_scene]
+        curr_token = sc_iter["first_sample_token"]
+        while curr_token and len(frame_indices) < num_frames:
+            idx = sample_token_to_idx.get(curr_token)
+            if idx is not None:
+                frame_indices.append(idx)
+                curr_token = samples[idx]["next"]
+            else:
+                break
+        curr_scene += 1
 
-    print(f"Scene: {sc['name']} | Context: {sc['description']}")
-    print(f"Sequential Keyframe Chain: {frame_indices}")
+    print(f"Primary Scene: {sc['name']} | Context: {sc['description']}")
+    print(f"Total Sequential Keyframe Chain: {len(frame_indices)} frames (Indices: {frame_indices[:10]} ... {frame_indices[-5:]})")
 
     # Shared Temporal Memory & Tracker across consecutive frames
     ego_memory = TemporalEgoMemory()
     tracker = MultimodalTemporalTracker(max_age=2, dist_threshold=3.5)
 
     results = []
+    generated_frames = []
     for step, s_idx in enumerate(frame_indices):
         print(f"\n>>>>>>>>>>>> EXECUTING TIMESTEP {step+1}/{len(frame_indices)} (Sample #{s_idx}) >>>>>>>>>>>>")
-        out_name = os.path.join(BASE_DIR, f"sequence_step_{step+1}_sample_{s_idx}.png")
+        prefix = "camera_step" if camera_only else "sequence_step"
+        out_name = os.path.join(BASE_DIR, f"{prefix}_{step+1}_sample_{s_idx}.png")
         res = run_autonomous_pipeline(
             sample_idx=s_idx,
             save_dashboard=True,
             ego_memory=ego_memory,
             tracker=tracker,
-            output_filename=out_name
+            output_filename=out_name,
+            camera_only=camera_only
         )
         results.append(res)
+        generated_frames.append(out_name)
 
     print("\n" + "=" * 85)
     print(" SEQUENTIAL SIMULATION SUMMARY")
@@ -1009,6 +1156,37 @@ def run_sequential_simulation(scene_idx=0, num_frames=5):
     for i, r in enumerate(results):
         print(f"Step {i+1} (Sample #{r['sample_idx']}): Decision={r['planner_decision']:30s} | Steer={r['steering_angle_deg']:+5.1f}° | MinDist={r['min_dist']:5.1f}m | TTC={r['min_ttc']:5.1f}s")
     print("=" * 85)
+
+    # If camera_only or requested, encode video via FFmpeg
+    if camera_only:
+        try:
+            import subprocess
+            import imageio_ffmpeg
+            ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+            concat_txt = os.path.join(BASE_DIR, "camera_concat_list.txt")
+            target_fps = 5.0
+            frame_duration = 1.0 / target_fps
+            with open(concat_txt, "w") as f:
+                for img in generated_frames:
+                    clean_p = img.replace('\\', '/')
+                    f.write(f"file '{clean_p}'\n")
+                    f.write(f"duration {frame_duration:.4f}\n")
+                last_p = generated_frames[-1].replace('\\', '/')
+                f.write(f"file '{last_p}'\n")
+
+            vid_out = os.path.join(BASE_DIR, "camera_vision_simulation.mp4")
+            cmd = [
+                ffmpeg_exe, "-y", "-f", "concat", "-safe", "0",
+                "-i", concat_txt,
+                "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+                "-c:v", "libx264", "-profile:v", "main", "-pix_fmt", "yuv420p",
+                "-movflags", "+faststart", "-r", str(int(target_fps)), vid_out
+            ]
+            subprocess.run(cmd, check=True)
+            print(f"\n[VIDEO GENERATED] H.264 MP4 Saved: {vid_out} ({os.path.getsize(vid_out)/1e6:.2f} MB)")
+        except Exception as e:
+            print(f"[WARNING] Video encoding warning: {e}")
+
     return results
 
 
@@ -1018,9 +1196,11 @@ if __name__ == "__main__":
     parser.add_argument("--sequence", action="store_true", help="Run sequential multi-frame simulation")
     parser.add_argument("--scene", type=int, default=0, help="Scene index for sequential mode (0-9)")
     parser.add_argument("--frames", type=int, default=3, help="Number of consecutive frames to process")
+    parser.add_argument("--fps", type=float, default=5.0, help="Target video FPS (default: 5.0)")
+    parser.add_argument("--camera_only", action="store_true", help="Render only Camera Vision with LiDAR overlay & tracked obstacles")
     args = parser.parse_args()
 
     if args.sequence:
-        run_sequential_simulation(scene_idx=args.scene, num_frames=args.frames)
+        run_sequential_simulation(scene_idx=args.scene, num_frames=args.frames, camera_only=args.camera_only)
     else:
-        run_autonomous_pipeline(sample_idx=args.sample)
+        run_autonomous_pipeline(sample_idx=args.sample, camera_only=args.camera_only)

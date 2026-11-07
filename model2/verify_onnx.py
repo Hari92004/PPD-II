@@ -8,8 +8,8 @@ import time
 import numpy as np
 import torch
 
-def verify_onnx(onnx_path=r"D:\SIH26\model2\model2_lidar.onnx",
-                sample_path=r"D:\SIH26\model2\sample_pointcloud.npy"):
+def verify_onnx(onnx_path=r"D:\PPD2\model2\model2_lidar.onnx",
+                sample_path=r"D:\PPD2\model2\sample_pointcloud.npy"):
     print("=" * 65)
     print("   MODEL 2: ONNX MODEL VERIFICATION FOR MATLAB / SIMULINK")
     print("=" * 65)

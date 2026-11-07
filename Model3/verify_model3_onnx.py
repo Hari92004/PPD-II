@@ -7,7 +7,7 @@ import os
 import onnx
 import numpy as np
 
-def verify_model3_onnx(onnx_path=r"D:\SIH26\model3\model3_trajectory_predictor.onnx"):
+def verify_model3_onnx(onnx_path=r"D:\PPD2\Model3\model3_trajectory_predictor.onnx"):
     print("=" * 65)
     print("   MODEL 3: ONNX VERIFICATION FOR MATLAB / SIMULINK")
     print("=" * 65)

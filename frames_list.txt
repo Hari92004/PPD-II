@@ -1,0 +1,11 @@
+file 'D:/PPD2/sequence_step_1_sample_0.png'
+duration 1.5
+file 'D:/PPD2/sequence_step_2_sample_1.png'
+duration 1.5
+file 'D:/PPD2/sequence_step_3_sample_2.png'
+duration 1.5
+file 'D:/PPD2/sequence_step_4_sample_3.png'
+duration 1.5
+file 'D:/PPD2/sequence_step_5_sample_4.png'
+duration 1.5
+file 'D:/PPD2/sequence_step_5_sample_4.png'

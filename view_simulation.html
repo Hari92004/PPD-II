@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPD-II Multimodal Autonomous Driving Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #58a6ff;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        p.subtitle {
+            color: #8b949e;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        button {
+            background: #238636;
+            color: #ffffff;
+            border: none;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #2ea043;
+        }
+        button.secondary {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+        }
+        button.secondary:hover {
+            background: #30363d;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type=range] {
+            width: 250px;
+            cursor: pointer;
+        }
+        .metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .metric-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 10px 14px;
+            text-align: center;
+        }
+        .metric-title {
+            font-size: 11px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .metric-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #58a6ff;
+            margin-top: 4px;
+        }
+        .metric-value.danger { color: #f85149; }
+        .metric-value.warning { color: #d29922; }
+        .metric-value.success { color: #3fb950; }
+        .image-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background: #000;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #30363d;
+        }
+        img#display-img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Multimodal Autonomous Driving Simulation</h1>
+    <p class="subtitle">Perception (Camera YOLO26 + LiDAR PointPillars) &rarr; Temporal Tracking &rarr; Trajectory Forecast (GRU) &rarr; Frenet Path Planner</p>
+
+    <div class="container">
+        <!-- Metrics Bar -->
+        <div class="metrics-bar">
+            <div class="metric-card">
+                <div class="metric-title">Timeline Step</div>
+                <div class="metric-value" id="val-step">1 / 5</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Planner Decision</div>
+                <div class="metric-value warning" id="val-decision">DECELERATE</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Min TTC (Time to Collision)</div>
+                <div class="metric-value danger" id="val-ttc">1.61 s</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Min Obstacle Distance</div>
+                <div class="metric-value" id="val-dist">17.89 m</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Steering Command</div>
+                <div class="metric-value success" id="val-steer">+2.80&deg; (Left)</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button id="btn-play" onclick="togglePlay()">Pause</button>
+            <button class="secondary" onclick="prevFrame()">&larr; Prev Step</button>
+            <div class="slider-container">
+                <input type="range" id="frame-slider" min="0" max="4" value="0" oninput="onSliderChange(this.value)">
+                <span id="slider-label" style="font-weight: 600; min-width: 45px;">Step 1</span>
+            </div>
+            <button class="secondary" onclick="nextFrame()">Next Step &rarr;</button>
+        </div>
+
+        <!-- Dashboard Image Frame -->
+        <div class="image-wrapper">
+            <img id="display-img" src="sequence_step_1_sample_0.png" alt="Autonomous Driving Dashboard">
+        </div>
+    </div>
+
+    <script>
+        const steps = [
+            {
+                img: "sequence_step_1_sample_0.png",
+                step: "1 / 5",
+                decision: "DECELERATE",
+                decisionClass: "warning",
+                ttc: "1.61 s",
+                dist: "17.89 m",
+                steer: "+2.80° (Left)"
+            },
+            {
+                img: "sequence_step_2_sample_1.png",
+                step: "2 / 5",
+                decision: "DECELERATE",
+                decisionClass: "warning",
+                ttc: "1.21 s",
+                dist: "13.38 m",
+                steer: "+0.00° (Straight)"
+            },
+            {
+                img: "sequence_step_3_sample_2.png",
+                step: "3 / 5",
+                decision: "DECELERATE",
+                decisionClass: "danger",
+                ttc: "0.79 s",
+                dist: "8.72 m",
+                steer: "+0.00° (Straight)"
+            },
+            {
+                img: "sequence_step_4_sample_3.png",
+                step: "4 / 5",
+                decision: "EMERGENCY SWERVE",
+                decisionClass: "danger",
+                ttc: "0.44 s",
+                dist: "4.94 m",
+                steer: "+4.13° (Left)"
+            },
+            {
+                img: "sequence_step_5_sample_4.png",
+                step: "5 / 5",
+                decision: "STABILIZE / FOLLOW",
+                decisionClass: "success",
+                ttc: "2.83 s",
+                dist: "31.40 m",
+                steer: "+2.48° (Left)"
+            }
+        ];
+
+        let currentIndex = 0;
+        let isPlaying = true;
+        let timer = null;
+
+        function updateUI(idx) {
+            const data = steps[idx];
+            document.getElementById('display-img').src = data.img;
+            document.getElementById('val-step').innerText = data.step;
+            
+            const decEl = document.getElementById('val-decision');
+            decEl.innerText = data.decision;
+            decEl.className = 'metric-value ' + data.decisionClass;
+
+            const ttcEl = document.getElementById('val-ttc');
+            ttcEl.innerText = data.ttc;
+            ttcEl.className = (parseFloat(data.ttc) < 1.0) ? 'metric-value danger' : 'metric-value warning';
+
+            document.getElementById('val-dist').innerText = data.dist;
+            document.getElementById('val-steer').innerText = data.steer;
+
+            document.getElementById('frame-slider').value = idx;
+            document.getElementById('slider-label').innerText = "Step " + (idx + 1);
+        }
+
+        function nextFrame() {
+            currentIndex = (currentIndex + 1) % steps.length;
+            updateUI(currentIndex);
+        }
+
+        function prevFrame() {
+            currentIndex = (currentIndex - 1 + steps.length) % steps.length;
+            updateUI(currentIndex);
+        }
+
+        function onSliderChange(val) {
+            currentIndex = parseInt(val);
+            updateUI(currentIndex);
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('btn-play');
+            if (isPlaying) {
+                btn.innerText = "Pause";
+                btn.className = "";
+                startTimer();
+            } else {
+                btn.innerText = "Play";
+                btn.className = "secondary";
+                clearInterval(timer);
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(() => {
+                if (isPlaying) {
+                    nextFrame();
+                }
+            }, 1400);
+        }
+
+        startTimer();
+    </script>
+</body>
+</html>
+

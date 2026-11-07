@@ -10,8 +10,8 @@ from pointpillars_net import PointPillars3DDetector
 from dataset_loader import NuScenesLidarDataset
 
 def export_trained_model(
-    checkpoint_path=r"D:\SIH26\model2\best_model2_lidar.pth",
-    onnx_output_path=r"D:\SIH26\model2\model2_lidar.onnx",
+    checkpoint_path=r"D:\PPD2\model2\best_model2_lidar.pth",
+    onnx_output_path=r"D:\PPD2\model2\model2_lidar.onnx",
     num_points=16384
 ):
     print("=" * 65)

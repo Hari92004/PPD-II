@@ -121,6 +121,44 @@ def compute_model2_loss(predictions, targets):
     total_loss = 2.0 * box_loss + 1.0 * cls_loss + 1.5 * conf_loss
     return total_loss, box_loss.item(), cls_loss.item(), conf_loss.item()
 
+def compute_model2_focal_loss(predictions, targets, gamma=2.0, alpha=0.25):
+    """
+    Enhanced Multi-Task Loss with Confidence Focal Loss.
+    Heavily suppresses easy negative background proposals, boosting Precision & F1.
+    """
+    device = predictions.device
+    pred_boxes = predictions[:, :, :8]
+    pred_cls = predictions[:, :, 8:11]
+    pred_conf = predictions[:, :, 11].clamp(1e-6, 1.0 - 1e-6)
+    
+    target_boxes = targets[:, :, :8]
+    target_cls_id = targets[:, :, 8].long()
+    target_valid = targets[:, :, 9] # 1.0 if obstacle, 0.0 if empty/background
+    
+    # 1. Focal Loss on Confidence
+    p_t = pred_conf * target_valid + (1.0 - pred_conf) * (1.0 - target_valid)
+    alpha_t = alpha * target_valid + (1.0 - alpha) * (1.0 - target_valid)
+    focal_weight = alpha_t * torch.pow((1.0 - p_t), gamma)
+    bce = -torch.log(p_t)
+    conf_loss = (focal_weight * bce).mean()
+    
+    # 2. Smooth L1 3D Box Loss
+    valid_mask = (target_valid > 0.5).unsqueeze(-1).expand_as(pred_boxes)
+    if valid_mask.sum() > 0:
+        box_loss = F.smooth_l1_loss(pred_boxes[valid_mask], target_boxes[valid_mask])
+    else:
+        box_loss = torch.tensor(0.0, device=device)
+        
+    # 3. Cross Entropy Classification Loss
+    valid_cls_mask = target_valid > 0.5
+    if valid_cls_mask.sum() > 0:
+        cls_loss = F.cross_entropy(pred_cls[valid_cls_mask], target_cls_id[valid_cls_mask])
+    else:
+        cls_loss = torch.tensor(0.0, device=device)
+        
+    total_loss = 2.0 * box_loss + 1.0 * cls_loss + 5.0 * conf_loss
+    return total_loss, box_loss.item(), cls_loss.item(), conf_loss.item()
+
 if __name__ == "__main__":
     print("Testing PointPillars3DDetector architecture...")
     model = PointPillars3DDetector()

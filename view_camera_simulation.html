@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPD-II Camera Vision: Calibrated LiDAR Depth & Tracked Detections</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #0b0f19;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #58a6ff;
+            margin-bottom: 5px;
+            font-size: 22px;
+            text-align: center;
+        }
+        p.subtitle {
+            color: #8b949e;
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1440px;
+            width: 100%;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        button {
+            background: #238636;
+            color: #ffffff;
+            border: none;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover { background: #2ea043; }
+        button.secondary {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+        }
+        button.secondary:hover { background: #30363d; }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type=range] {
+            width: 260px;
+            cursor: pointer;
+        }
+        .image-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background: #000;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #30363d;
+        }
+        img#display-img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>1. Camera Vision: RGB Frame + Calibrated LiDAR Depth Overlay & Tracked Detections</h1>
+    <p class="subtitle">Multi-Modal Sequential Simulation (Scene-0061 | 5 Keyframes)</p>
+
+    <div class="container">
+        <!-- Controls -->
+        <div class="controls">
+            <button id="btn-play" onclick="togglePlay()">Pause</button>
+            <button class="secondary" onclick="prevFrame()">&larr; Prev Step</button>
+            <div class="slider-container">
+                <input type="range" id="frame-slider" min="0" max="4" value="0" oninput="onSliderChange(this.value)">
+                <span id="slider-label" style="font-weight: 600; min-width: 60px;">Step 1</span>
+            </div>
+            <button class="secondary" onclick="nextFrame()">Next Step &rarr;</button>
+        </div>
+
+        <!-- Camera Frame Image -->
+        <div class="image-wrapper">
+            <img id="display-img" src="camera_step_1_sample_0.png" alt="Camera Vision Frame">
+        </div>
+    </div>
+
+    <script>
+        const frames = [
+            "camera_step_1_sample_0.png",
+            "camera_step_2_sample_1.png",
+            "camera_step_3_sample_2.png",
+            "camera_step_4_sample_3.png",
+            "camera_step_5_sample_4.png"
+        ];
+
+        let currentIndex = 0;
+        let isPlaying = true;
+        let timer = null;
+
+        function updateUI(idx) {
+            document.getElementById('display-img').src = frames[idx];
+            document.getElementById('frame-slider').value = idx;
+            document.getElementById('slider-label').innerText = "Step " + (idx + 1);
+        }
+
+        function nextFrame() {
+            currentIndex = (currentIndex + 1) % frames.length;
+            updateUI(currentIndex);
+        }
+
+        function prevFrame() {
+            currentIndex = (currentIndex - 1 + frames.length) % frames.length;
+            updateUI(currentIndex);
+        }
+
+        function onSliderChange(val) {
+            currentIndex = parseInt(val);
+            updateUI(currentIndex);
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('btn-play');
+            if (isPlaying) {
+                btn.innerText = "Pause";
+                btn.className = "";
+                startTimer();
+            } else {
+                btn.innerText = "Play";
+                btn.className = "secondary";
+                clearInterval(timer);
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(() => {
+                if (isPlaying) {
+                    nextFrame();
+                }
+            }, 1500);
+        }
+
+        startTimer();
+    </script>
+</body>
+</html>
+
