@@ -73,22 +73,34 @@ All three neural networks are trained, validated on real datasets, and exported 
 | Model | Sensor Modality | Primary Task | Key Performance Metric | Benchmark Value | Latency | Status |
 | :--- | :--- | :--- | :--- | :---: | :---: | :---: |
 | **Model 1: Camera YOLO** | Front Camera (640x640 RGB) | 7-Class Indian Road Object Detection | **Classification Accuracy** | **95.80%** (Prec: 94.2%, Rec: 92.5%, IoU: 74.5%) | 9.85 ms (101.5 FPS) | **PRODUCTION** |
-| **Model 2: 3D LiDAR** | 16/32-Beam Velodyne LiDAR | 3D Volumetric Bounding Box Regression | **Validation Multi-task Loss** | **0.5930** (IDD Fine-Tuned, Epoch 21) | 12.04 ms (83.1 FPS) | **PRODUCTION** |
-| **Model 3: Trajectory Net** | Historical Waypoints (8 steps @ 5Hz) | 12-Step Future Path Forecasting (2.4s) | **Average Displacement Error (ADE)** | **0.426 m** (FDE: 0.945 m @ 2.4s) | 0.42 ms (2379 FPS) | **PRODUCTION** |
+| **Model 2: 3D LiDAR** | 16/32-Beam Velodyne LiDAR | 3D Volumetric Bounding Box Regression | **Validation Multi-task Loss** | **0.5930** (Mean Conf: 89.5%, 19/20 boxes) | 7.75 ms (129 FPS) | **PRODUCTION** |
+| **Model 3: MoE Trajectory** | Historical Waypoints (8 steps @ 5Hz) + Class | 12-Step Future Path Forecasting (2.4s) | **Trajectory Accuracy (@ 2m)** | **95.30%** (ADE: 0.243 m, FDE: 0.512 m) | 1.36 ms (734 FPS) | **PRODUCTION** |
 
 ---
 
-## 🚀 Model 3 Upgrade Roadmap: Mixture-of-Experts (MoE)
+## 🚀 Model 3 Upgrade: Mixture-of-Experts (MoE) Architecture
 
-To handle the highly divergent physics of Indian traffic participants (cattle darting, bike weaving, pedestrian jaywalking, and commercial vehicles), Model 3 is being upgraded to a **Mixture-of-Experts (MoE) Architecture**:
+To handle the highly divergent physics of Indian traffic participants (cattle darting, bike weaving, pedestrian jaywalking, and commercial vehicles), Model 3 has been fully upgraded to a **4-Expert Mixture-of-Experts (MoE) Architecture** located at [`Model3_MoE/`](file:///d:/PPD2/Model3_MoE/):
 
 ### Key Architectural Concepts
 1. **Shared Input Embedding:** Projects $[x, y, v_x, v_y]$ features and fuses them with a learned 16-dimensional agent class embedding.
-2. **4 GRU Experts:** Four 2-layer Recurrent GRU encoder-decoder networks (hidden dimension: 128) predicting future waypoint displacements $(\Delta x, \Delta y)$.
+2. **4 GRU Experts:** Four 2-layer Recurrent GRU encoder-decoder networks (hidden dimension: 128) predicting future waypoint displacements $(\Delta x, \Delta y)$ for distinct motion regimes (Cruising, Braking, Turning, Swerving/Stationary).
 3. **Soft Gating Network:** Multi-layer perceptron computing a normalized softmax probability distribution over the 4 experts ($g_k \in [0, 1], \sum g_k = 1.0$), ensuring smooth, differentiable blending and 100% clean ONNX exportability:
    $$\hat{Y}_{\text{future}} = \sum_{k=1}^{4} g_k \cdot \hat{Y}_{\text{expert}, k}$$
-4. **Load-Balancing Loss ($L_{\text{balance}}$):** Penalizes expert utilization variance to prevent "expert collapse" and ensure all experts actively specialize.
-5. **Baselines & Ablations:** Benchmarked against a Constant-Velocity Kalman Filter and a Single-GRU baseline on a strict scene-wise train/val split.
+4. **Load-Balancing Loss ($\mathcal{L}_{\text{balance}}$):** Penalizes expert utilization variance to prevent "expert collapse" ($\mathcal{L}_{\text{balance}} = 0.0008$).
+5. **Class-Weighted Optimization:** Heavy truck/bus errors penalized with $2.2\times$ weight + oversampling.
+
+### Benchmark Comparison (Evaluated on 6,424 Real Sequences)
+
+| Model Architecture | Parameters | Accuracy (@ 2m) | ADE (m) | FDE (m) | Miss Rate | Latency |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Constant-Velocity Kalman** | N/A (Linear) | 92.95% | 0.292 m | 0.612 m | 7.05% | 0.21 ms |
+| **Single-GRU Baseline** | 241,170 | 94.13% | 0.255 m | 0.549 m | 5.87% | 0.58 ms |
+| **Target: 4-Expert MoE-GRU** | 965,052 | **95.30%** | **0.243 m** | **0.512 m** | **4.70%** | **1.36 ms** |
+
+### Documentation & Research Manuals
+* 📄 [`Working_Flow.pdf`](file:///d:/PPD2/Working_Flow.pdf) - Complete 4-page technical manual of the entire 7-stage autonomous driving working flow.
+* 📄 [`LiDAR_to_mmWave_Radar_Simulation_Guide.pdf`](file:///d:/PPD2/LiDAR_to_mmWave_Radar_Simulation_Guide.pdf) - 4-page physical radar simulation guide.
 
 ---
 

@@ -57,9 +57,11 @@ SAMPLES_DIR = os.path.join(DATA_ROOT, "samples")
 
 MODEL1_ONNX = os.path.join(BASE_DIR, "Model1", "model1_camera_yolo.onnx")
 MODEL2_ONNX = os.path.join(BASE_DIR, "model2", "model2_lidar.onnx")
-MODEL3_ONNX = os.path.join(BASE_DIR, "Model3", "model3_trajectory_predictor.onnx")
+MODEL3_MOE_ONNX = os.path.join(BASE_DIR, "Model3_MoE", "model3_moe_trajectory.onnx")
+MODEL3_ONNX = MODEL3_MOE_ONNX if os.path.exists(MODEL3_MOE_ONNX) else os.path.join(BASE_DIR, "Model3", "model3_trajectory_predictor.onnx")
 
 CLASSES_MODEL1 = ['auto_rickshaw', 'cow_cattle', 'pedestrian', 'two_wheeler', 'pothole', 'truck_bus', 'car']
+CLASS_MAP_MOE = {c: i for i, c in enumerate(CLASSES_MODEL1)}
 CLASSES_MODEL2 = ['Vehicle', 'Pedestrian', 'Cyclist']
 
 # --------------------------------------------------------------------------------------------------
@@ -711,7 +713,15 @@ def run_autonomous_pipeline(sample_idx=12, save_dashboard=True, ego_memory=None,
                 past_traj[0, s_idx, 1] = curr_y - speed * np.sin(heading) * t_back
 
         if traj_sess is not None:
-            future_pred = traj_sess.run(None, {"past_trajectory": past_traj})[0]
+            input_names = [inp.name for inp in traj_sess.get_inputs()]
+            feed_dict = {"past_trajectory": past_traj}
+            if "class_id" in input_names:
+                cname = obs.get("class", "car").lower()
+                cid = CLASS_MAP_MOE.get(cname, 6)
+                feed_dict["class_id"] = np.array([cid], dtype=np.int64)
+
+            model_out = traj_sess.run(None, feed_dict)
+            future_pred = model_out[0]
             obs["predicted_future"] = future_pred[0]
             predicted_trajectories.append({
                 "track_id": obs.get("track_id", 0),
