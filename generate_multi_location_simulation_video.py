@@ -1,15 +1,17 @@
 """
 ====================================================================================================
-FULL MULTI-LOCATION SIMULATION VIDEO GENERATOR: 3 DISTINCT SENSORS OVERLAY
+CLEAN FULL MULTI-LOCATION SIMULATION VIDEO GENERATOR: UNCLUTTERED IMMERSIVE AR VIEW
 Project: Autonomous Driving Perception-Prediction-Planning Pipeline (D:\PPD2)
 ====================================================================================================
-3 Distinct Perception Sensors Rendered Independently:
-  1. CAMERA VISION (Model 1 YOLO)    : Green 2D Bounding Boxes with class semantics
-  2. 3D LIDAR (Model 2 PointPillars) : Front (<25m) = Vibrant Blue | Rear (>=25m) = Vibrant Orange
-  3. 77 GHz mmWave FMCW RADAR        : Distinct Magenta Diamond Lock Reticles + Doppler Vectors + RCS Badge
-  4. MODEL 3 (4-Expert MoE-GRU)      : 12 future waypoints (2.4s) motion prediction forecast
-  5. FRENET DUAL PATH PLANNER        : Nominal Centerline (Yellow Dashed) vs. Avoidance Bend (Neon Green)
-  6. TELEMETRY & SENSOR FUSION HUD   : Complete real-time autonomous system status
+Clean Immersive HUD Layout:
+  1. NO TOP HUD BANNER (100% Unobstructed Windshield Horizon View)
+  2. NO DISTANT ORANGE BOXES (Distant clutter suppressed; only relevant Front Blue boxes shown)
+  3. FRONT VEHICLES (< 25m)       : Vibrant Blue 3D Bounding Boxes with Speed HUD
+  4. CAMERA VISION (Model 1 YOLO) : Clean Green 2D Bounding Boxes on real vehicles
+  5. 77 GHz mmWave FMCW RADAR     : Distinct Magenta Diamond Lock Reticles + Doppler Vectors
+  6. MODEL 3 (4-Expert MoE-GRU)   : 12 future waypoints (2.4s) motion prediction forecast
+  7. FRENET DUAL PATH PLANNER     : Nominal Centerline (Yellow Dashed) vs. Avoidance Bend (Neon Green)
+  8. CALIBRATED LIDAR OVERLAY     : Turbo colormap point cloud depth scatter
 
 Outputs:
   - D:\PPD2\camera_vision_simulation.mp4
@@ -44,7 +46,6 @@ DRIVE_SCENE_INFO = {
 
 # Color Definitions
 COLOR_FRONT_BLUE = (255, 150, 20)    # Vibrant Blue (BGR)
-COLOR_REAR_ORANGE = (0, 140, 255)    # Vibrant Orange (BGR)
 COLOR_CAM_GREEN = (0, 255, 0)        # Camera Green (BGR)
 COLOR_RADAR_MAGENTA = (255, 0, 255)  # Radar Magenta (BGR)
 
@@ -223,7 +224,6 @@ class VehicleTracker:
                 }
                 matched_track_ids.add(new_id)
 
-        # Match mmWave radar targets
         for trk_id, trk in self.tracks.items():
             tx, ty, _ = trk['pos']
             closest_vr = []
@@ -257,32 +257,6 @@ class VehicleTracker:
             del self.tracks[did]
 
         return active_tracked_objects
-
-
-def draw_hud_banner(frame, lines, top_left_x=40, top_left_y=40):
-    padding_x = 24
-    padding_y = 18
-    line_height = 28
-    hud_w = 1240
-    hud_h = padding_y * 2 + len(lines) * line_height
-
-    overlay = frame.copy()
-    cv2.rectangle(overlay, (top_left_x, top_left_y), (top_left_x + hud_w, top_left_y + hud_h), (12, 16, 24), -1)
-    cv2.addWeighted(overlay, 0.78, frame, 0.22, 0, frame)
-
-    cv2.rectangle(frame, (top_left_x, top_left_y), (top_left_x + hud_w, top_left_y + hud_h), (50, 60, 80), 2)
-    cv2.rectangle(frame, (top_left_x, top_left_y), (top_left_x + 6, top_left_y + hud_h), (0, 220, 100), -1)
-
-    for i, line in enumerate(lines):
-        y_pos = top_left_y + padding_y + (i + 1) * line_height - 6
-        color = (255, 255, 255)
-        if "CRITICAL" in line:
-            color = (0, 70, 255)
-        elif "WARNING" in line:
-            color = (0, 190, 255)
-        elif "NOMINAL" in line:
-            color = (80, 255, 120)
-        cv2.putText(frame, line, (top_left_x + padding_x, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.58, color, 2, cv2.LINE_AA)
 
 
 def project_ego_point(x, y, z=-1.25, W=1920, H=1080):
@@ -370,7 +344,8 @@ def render_dual_paths(frame, active_obstacles, ego_speed_kmh):
 
 def main():
     print("=" * 100)
-    print("  MULTI-LOCATION SIMULATION VIDEO: 3 DISTINCT SENSORS OVERLAY")
+    print("  CLEAN FULL MULTI-LOCATION SIMULATION: UNCLUTTERED AR VIEW")
+    print("  (NO TOP BANNER | NO DISTANT ORANGE BOXES | ONLY RELEVANT BLUE FRONT VEHICLES)")
     print("=" * 100)
 
     fps = 7.0
@@ -390,7 +365,7 @@ def main():
     selected_df = pd.concat(drives_frames, ignore_index=True)
     print(f"Sampled Multi-Location Sequences: {len(selected_df)} frames ready across d0, d1, d2.")
 
-    temp_dir = os.path.join(BASE_DIR, "temp_video_three_sensors")
+    temp_dir = os.path.join(BASE_DIR, "temp_video_clean")
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir, exist_ok=True)
@@ -399,17 +374,17 @@ def main():
     yolo_model = YOLO("yolov8n.pt")
     m2_sess = ort.InferenceSession(MODEL2_ONNX, providers=['CPUExecutionProvider'])
     m3_sess = ort.InferenceSession(MODEL3_ONNX, providers=['CPUExecutionProvider'])
-    print("  * Sensor 1: Camera YOLOv8 (Image-First) -> LOADED")
-    print("  * Sensor 2: LiDAR 3D PointPillars (Front: Blue, Rear: Orange) -> LOADED")
-    print("  * Sensor 3: 77 GHz mmWave FMCW Radar Point-Out -> LOADED")
-    print("  * Prediction: Model 3 (4-Expert MoE Trajectory Forecast) -> LOADED")
+    print("  * Sensor 1: Camera YOLOv8 -> LOADED")
+    print("  * Sensor 2: LiDAR 3D PointPillars -> LOADED")
+    print("  * Sensor 3: 77 GHz mmWave FMCW Radar -> LOADED")
+    print("  * Prediction: Model 3 (4-Expert MoE-GRU) -> LOADED")
 
     tracker = VehicleTracker(max_missed=5)
     rendered_frames = []
     t_start = time.time()
     dt = 1.0 / fps
 
-    print(f"\n[2/3] Rendering Frames with 3 Distinct Perception Sensors...")
+    print(f"\n[2/3] Rendering Frames with Clean Uncluttered AR Display...")
 
     for idx in range(len(selected_df)):
         row = selected_df.iloc[idx]
@@ -420,9 +395,7 @@ def main():
         img_path = os.path.join(IDD_DIR, row['camera_file'])
         lidar_path = os.path.join(IDD_DIR, row['lidar_file'])
 
-        # ------------------------------------------------------------------------------------------
-        # 1. PURE CLEAN RAW CAMERA INGESTION & SENSOR 1: CAMERA VISION YOLO
-        # ------------------------------------------------------------------------------------------
+        # 1. Clean raw image ingestion
         raw_frame = cv2.imread(img_path)
         if raw_frame is None:
             continue
@@ -449,9 +422,7 @@ def main():
                         'center': ((x1 + x2) // 2, (y1 + y2) // 2)
                     })
 
-        # ------------------------------------------------------------------------------------------
-        # 2. SENSOR 2: MODEL 2 (3D LIDAR POINTPILLARS OBJECT DETECTOR)
-        # ------------------------------------------------------------------------------------------
+        # 2. LiDAR 3D PointPillars Detection
         if len(pts) >= 16384:
             inp2 = pts[:16384][np.newaxis, ...]
         else:
@@ -485,7 +456,6 @@ def main():
                     x2 = min(W - 1, u + bw // 2)
                     y2 = min(H - 1, v + bh // 2)
 
-                    # Match with Camera Vision semantics if close
                     for vd in cam_vision_dets:
                         vx, vy, vw, vh = vd['box']
                         if abs(u - (vx + vw // 2)) < 80 and abs(v - (vy + vh // 2)) < 80:
@@ -502,7 +472,6 @@ def main():
                             'conf': float(b[11])
                         })
 
-        # Also add prominent vision detections on the vehicle side (e.g. orange car)
         for vd in cam_vision_dets:
             vx, vy, vw, vh = vd['box']
             already_covered = False
@@ -524,19 +493,13 @@ def main():
                     'conf': vd['conf']
                 })
 
-        # ------------------------------------------------------------------------------------------
-        # 3. SENSOR 3: 77 GHz FMCW mmWave RADAR TARGET IDENTIFICATION
-        # ------------------------------------------------------------------------------------------
+        # 3. 77 GHz mmWave FMCW Radar Simulation
         radar_targets = simulate_mmwave_radar(pts, ego_speed, raw_fused_detections)
 
-        # ------------------------------------------------------------------------------------------
-        # 4. MULTIMODAL TRACKER & DUAL SENSOR SPEED COMPUTATION
-        # ------------------------------------------------------------------------------------------
+        # 4. Multimodal Tracking
         active_tracks = tracker.update(raw_fused_detections, dt, ego_speed, radar_targets)
 
-        # ------------------------------------------------------------------------------------------
-        # 5. MODEL 3 (MoE-GRU) TRAJECTORY FORECASTING (12 Future Waypoints / 2.4s)
-        # ------------------------------------------------------------------------------------------
+        # 5. Model 3 MoE-GRU Trajectory Forecasting
         CLASS_MAP_MOE = {'car': 6, 'truck_bus': 5, 'two_wheeler': 3, 'person': 2}
         for trk in active_tracks:
             cid = CLASS_MAP_MOE.get(trk['class'], 6)
@@ -561,13 +524,11 @@ def main():
                     pred_pts.append(wpt)
             trk['future_waypoints'] = pred_pts
 
-        # ------------------------------------------------------------------------------------------
-        # 6. DUAL PATH PLANNING (Frenet Quintic Polynomial Spline)
-        # ------------------------------------------------------------------------------------------
+        # 6. Dual Path Planning
         swerve_offset, blocking_obs = render_dual_paths(display_frame, active_tracks, ego_speed)
 
         # ------------------------------------------------------------------------------------------
-        # 7. RENDER 3 DISTINCT SENSORS OVERLAY
+        # 7. RENDER CLEAN VISUAL LAYERS (NO TOP BANNER | NO ORANGE BOXES)
         # ------------------------------------------------------------------------------------------
         # Layer 1: LiDAR Point Cloud Depth Projection (Turbo colormap)
         u_p, v_p, d_p = project_lidar_points_fast(pts, W, H)
@@ -579,105 +540,84 @@ def main():
                 b, g, r = colormap[i, 0]
                 cv2.circle(display_frame, (u_p[i], v_p[i]), 2, (int(b), int(g), int(r)), -1)
 
-        # Layer 2: Model 1 Camera Vision Detections (Thin Green 2D Boxes)
+        # Layer 2: Model 1 Camera Vision Detections (Thin Green 2D Boxes on visible vehicles)
         for vd in cam_vision_dets:
             vx, vy, vw, vh = vd['box']
             cv2.rectangle(display_frame, (vx, vy), (vx + vw, vy + vh), COLOR_CAM_GREEN, 2, cv2.LINE_AA)
-            cam_lbl = f"CAMERA: {vd['class'].upper()}"
+            cam_lbl = f"{vd['class'].upper()}"
             (tw, th), _ = cv2.getTextSize(cam_lbl, cv2.FONT_HERSHEY_SIMPLEX, 0.45, 1)
             cv2.rectangle(display_frame, (vx, vy - th - 6), (vx + tw + 6, vy), COLOR_CAM_GREEN, -1)
             cv2.putText(display_frame, cam_lbl, (vx + 3, vy - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 0), 1, cv2.LINE_AA)
 
-        # Layer 3: Model 2 LiDAR 3D Bounding Boxes (FRONT = BLUE <25m, REAR = ORANGE >=25m)
+        # Layer 3: Model 2 LiDAR 3D Bounding Boxes — ONLY FRONT VEHICLES (< 25m) IN VIBRANT BLUE!
+        # DISTANT ORANGE BOXES ARE SUPPRESSED COMPLETELY!
         for trk in active_tracks:
-            bx, by, bw, bh = trk['box']
             dist = trk['dist']
-            is_front = dist < 25.0
-            col = COLOR_FRONT_BLUE if is_front else COLOR_REAR_ORANGE
-            pos_tag = "FRONT" if is_front else "REAR"
+            if dist < 25.0:  # Only render Front relevant vehicles
+                bx, by, bw, bh = trk['box']
+                col = COLOR_FRONT_BLUE
 
-            # Thick 3D Projection Box
-            cv2.rectangle(display_frame, (bx, by), (bx + bw, by + bh), col, 3, cv2.LINE_AA)
-            # Corner brackets
-            c_len = min(20, max(8, bw // 4), max(8, bh // 4))
-            cv2.line(display_frame, (bx, by), (bx + c_len, by), (255, 255, 255), 3, cv2.LINE_AA)
-            cv2.line(display_frame, (bx, by), (bx, by + c_len), (255, 255, 255), 3, cv2.LINE_AA)
-            cv2.line(display_frame, (bx + bw, by), (bx + bw - c_len, by), (255, 255, 255), 3, cv2.LINE_AA)
-            cv2.line(display_frame, (bx + bw, by), (bx + bw, by + c_len), (255, 255, 255), 3, cv2.LINE_AA)
+                # Thick 3D Projection Box
+                cv2.rectangle(display_frame, (bx, by), (bx + bw, by + bh), col, 3, cv2.LINE_AA)
+                # Tech Corner Accents
+                c_len = min(20, max(8, bw // 4), max(8, bh // 4))
+                cv2.line(display_frame, (bx, by), (bx + c_len, by), (255, 255, 255), 3, cv2.LINE_AA)
+                cv2.line(display_frame, (bx, by), (bx, by + c_len), (255, 255, 255), 3, cv2.LINE_AA)
+                cv2.line(display_frame, (bx + bw, by), (bx + bw - c_len, by), (255, 255, 255), 3, cv2.LINE_AA)
+                cv2.line(display_frame, (bx + bw, by), (bx + bw, by + c_len), (255, 255, 255), 3, cv2.LINE_AA)
 
-            # LiDAR Telemetry Tag
-            lidar_tag = f"LiDAR ({pos_tag}): {trk['class'].upper()} {dist:.1f}m | {trk['speed_lidar']:.1f} km/h"
-            (tw, th), _ = cv2.getTextSize(lidar_tag, cv2.FONT_HERSHEY_SIMPLEX, 0.48, 2)
-            cv2.rectangle(display_frame, (bx, by + bh), (bx + tw + 8, by + bh + th + 8), col, -1)
-            cv2.putText(display_frame, lidar_tag, (bx + 4, by + bh + th + 4), cv2.FONT_HERSHEY_SIMPLEX, 0.48, (255, 255, 255), 2, cv2.LINE_AA)
+                # Front LiDAR Telemetry Tag
+                lidar_tag = f"FRONT: {trk['class'].upper()} {dist:.1f}m | {trk['speed_lidar']:.1f} km/h"
+                (tw, th), _ = cv2.getTextSize(lidar_tag, cv2.FONT_HERSHEY_SIMPLEX, 0.48, 2)
+                cv2.rectangle(display_frame, (bx, by + bh), (bx + tw + 8, by + bh + th + 8), col, -1)
+                cv2.putText(display_frame, lidar_tag, (bx + 4, by + bh + th + 4), cv2.FONT_HERSHEY_SIMPLEX, 0.48, (255, 255, 255), 2, cv2.LINE_AA)
 
-        # Layer 4: SENSOR 3: 77 GHz mmWave RADAR TARGET LOCK (DISTINCT MAGENTA OVERLAY)
+        # Layer 4: SENSOR 3: 77 GHz mmWave RADAR TARGET LOCK (DISTINCT MAGENTA OVERLAY on active vehicles)
         for trk in active_tracks:
-            bx, by, bw, bh = trk['box']
-            ru = bx + bw // 2
-            rv = by + bh // 2
-            vr = trk.get('vr_radar', 0.0)
-            rcs = trk.get('rcs_radar', 15.0)
+            dist = trk['dist']
+            if dist < 30.0:  # Relevant active radar range
+                bx, by, bw, bh = trk['box']
+                ru = bx + bw // 2
+                rv = by + bh // 2
+                vr = trk.get('vr_radar', 0.0)
+                rcs = trk.get('rcs_radar', 15.0)
 
-            # Magenta Diamond Reticle (Radar Target Lock)
-            pts_dia = np.array([[ru, rv - 10], [ru + 10, rv], [ru, rv + 10], [ru - 10, rv]], np.int32)
-            cv2.polylines(display_frame, [pts_dia], isClosed=True, color=COLOR_RADAR_MAGENTA, thickness=2, lineType=cv2.LINE_AA)
-            cv2.circle(display_frame, (ru, rv), 13, COLOR_RADAR_MAGENTA, 1, lineType=cv2.LINE_AA)
-            cv2.circle(display_frame, (ru, rv), 3, (255, 255, 255), -1, lineType=cv2.LINE_AA)
+                # Magenta Diamond Reticle (Radar Target Lock)
+                pts_dia = np.array([[ru, rv - 10], [ru + 10, rv], [ru, rv + 10], [ru - 10, rv]], np.int32)
+                cv2.polylines(display_frame, [pts_dia], isClosed=True, color=COLOR_RADAR_MAGENTA, thickness=2, lineType=cv2.LINE_AA)
+                cv2.circle(display_frame, (ru, rv), 13, COLOR_RADAR_MAGENTA, 1, lineType=cv2.LINE_AA)
+                cv2.circle(display_frame, (ru, rv), 3, (255, 255, 255), -1, lineType=cv2.LINE_AA)
 
-            # Doppler Velocity Vector Line
-            arr_len = int(np.clip(vr * 8.0, -42, 42))
-            vec_col = (255, 255, 0) if vr >= 0 else (0, 80, 255)
-            cv2.arrowedLine(display_frame, (ru, rv), (ru, rv - arr_len), vec_col, 3, tipLength=0.35)
+                # Doppler Velocity Vector Line
+                arr_len = int(np.clip(vr * 8.0, -42, 42))
+                vec_col = (255, 255, 0) if vr >= 0 else (0, 80, 255)
+                cv2.arrowedLine(display_frame, (ru, rv), (ru, rv - arr_len), vec_col, 3, tipLength=0.35)
 
-            # Distinct mmWave Radar Identification Tag
-            vr_str = f"+{vr:.1f}" if vr >= 0 else f"{vr:.1f}"
-            rad_tag = f"RADAR LOCK: vr={vr_str}m/s | RCS={rcs:.1f}dBsm"
-            (tw, th), _ = cv2.getTextSize(rad_tag, cv2.FONT_HERSHEY_SIMPLEX, 0.46, 2)
+                # Distinct mmWave Radar Identification Tag
+                vr_str = f"+{vr:.1f}" if vr >= 0 else f"{vr:.1f}"
+                rad_tag = f"RADAR LOCK: vr={vr_str}m/s | RCS={rcs:.1f}dBsm"
+                (tw, th), _ = cv2.getTextSize(rad_tag, cv2.FONT_HERSHEY_SIMPLEX, 0.46, 2)
 
-            badge_x = max(10, min(W - tw - 20, ru - tw // 2))
-            badge_y = max(35, by - 8)
+                badge_x = max(10, min(W - tw - 20, ru - tw // 2))
+                badge_y = max(35, by - 8)
 
-            overlay = display_frame.copy()
-            cv2.rectangle(overlay, (badge_x, badge_y - th - 6), (badge_x + tw + 10, badge_y + 4), (25, 10, 35), -1)
-            cv2.addWeighted(overlay, 0.85, display_frame, 0.15, 0, display_frame)
-            cv2.rectangle(display_frame, (badge_x, badge_y - th - 6), (badge_x + tw + 10, badge_y + 4), COLOR_RADAR_MAGENTA, 2, cv2.LINE_AA)
-            cv2.putText(display_frame, rad_tag, (badge_x + 5, badge_y - 2), cv2.FONT_HERSHEY_SIMPLEX, 0.46, (255, 120, 255), 2, cv2.LINE_AA)
+                overlay = display_frame.copy()
+                cv2.rectangle(overlay, (badge_x, badge_y - th - 6), (badge_x + tw + 10, badge_y + 4), (25, 10, 35), -1)
+                cv2.addWeighted(overlay, 0.85, display_frame, 0.15, 0, display_frame)
+                cv2.rectangle(display_frame, (badge_x, badge_y - th - 6), (badge_x + tw + 10, badge_y + 4), COLOR_RADAR_MAGENTA, 2, cv2.LINE_AA)
+                cv2.putText(display_frame, rad_tag, (badge_x + 5, badge_y - 2), cv2.FONT_HERSHEY_SIMPLEX, 0.46, (255, 120, 255), 2, cv2.LINE_AA)
 
         # Layer 5: Model 3 MoE Trajectory Forecasts (Magenta dots/lines)
         for trk in active_tracks:
-            pred_pts = trk.get('future_waypoints', [])
-            if len(pred_pts) >= 2:
-                for p_i in range(len(pred_pts) - 1):
-                    cv2.line(display_frame, pred_pts[p_i], pred_pts[p_i + 1], (255, 100, 255), 2, cv2.LINE_AA)
-                    cv2.circle(display_frame, pred_pts[p_i], 3, (255, 200, 255), -1, cv2.LINE_AA)
+            if trk['dist'] < 28.0:
+                pred_pts = trk.get('future_waypoints', [])
+                if len(pred_pts) >= 2:
+                    for p_i in range(len(pred_pts) - 1):
+                        cv2.line(display_frame, pred_pts[p_i], pred_pts[p_i + 1], (255, 100, 255), 2, cv2.LINE_AA)
+                        cv2.circle(display_frame, pred_pts[p_i], 3, (255, 200, 255), -1, cv2.LINE_AA)
 
-        # Layer 6: Telemetry HUD Banner
-        loc_info = DRIVE_SCENE_INFO.get(drive_id, {'name': drive_id, 'tag': 'Indian Road'})
-        min_ttc = 99.0
-        for trk in active_tracks:
-            ttc = trk['dist'] / max(ego_speed / 3.6, 2.5)
-            if ttc < min_ttc:
-                min_ttc = ttc
-
-        if blocking_obs is not None:
-            steer_act = "STEER RIGHT (AVOIDANCE)" if swerve_offset > 0 else "STEER LEFT (AVOIDANCE)"
-            status_txt = f"WARNING (OBSTACLE AT {blocking_obs['dist']:.1f}m - BENDING PATH)"
-        elif min_ttc < 3.0:
-            steer_act = "DECELERATE & MAINTAIN CLEARANCE"
-            status_txt = "CRITICAL PROXIMITY"
-        else:
-            steer_act = "FOLLOW NOMINAL CENTERLINE"
-            status_txt = "NOMINAL (SAFE ROAD CORRIDOR)"
-
-        hud_info = [
-            f"LOCATION: {loc_info['name'].upper()} ({loc_info['tag']})",
-            f"FRAME: #{frame_id:04d} (Global {idx+1}/{total_frames}) | Ego Speed: {ego_speed:.1f} km/h",
-            f"Sensors: [1. Cam Vision: GREEN] [2. LiDAR: BLUE <25m, ORANGE >=25m] [3. Radar: MAGENTA LOCK]",
-            f"Active Obstacles: {len(active_tracks)} Tracked | Min TTC: {min_ttc:.2f} s | Steering: {steer_act}",
-            f"System Status: {status_txt} | Planner: Dual-Path Frenet Quintic Evasion"
-        ]
-        draw_hud_banner(display_frame, hud_info, 40, 40)
+        # NOTE: TOP TELEMETRY BANNER HAS BEEN COMPLETELY REMOVED AS REQUESTED!
+        # The entire top view is clear, unobstructed windshield view.
 
         # Save frame to disk
         frame_filename = os.path.join(temp_dir, f"frame_{idx:05d}.png")
@@ -690,7 +630,7 @@ def main():
             print(f"  --> Processed [{idx+1:03d}/{total_frames:03d}] frames ({fps_render:.1f} FPS render speed)")
 
     render_time = time.time() - t_start
-    print(f"\n[3/3] Encoding {len(rendered_frames)} Frames into High-Quality H.264 MP4 @ {fps} FPS...")
+    print(f"\n[3/3] Encoding {len(rendered_frames)} Frames into Clean High-Quality H.264 MP4 @ {fps} FPS...")
 
     ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
     input_pattern = os.path.join(temp_dir, "frame_%05d.png")
@@ -720,7 +660,7 @@ def main():
 
     v1_size = os.path.getsize(out_video_1) / (1024 * 1024)
     print("\n" + "=" * 100)
-    print("SUCCESSFULLY GENERATED 3-SENSOR OVERLAY SIMULATION VIDEO!")
+    print("SUCCESSFULLY GENERATED CLEAN UNCLUTTERED AR SIMULATION VIDEO!")
     print(f"  * Primary File  : {out_video_1} ({v1_size:.2f} MB)")
     print(f"  * Backup File   : {out_video_2}")
     print(f"  * Resolution    : 1920 x 1080 (Full HD)")
