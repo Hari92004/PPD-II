@@ -1,24 +1,24 @@
 """
 ====================================================================================================
-IMAGE-FIRST MULTI-LOCATION DUAL-SENSOR SPEED & BENT-PATH SIMULATION GENERATOR
-Project: Autonomous Driving Pipeline for Indian Road Conditions (D:\PPD2)
+MULTI-LOCATION INDIAN ROAD SIMULATION VIDEO GENERATOR
+Project: Autonomous Driving Perception-Prediction-Planning Pipeline (D:\PPD2)
 ====================================================================================================
-Execution Pipeline (Strictly Image-First Architecture):
-  1. RAW CAMERA INGESTION: Load pristine 1080p RGB frame (raw, untouched).
-  2. STEP 1 (IMAGE-FIRST): Model 1 (Camera YOLO) processes clean RGB frame to extract 2D vision detections.
-  3. STEP 2: Model 2 (3D LiDAR PointPillars) detects spatial bounding boxes [X, Y, Z, L, W, H].
-  4. STEP 3: Multi-modal fusion matches 2D Camera visual classes with 3D LiDAR spatial coordinates.
-  5. STEP 4: 77 GHz FMCW mmWave Radar simulation calculates direct Doppler radial velocity (v_r).
-  6. STEP 5: Multimodal Temporal Tracker computes:
-     - LiDAR Speed (v_LiDAR): Smoothed 3D centroid displacement (tracking over dt)
-     - mmWave Radar Speed (v_Radar): Physical FMCW Doppler velocity (v_ego + v_r/cos theta)
-  7. STEP 6: Model 3 (4-Expert MoE-GRU) forecasts next 12 future waypoints (2.4s) per vehicle.
-  8. STEP 7: Frenet Quintic Spline Local Path Planner generates:
-     - Path 1: Nominal / Predicted Straight Centerline (Yellow Dashed Line)
-     - Path 2: Final Planned Collision-Avoidance Path (Bent Glowing Neon Green Ribbon)
-  9. STEP 8: Render all visual layers onto display frame (LiDAR turbo overlay, radar markers,
-     tech-bracket bounding boxes, translucent speed HUD cards, dual paths, telemetry banner).
- 10. STEP 9: High-quality H.264 MP4 encoding (150 frames @ 7.0 FPS, 21.43s duration, 1920x1080).
+Features Implemented:
+  1. Multi-Drive Dataset Ingestion: d0 (urban street), d1 (arterial road), d2 (highway bypass)
+  2. Model 1 (2D Camera Vision): Real YOLO detector on pristine raw 1080p RGB image (Image-First)
+  3. Model 2 (3D LiDAR PointPillars): Spatial 3D bounding boxes projected onto camera plane
+     * FRONT VEHICLES (< 25m) : VIBRANT BLUE (BGR: 255, 150, 20)
+     * REAR VEHICLES (>= 25m) : VIBRANT ORANGE (BGR: 0, 140, 255)
+  4. 77 GHz FMCW mmWave Radar: Physical radar target returns with Doppler velocity vectors
+  5. Dual-Sensor Vehicle Speed Tracking:
+     * LiDAR Speed (v_LiDAR): Smoothed 3D centroid displacement (tracking over dt)
+     * mmWave Radar Speed (v_Radar): Direct FMCW Doppler radial velocity (v_ego + v_r/cos theta)
+  6. Model 3 (4-Expert MoE-GRU): 12 future waypoints (2.4s) motion forecast plotted per vehicle
+  7. Dual Path Visualization:
+     * Nominal Path: Dashed Yellow Centerline
+     * Final Planned Avoidance Path: Smooth Bending Neon Green AR Ribbon (Frenet Quintic Spline)
+  8. Telemetry & Sensor Fusion HUD Banner
+  9. High-Quality H.264 MP4 Video: 150 Frames @ 7.0 FPS (Duration: 21.43s, 1920x1080)
 
 Outputs:
   - D:\PPD2\camera_vision_simulation.mp4
@@ -36,34 +36,24 @@ import numpy as np
 import cv2
 import onnxruntime as ort
 import imageio_ffmpeg
+from ultralytics import YOLO
 
 BASE_DIR = r"D:\PPD2"
 IDD_DIR = os.path.join(BASE_DIR, "dataset_idd_synchronized")
 INDEX_CSV = os.path.join(IDD_DIR, "synchronized_index.csv")
 
-MODEL1_ONNX = os.path.join(BASE_DIR, "Model1", "model1_camera_yolo.onnx")
 MODEL2_ONNX = os.path.join(BASE_DIR, "model2", "model2_lidar.onnx")
 MODEL3_ONNX = os.path.join(BASE_DIR, "Model3_MoE", "model3_moe_trajectory.onnx")
-
-CLASSES_MODEL1 = ['auto_rickshaw', 'cow_cattle', 'pedestrian', 'two_wheeler', 'pothole', 'truck_bus', 'car']
-CLASS_MAP_MOE = {c: i for i, c in enumerate(CLASSES_MODEL1)}
-
-CLASS_COLORS = {
-    'car': (16, 220, 100),            # Lime Green
-    'truck_bus': (0, 140, 255),       # Orange / Amber
-    'auto_rickshaw': (0, 215, 255),    # Golden Yellow
-    'two_wheeler': (255, 200, 0),     # Cyan
-    'pedestrian': (255, 50, 200),      # Magenta
-    'cow_cattle': (50, 150, 255),      # Ochre
-    'pothole': (0, 0, 255),           # Red
-    'obstacle': (200, 200, 200)
-}
 
 DRIVE_SCENE_INFO = {
     'd0': {'name': 'Drive 0: MG Road Urban Sector', 'tag': 'Dense Traffic & Pedestrians'},
     'd1': {'name': 'Drive 1: Outer Ring Arterial Corridor', 'tag': 'Mixed Vehicles & High Flow'},
     'd2': {'name': 'Drive 2: Suburban Highway Bypass', 'tag': 'Higher Speed & Wide Lanes'}
 }
+
+# Color Definitions
+COLOR_FRONT_BLUE = (255, 150, 20)   # Vivid Electric Blue (BGR)
+COLOR_REAR_ORANGE = (0, 140, 255)   # Vivid Bright Orange (BGR)
 
 # 77 GHz Radar physical parameters
 FC_HZ = 77e9
@@ -77,9 +67,9 @@ CFAR_THRESHOLD_DB = 14.0
 RCS_MAP = {
     'truck_bus': 22.0,
     'car': 12.0,
-    'auto_rickshaw': 6.0,
+    'motorcycle': 4.0,
     'two_wheeler': 3.0,
-    'pedestrian': -1.0,
+    'person': -1.0,
     'road_clutter': -12.0
 }
 
@@ -207,10 +197,8 @@ class VehicleTracker:
                 old_x, old_y, _ = trk['pos']
                 rel_vx = (dx - old_x) / dt
                 rel_vy = (dy - old_y) / dt
-                # Target road speed (absolute):
                 target_vx = ego_speed_ms + rel_vx
                 raw_speed_kmh = max(5.0, np.hypot(target_vx, rel_vy) * 3.6)
-                # Alpha-beta smoothing
                 trk['speed_lidar'] = float(0.65 * trk['speed_lidar'] + 0.35 * raw_speed_kmh)
                 trk['pos'] = (dx, dy, dz)
                 trk['box'] = det['box']
@@ -224,11 +212,11 @@ class VehicleTracker:
             else:
                 new_id = self.next_id
                 self.next_id += 1
-                base_speed = ego_speed_kmh + np.random.uniform(5.0, 16.0)
+                base_speed = ego_speed_kmh + np.random.uniform(4.0, 14.0)
                 if det['class'] in ['truck_bus']:
-                    base_speed = max(18.0, ego_speed_kmh - 3.5)
-                elif det['class'] in ['auto_rickshaw', 'two_wheeler']:
-                    base_speed = max(20.0, ego_speed_kmh + 2.0)
+                    base_speed = max(18.0, ego_speed_kmh - 3.0)
+                elif det['class'] in ['motorcycle', 'two_wheeler']:
+                    base_speed = max(20.0, ego_speed_kmh + 3.0)
                 self.tracks[new_id] = {
                     'id': new_id,
                     'pos': (dx, dy, dz),
@@ -243,7 +231,7 @@ class VehicleTracker:
                 }
                 matched_track_ids.add(new_id)
 
-        # Match mmWave radar targets to tracks
+        # Match mmWave radar targets
         for trk_id, trk in self.tracks.items():
             tx, ty, _ = trk['pos']
             closest_vr = []
@@ -258,7 +246,7 @@ class VehicleTracker:
                 trk['speed_radar'] = float(np.clip(v_target_radar, 5.0, 95.0))
             else:
                 trk['vr_radar'] = float((trk['speed_lidar'] - ego_speed_kmh) / 3.6)
-                trk['speed_radar'] = float(trk['speed_lidar'] + np.random.uniform(-1.2, 1.2))
+                trk['speed_radar'] = float(trk['speed_lidar'] + np.random.uniform(-1.0, 1.0))
 
             if trk_id in matched_track_ids:
                 active_tracked_objects.append(trk)
@@ -280,7 +268,7 @@ def draw_hud_banner(frame, lines, top_left_x=40, top_left_y=40):
     padding_x = 24
     padding_y = 18
     line_height = 28
-    hud_w = 1180
+    hud_w = 1200
     hud_h = padding_y * 2 + len(lines) * line_height
 
     overlay = frame.copy()
@@ -299,15 +287,20 @@ def draw_hud_banner(frame, lines, top_left_x=40, top_left_y=40):
             color = (0, 190, 255)
         elif "NOMINAL" in line:
             color = (80, 255, 120)
-        cv2.putText(frame, line, (top_left_x + padding_x, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.62, color, 2, cv2.LINE_AA)
+        cv2.putText(frame, line, (top_left_x + padding_x, y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.60, color, 2, cv2.LINE_AA)
 
 
 def draw_vehicle_bounding_box(frame, trk):
     bx, by, bw, bh = trk['box']
     cname = trk['class'].lower()
-    col = CLASS_COLORS.get(cname, (16, 220, 100))
+    dist = trk['dist']
 
-    # Main 2D Bounding Box
+    # Front (< 25m) = BLUE, Rear (>= 25m) = ORANGE
+    is_front = dist < 25.0
+    col = COLOR_FRONT_BLUE if is_front else COLOR_REAR_ORANGE
+    pos_tag = "FRONT" if is_front else "REAR"
+
+    # Main 2D Bounding Box (Thick 3px)
     cv2.rectangle(frame, (bx, by), (bx + bw, by + bh), col, 3, cv2.LINE_AA)
 
     # Tech Corner Accents
@@ -336,18 +329,18 @@ def draw_vehicle_bounding_box(frame, trk):
     cv2.rectangle(frame, (card_x, card_y), (card_x + card_w, card_y + card_h), col, 2, cv2.LINE_AA)
     cv2.rectangle(frame, (card_x, card_y), (card_x + 5, card_y + card_h), col, -1)
 
-    # Line 1: Class & ID & Range
-    tag_header = f"[{cname.upper()} | ID#{trk['id']:02d}]   Range: {trk['dist']:.1f} m"
-    cv2.putText(frame, tag_header, (card_x + 12, card_y + 22), cv2.FONT_HERSHEY_SIMPLEX, 0.54, (255, 255, 255), 2, cv2.LINE_AA)
+    # Line 1: Position Tag, Class & ID & Range
+    tag_header = f"[{pos_tag} {cname.upper()} | ID#{trk['id']:02d}]   Range: {trk['dist']:.1f} m"
+    cv2.putText(frame, tag_header, (card_x + 12, card_y + 22), cv2.FONT_HERSHEY_SIMPLEX, 0.52, (255, 255, 255), 2, cv2.LINE_AA)
 
     # Line 2: LiDAR Speed
     tag_lidar = f"LiDAR Speed : {trk['speed_lidar']:.1f} km/h (Tracked)"
-    cv2.putText(frame, tag_lidar, (card_x + 12, card_y + 44), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (60, 255, 140), 2, cv2.LINE_AA)
+    cv2.putText(frame, tag_lidar, (card_x + 12, card_y + 44), cv2.FONT_HERSHEY_SIMPLEX, 0.48, (60, 255, 140), 2, cv2.LINE_AA)
 
     # Line 3: 77 GHz mmWave Radar Speed
     vr_sign = "+" if trk['vr_radar'] >= 0 else ""
     tag_radar = f"mmWave Radar: {trk['speed_radar']:.1f} km/h (vr: {vr_sign}{trk['vr_radar']:.1f} m/s)"
-    cv2.putText(frame, tag_radar, (card_x + 12, card_y + 66), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255, 230, 0), 2, cv2.LINE_AA)
+    cv2.putText(frame, tag_radar, (card_x + 12, card_y + 66), cv2.FONT_HERSHEY_SIMPLEX, 0.48, (255, 230, 0), 2, cv2.LINE_AA)
 
 
 def project_ego_point(x, y, z=-1.25, W=1920, H=1080):
@@ -435,7 +428,7 @@ def render_dual_paths(frame, active_obstacles, ego_speed_kmh):
 
 def main():
     print("=" * 100)
-    print("  IMAGE-FIRST MULTI-LOCATION DUAL-SENSOR SPEED & BENT-PATH SIMULATION GENERATOR")
+    print("  MULTI-LOCATION SIMULATION VIDEO GENERATOR: REAL YOLO & COLOR-CODED LIDAR")
     print("=" * 100)
 
     fps = 7.0
@@ -455,16 +448,16 @@ def main():
     selected_df = pd.concat(drives_frames, ignore_index=True)
     print(f"Sampled Multi-Location Sequences: {len(selected_df)} frames ready across d0, d1, d2.")
 
-    temp_dir = os.path.join(BASE_DIR, "temp_video_image_first")
+    temp_dir = os.path.join(BASE_DIR, "temp_video_color_coded")
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir, exist_ok=True)
 
     print("\n[1/3] Loading Deep Learning Perception & Prediction Engines...")
-    m1_sess = ort.InferenceSession(MODEL1_ONNX, providers=['CPUExecutionProvider'])
+    yolo_model = YOLO("yolov8n.pt")
     m2_sess = ort.InferenceSession(MODEL2_ONNX, providers=['CPUExecutionProvider'])
     m3_sess = ort.InferenceSession(MODEL3_ONNX, providers=['CPUExecutionProvider'])
-    print("  * Model 1 (Camera YOLO - Image First): LOADED")
+    print("  * Model 1 (Real YOLO Vision): LOADED")
     print("  * Model 2 (3D LiDAR PointPillars): LOADED")
     print("  * Model 3 (4-Expert MoE Trajectory Predictor): LOADED")
 
@@ -473,7 +466,7 @@ def main():
     t_start = time.time()
     dt = 1.0 / fps
 
-    print(f"\n[2/3] Processing Frames with Strict Image-First Order...")
+    print(f"\n[2/3] Processing Frames with Real Visual Detections & Front-Blue/Rear-Orange LiDAR...")
 
     for idx in range(len(selected_df)):
         row = selected_df.iloc[idx]
@@ -485,7 +478,7 @@ def main():
         lidar_path = os.path.join(IDD_DIR, row['lidar_file'])
 
         # ------------------------------------------------------------------------------------------
-        # STEP 1: CLEAN RAW IMAGE INGESTION & MODEL 1 CAMERA YOLO (IMAGE-FIRST)
+        # STEP 1: CLEAN RAW IMAGE INGESTION & REAL YOLO INFERENCE (IMAGE-FIRST)
         # ------------------------------------------------------------------------------------------
         raw_frame = cv2.imread(img_path)
         if raw_frame is None:
@@ -493,28 +486,24 @@ def main():
         H, W = raw_frame.shape[:2]
         pts = np.load(lidar_path)[:, :4].astype(np.float32)
 
-        # Work on display copy for final rendering so raw_frame stays pristine for vision processing
         display_frame = raw_frame.copy()
 
-        # Execute Model 1 YOLO directly on pristine raw image
-        img_resized = cv2.resize(raw_frame, (640, 640))
-        img_arr = img_resized.astype(np.float32) / 255.0
-        inp1 = np.transpose(img_arr, (2, 0, 1))[np.newaxis, ...]
-        preds1 = m1_sess.run(None, {'camera_frame': inp1})[0]
-
-        vision_detections = []
-        if len(preds1.shape) == 3 and preds1.shape[-1] >= 12:
-            for b in preds1[0]:
-                conf = float(b[11])
-                if conf > 0.35:
-                    cls_id = int(np.argmax(b[4:11]))
-                    cname = CLASSES_MODEL1[cls_id] if cls_id < len(CLASSES_MODEL1) else "car"
-                    if cname in ['car', 'truck_bus', 'auto_rickshaw', 'two_wheeler', 'pedestrian', 'cow_cattle']:
-                        vision_detections.append({
-                            'class': cname,
-                            'conf': conf,
-                            'raw_box': b[:4]
-                        })
+        # Run real YOLOv8 on pristine raw image
+        yolo_results = yolo_model(raw_frame, conf=0.25, verbose=False)
+        vision_dets = []
+        for r in yolo_results:
+            for box in r.boxes:
+                cid = int(box.cls[0])
+                cname = yolo_model.names[cid]
+                conf = float(box.conf[0])
+                if cname in ['car', 'motorcycle', 'bus', 'truck', 'person', 'bicycle']:
+                    x1, y1, x2, y2 = [int(v) for v in box.xyxy[0]]
+                    vision_dets.append({
+                        'class': 'truck_bus' if cname in ['bus', 'truck'] else ('two_wheeler' if cname in ['motorcycle', 'bicycle'] else cname),
+                        'conf': conf,
+                        'box': (x1, y1, x2 - x1, y2 - y1),
+                        'center': ((x1 + x2) // 2, (y1 + y2) // 2)
+                    })
 
         # ------------------------------------------------------------------------------------------
         # STEP 2: MODEL 2 (3D LIDAR OBJECT DETECTOR) & SPATIAL FUSION
@@ -530,16 +519,15 @@ def main():
         cx, cy = W / 2.0, H / 2.0
 
         raw_fused_detections = []
+        CLASSES_MODEL2 = ['truck_bus', 'car', 'two_wheeler']
+
         for b in out2[0]:
             if b[11] > 0.35:
                 x, y, z = float(b[0]), float(b[1]), float(b[2])
                 l, w, h = float(b[3]), float(b[4]), float(b[5])
                 if 4.5 < x < 52.0 and abs(y) < 16.0:
                     cid = int(np.argmax(b[8:11]))
-                    cname = ['truck_bus', 'car', 'two_wheeler'][cid] if cid < 3 else 'car'
-                    # Match with Vision Detection if available
-                    if len(vision_detections) > 0:
-                        cname = vision_detections[len(raw_fused_detections) % len(vision_detections)]['class']
+                    cname = CLASSES_MODEL2[cid] if cid < len(CLASSES_MODEL2) else 'car'
 
                     xc = -y
                     yc = -z + 0.35
@@ -552,7 +540,15 @@ def main():
                     y1 = max(0, v - bh // 2)
                     x2 = min(W - 1, u + bw // 2)
                     y2 = min(H - 1, v + bh // 2)
-                    if (x2 - x1) > 35 and (y2 - y1) > 28 and y1 < H - 40:
+
+                    # Spatial matching with Model 1 visual detection
+                    for vd in vision_dets:
+                        vx, vy, vw, vh = vd['box']
+                        if abs(u - (vx + vw // 2)) < 80 and abs(v - (vy + vh // 2)) < 80:
+                            cname = vd['class']
+                            break
+
+                    if (x2 - x1) > 30 and (y2 - y1) > 25 and y1 < H - 40 and 0 <= u < W and 0 <= v < H:
                         raw_fused_detections.append({
                             'class': cname,
                             'pos': (x, y, z),
@@ -560,6 +556,29 @@ def main():
                             'dist': np.sqrt(x**2 + y**2),
                             'conf': float(b[11])
                         })
+
+        # Also add prominent vision detections on the vehicle side (e.g. orange car)
+        for vd in vision_dets:
+            vx, vy, vw, vh = vd['box']
+            # If not already covered by a 3D box and large enough
+            already_covered = False
+            for rfd in raw_fused_detections:
+                rx, ry, rw, rh = rfd['box']
+                if abs((vx + vw // 2) - (rx + rw // 2)) < 100:
+                    already_covered = True
+                    break
+            if not already_covered and vw > 80 and vh > 60:
+                # Estimate distance from pixel size
+                est_dist = max(6.0, 1250.0 * 2.0 / vw)
+                est_x = est_dist
+                est_y = -((vx + vw // 2) - cx) * est_x / fx
+                raw_fused_detections.append({
+                    'class': vd['class'],
+                    'pos': (est_x, est_y, -1.2),
+                    'box': (vx, vy, vw, vh),
+                    'dist': float(np.sqrt(est_x**2 + est_y**2)),
+                    'conf': vd['conf']
+                })
 
         # ------------------------------------------------------------------------------------------
         # STEP 3: 77 GHz mmWave FMCW RADAR SIMULATION
@@ -574,6 +593,7 @@ def main():
         # ------------------------------------------------------------------------------------------
         # STEP 5: MODEL 3 (MoE-GRU) TRAJECTORY FORECASTING (12 Future Waypoints / 2.4s)
         # ------------------------------------------------------------------------------------------
+        CLASS_MAP_MOE = {'car': 6, 'truck_bus': 5, 'two_wheeler': 3, 'person': 2}
         for trk in active_tracks:
             cid = CLASS_MAP_MOE.get(trk['class'], 6)
             past_mock = np.zeros((1, 8, 2), dtype=np.float32)
@@ -589,7 +609,6 @@ def main():
             feed = {'past_trajectory': past_mock, 'class_id': np.array([cid], dtype=np.int64)}
             preds3 = m3_sess.run(None, feed)[0]
 
-            # Store future forecasted waypoints
             pred_pts = []
             for w_step in range(preds3.shape[1]):
                 wx, wy = float(preds3[0, w_step, 0]), float(preds3[0, w_step, 1])
@@ -604,7 +623,7 @@ def main():
         swerve_offset, blocking_obs = render_dual_paths(display_frame, active_tracks, ego_speed)
 
         # ------------------------------------------------------------------------------------------
-        # STEP 7: RENDER VISUAL OVERLAYS (LiDAR Turbo + Radar + Forecasts + Speed HUDs)
+        # STEP 7: RENDER ALL VISUAL OVERLAYS
         # ------------------------------------------------------------------------------------------
         # 1. Calibrated LiDAR Point Cloud Depth Projection
         u_p, v_p, d_p = project_lidar_points_fast(pts, W, H)
@@ -632,7 +651,8 @@ def main():
                     cv2.line(display_frame, pred_pts[p_i], pred_pts[p_i + 1], (255, 100, 255), 2, cv2.LINE_AA)
                     cv2.circle(display_frame, pred_pts[p_i], 3, (255, 200, 255), -1, cv2.LINE_AA)
 
-        # 4. Tech Bounding Boxes with Dual-Sensor Speed HUD Cards
+        # 4. Color-Coded Tech Bounding Boxes with Dual-Sensor Speed HUD Cards
+        # Front (<25m) = BLUE, Rear (>=25m) = ORANGE
         for trk in active_tracks:
             draw_vehicle_bounding_box(display_frame, trk)
 
@@ -657,7 +677,7 @@ def main():
         hud_info = [
             f"LOCATION: {loc_info['name'].upper()} ({loc_info['tag']})",
             f"FRAME: #{frame_id:04d} (Global {idx+1}/{total_frames}) | Ego Speed: {ego_speed:.1f} km/h",
-            f"Perception Order: [1. Raw Camera Model 1 YOLO] -> [2. LiDAR 3D] -> [3. 77 GHz mmWave Radar]",
+            f"Perception: Model 1 YOLO Vision + Model 2 LiDAR (FRONT: BLUE <25m, REAR: ORANGE >=25m) + 77 GHz Radar",
             f"Active Obstacles: {len(active_tracks)} Tracked | Min TTC: {min_ttc:.2f} s | Steering: {steer_act}",
             f"System Status: {status_txt} | Planner: Dual-Path Frenet Quintic Evasion"
         ]
@@ -704,7 +724,7 @@ def main():
 
     v1_size = os.path.getsize(out_video_1) / (1024 * 1024)
     print("\n" + "=" * 100)
-    print("SUCCESSFULLY GENERATED IMAGE-FIRST SIMULATION VIDEO!")
+    print("SUCCESSFULLY GENERATED COLOR-CODED LIDAR SIMULATION VIDEO!")
     print(f"  * Primary File  : {out_video_1} ({v1_size:.2f} MB)")
     print(f"  * Backup File   : {out_video_2}")
     print(f"  * Resolution    : 1920 x 1080 (Full HD)")
