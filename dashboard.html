@@ -28,62 +28,79 @@
             user-select: none;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            height: 100vh;
             background-color: var(--bg-dark);
             color: var(--text-main);
-            padding: 16px 20px;
+            overflow: hidden; /* Zero unwanted scrollbars by default */
+        }
+
+        body {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            padding: 8px 14px;
         }
 
         /* Top Header */
         header {
             width: 100%;
             max-width: 1720px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 12px;
+            padding-bottom: 6px;
             border-bottom: 1px solid var(--panel-border);
-            margin-bottom: 14px;
+            margin-bottom: 6px;
+            flex-shrink: 0;
+        }
+
+        .title-block {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .title-block h1 {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             letter-spacing: 0.5px;
             color: #ffffff;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .badge-live {
             background: rgba(0, 229, 255, 0.15);
             border: 1px solid var(--cyan-accent);
             color: var(--cyan-accent);
-            font-size: 11px;
-            padding: 2px 8px;
+            font-size: 10px;
+            padding: 1px 6px;
             border-radius: 4px;
             font-weight: 600;
             letter-spacing: 0.5px;
         }
 
         .subtitle {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
-            margin-top: 3px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* Drive Selector Tabs */
         .drive-tabs {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             background: #0d121c;
-            padding: 4px;
-            border-radius: 8px;
+            padding: 3px;
+            border-radius: 6px;
             border: 1px solid var(--panel-border);
         }
 
@@ -91,10 +108,10 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 6px 14px;
-            font-size: 12px;
+            padding: 4px 10px;
+            font-size: 11px;
             font-weight: 600;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -109,21 +126,49 @@
             color: #080b10;
         }
 
+        /* Zoom Scale Selector */
+        .scale-selector {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #0d121c;
+            padding: 3px;
+            border-radius: 6px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .scale-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .scale-btn.active {
+            background: #1e293b;
+            color: #ffffff;
+        }
+
         /* Top Telemetry Metrics Cards */
         .metrics-grid {
             width: 100%;
             max-width: 1720px;
+            margin: 0 auto 6px auto;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-            margin-bottom: 14px;
+            gap: 8px;
+            flex-shrink: 0;
         }
 
         .metric-card {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            padding: 10px 14px;
+            border-radius: 6px;
+            padding: 6px 12px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -148,7 +193,7 @@
         .metric-card.accent-green::before { background: var(--cam-green); }
 
         .metric-label {
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-muted);
@@ -158,19 +203,19 @@
         .metric-val-row {
             display: flex;
             align-items: baseline;
-            gap: 6px;
-            margin-top: 4px;
+            gap: 5px;
+            margin-top: 2px;
         }
 
         .metric-value {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: #ffffff;
             font-family: monospace;
         }
 
         .metric-unit {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
         }
 
@@ -178,10 +223,13 @@
         .workspace {
             width: 100%;
             max-width: 1720px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: 1.25fr 1fr;
-            gap: 14px;
-            margin-bottom: 14px;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 10px;
+            flex: 1;
+            min-height: 0; /* Important for inner flex scrolling/auto-fitting */
+            margin-bottom: 6px;
         }
 
         /* Left Pane: Camera Vision & LiDAR AR View */
@@ -189,39 +237,41 @@
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             border-radius: 8px;
-            padding: 12px;
+            padding: 8px 10px;
             display: flex;
             flex-direction: column;
+            min-height: 0;
         }
 
         .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
-            padding-bottom: 6px;
+            margin-bottom: 6px;
+            padding-bottom: 4px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
         }
 
         .panel-title {
-            font-size: 13px;
+            font-size: 11.5px;
             font-weight: 700;
             letter-spacing: 0.5px;
             color: #ffffff;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .panel-pills {
             display: flex;
-            gap: 6px;
+            gap: 4px;
         }
 
         .pill {
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
+            font-size: 9.5px;
+            padding: 1px 5px;
+            border-radius: 3px;
             font-weight: 600;
             letter-spacing: 0.3px;
         }
@@ -232,12 +282,12 @@
 
         .cam-frame-box {
             position: relative;
-            width: 100%;
+            flex: 1;
+            min-height: 0;
             background: #000;
             border-radius: 6px;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            aspect-ratio: 4 / 3;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -246,16 +296,17 @@
         .cam-frame-box img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* Clean letterboxed/fitted aspect ratio */
             display: block;
         }
 
         .cam-footer {
-            margin-top: 8px;
+            margin-top: 6px;
             display: flex;
             justify-content: space-between;
-            font-size: 11px;
+            font-size: 10.5px;
             color: var(--text-muted);
+            flex-shrink: 0;
         }
 
         /* Right Pane: 77 GHz mmWave FMCW Radar BEV Scope */
@@ -263,14 +314,16 @@
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             border-radius: 8px;
-            padding: 12px;
+            padding: 8px 10px;
             display: flex;
             flex-direction: column;
+            min-height: 0;
         }
 
         .radar-canvas-container {
             position: relative;
-            width: 100%;
+            flex: 1;
+            min-height: 0;
             background: #080b12;
             border-radius: 6px;
             border: 1px solid rgba(0, 229, 255, 0.25);
@@ -278,7 +331,6 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            aspect-ratio: 1 / 1;
         }
 
         canvas#radarCanvas {
@@ -293,8 +345,8 @@
             background: rgba(16, 22, 34, 0.95);
             border: 1px solid var(--radar-magenta);
             border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 11px;
+            padding: 5px 8px;
+            font-size: 10.5px;
             color: #ffffff;
             pointer-events: none;
             display: none;
@@ -305,12 +357,13 @@
 
         /* Radar Targets Mini Table */
         .radar-table-wrap {
-            margin-top: 8px;
-            max-height: 130px;
+            margin-top: 6px;
+            height: 95px;
             overflow-y: auto;
             border: 1px solid var(--panel-border);
-            border-radius: 6px;
+            border-radius: 4px;
             background: #0d121c;
+            flex-shrink: 0;
         }
 
         .radar-table-wrap::-webkit-scrollbar {
@@ -324,7 +377,7 @@
         table.radar-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
+            font-size: 10.5px;
             font-family: monospace;
             text-align: left;
         }
@@ -332,15 +385,16 @@
         table.radar-table th {
             background: #141b29;
             color: var(--text-muted);
-            padding: 5px 8px;
+            padding: 3px 6px;
             font-weight: 600;
             border-bottom: 1px solid var(--panel-border);
             position: sticky;
             top: 0;
+            font-size: 10px;
         }
 
         table.radar-table td {
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             color: #e2e8f0;
         }
@@ -349,35 +403,37 @@
         .controls-bar {
             width: 100%;
             max-width: 1720px;
+            margin: 0 auto;
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             border-radius: 8px;
-            padding: 12px 18px;
+            padding: 8px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 16px;
+            gap: 12px;
+            flex-shrink: 0;
         }
 
         .playback-btns {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .btn-ctrl {
             background: #1e293b;
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #ffffff;
-            padding: 7px 14px;
-            border-radius: 6px;
-            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.15s ease;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
 
         .btn-ctrl:hover {
@@ -388,7 +444,7 @@
             background: var(--cyan-accent);
             color: #080b10;
             border: none;
-            padding: 7px 20px;
+            padding: 6px 16px;
         }
 
         .btn-play-pause:hover {
@@ -399,12 +455,12 @@
             flex: 1;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         input[type="range"] {
             flex: 1;
-            height: 6px;
+            height: 5px;
             background: #1e293b;
             border-radius: 3px;
             outline: none;
@@ -413,21 +469,21 @@
         }
 
         .frame-counter {
-            font-size: 13px;
+            font-size: 12px;
             font-family: monospace;
             font-weight: 700;
             color: var(--cyan-accent);
-            min-width: 130px;
+            min-width: 115px;
             text-align: right;
         }
 
         .speed-selector {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             background: #0d121c;
-            padding: 3px;
-            border-radius: 6px;
+            padding: 2px;
+            border-radius: 5px;
             border: 1px solid var(--panel-border);
         }
 
@@ -435,10 +491,10 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 4px 8px;
-            font-size: 11px;
+            padding: 3px 6px;
+            font-size: 10px;
             font-weight: 600;
-            border-radius: 4px;
+            border-radius: 3px;
             cursor: pointer;
         }
 
@@ -446,9 +502,23 @@
             background: #1e293b;
             color: #ffffff;
         }
+
+        /* Scale Modifier Modes */
+        body.scale-large {
+            overflow-y: auto;
+        }
+        body.scale-large .workspace {
+            min-height: 650px;
+        }
+        body.scale-compact .metrics-grid {
+            gap: 6px;
+        }
+        body.scale-compact .metric-card {
+            padding: 4px 8px;
+        }
     </style>
 </head>
-<body>
+<body id="dash-body">
 
     <!-- Header -->
     <header>
@@ -458,21 +528,31 @@
                 <span class="badge-live">LIVE FEED</span>
             </h1>
             <div class="subtitle">
-                Indian Driving Dataset (IDD) &bull; Camera (YOLOv8) &bull; LiDAR (PointPillars) &bull; 77 GHz mmWave FMCW Radar &bull; Frenet Planner
+                IDD Dataset &bull; Camera (YOLOv8) &bull; LiDAR &bull; 77 GHz mmWave FMCW Radar &bull; Frenet Planner
             </div>
         </div>
 
-        <div class="drive-tabs">
-            <button class="tab-btn active" id="tab-d0" onclick="switchDrive('d0')">Drive 0: Urban (MG Road)</button>
-            <button class="tab-btn" id="tab-d1" onclick="switchDrive('d1')">Drive 1: Arterial Corridor</button>
-            <button class="tab-btn" id="tab-d2" onclick="switchDrive('d2')">Drive 2: Suburban Highway</button>
+        <div class="header-controls">
+            <!-- Drive Selector Tabs -->
+            <div class="drive-tabs">
+                <button class="tab-btn active" id="tab-d0" onclick="switchDrive('d0')">Drive 0: Urban</button>
+                <button class="tab-btn" id="tab-d1" onclick="switchDrive('d1')">Drive 1: Arterial</button>
+                <button class="tab-btn" id="tab-d2" onclick="switchDrive('d2')">Drive 2: Highway</button>
+            </div>
+
+            <!-- Dashboard Size Selector -->
+            <div class="scale-selector">
+                <button class="scale-btn active" id="scale-fit" onclick="setScaleMode('fit', this)">Fit Viewport</button>
+                <button class="scale-btn" id="scale-std" onclick="setScaleMode('standard', this)">Medium</button>
+                <button class="scale-btn" id="scale-large" onclick="setScaleMode('large', this)">Expanded</button>
+            </div>
         </div>
     </header>
 
     <!-- Top Telemetry Metrics Bar -->
     <div class="metrics-grid">
         <div class="metric-card accent-cyan">
-            <span class="metric-label">Ego Vehicle Velocity</span>
+            <span class="metric-label">Ego Velocity</span>
             <div class="metric-val-row">
                 <span class="metric-value" id="val-speed">0.0</span>
                 <span class="metric-unit">km/h</span>
@@ -481,7 +561,7 @@
         </div>
 
         <div class="metric-card accent-amber">
-            <span class="metric-label">Closest Obstacle Range</span>
+            <span class="metric-label">Closest Obstacle</span>
             <div class="metric-val-row">
                 <span class="metric-value" id="val-closest">--</span>
                 <span class="metric-unit">meters</span>
@@ -489,16 +569,16 @@
         </div>
 
         <div class="metric-card accent-magenta">
-            <span class="metric-label">77 GHz Radar Active Locks</span>
+            <span class="metric-label">Radar Active Locks</span>
             <div class="metric-val-row">
                 <span class="metric-value" id="val-locks">0</span>
                 <span class="metric-unit">targets</span>
-                <span class="metric-unit" style="color:var(--radar-magenta); margin-left:auto;">Doppler Tracked</span>
+                <span class="metric-unit" style="color:var(--radar-magenta); margin-left:auto;">77GHz Doppler</span>
             </div>
         </div>
 
         <div class="metric-card accent-blue">
-            <span class="metric-label">Min TTC (Time to Collision)</span>
+            <span class="metric-label">Min TTC</span>
             <div class="metric-val-row">
                 <span class="metric-value" id="val-ttc">--</span>
                 <span class="metric-unit">seconds</span>
@@ -506,9 +586,9 @@
         </div>
 
         <div class="metric-card accent-green">
-            <span class="metric-label">Frenet Planner Steering</span>
+            <span class="metric-label">Frenet Steering</span>
             <div class="metric-val-row">
-                <span class="metric-value" id="val-steer" style="font-size:16px;">FOLLOW NOMINAL</span>
+                <span class="metric-value" id="val-steer" style="font-size:14px;">FOLLOW NOMINAL</span>
             </div>
         </div>
     </div>
@@ -616,6 +696,7 @@
         const canvas = document.getElementById('radarCanvas');
         const ctx = canvas.getContext('2d');
         const tooltip = document.getElementById('radarTooltip');
+        const bodyEl = document.getElementById('dash-body');
 
         const totalFrames = typeof DASHBOARD_DATA !== 'undefined' ? DASHBOARD_DATA.length : 0;
 
@@ -630,6 +711,19 @@
             startPlayback();
             requestAnimationFrame(renderRadarLoop);
         });
+
+        // Set Scale Mode
+        function setScaleMode(mode, btnEl) {
+            document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
+            btnEl.classList.add('active');
+
+            bodyEl.classList.remove('scale-compact', 'scale-large');
+            if (mode === 'compact') {
+                bodyEl.classList.add('scale-compact');
+            } else if (mode === 'large') {
+                bodyEl.classList.add('scale-large');
+            }
+        }
 
         // Drive Switcher
         function switchDrive(driveId) {
@@ -710,11 +804,11 @@
             const tbody = document.getElementById('radar-tbody');
             tbody.innerHTML = '';
             if (!targets || targets.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:10px;">No radar reflections in FOV</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:6px;">No radar reflections in FOV</td></tr>`;
                 return;
             }
 
-            targets.forEach((tgt, i) => {
+            targets.forEach((tgt) => {
                 const tr = document.createElement('tr');
                 const isReceding = tgt.vr >= 0;
                 const vrColor = isReceding ? "var(--cyan-accent)" : "var(--danger-red)";
@@ -976,4 +1070,3 @@
     </script>
 </body>
 </html>
-
