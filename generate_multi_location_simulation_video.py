@@ -446,33 +446,10 @@ def render_mmwave_radar_dashboard(bev_w=580, bev_h=1080, obstacles=[], ego_speed
         pv = int(v0 - ox * scale)
 
         if 20 <= pu < bev_w - 20 and 150 <= pv < 940:
-            # Magenta Radar Diamond Target
-            dia_pts = np.array([
-                [pu, pv - 8],
-                [pu + 8, pv],
-                [pu, pv + 8],
-                [pu - 8, pv]
-            ], np.int32)
-            cv2.fillPoly(bev, [dia_pts], COLOR_RADAR_MAGENTA)
-            cv2.polylines(bev, [dia_pts], True, (255, 255, 255), 1, cv2.LINE_AA)
-            cv2.circle(bev, (pu, pv), 2, (255, 255, 255), -1)
-
-            # Doppler velocity vector arrow (relative radial speed)
-            arr_len = int(np.clip(vr * 3.5, -28, 28))
-            vec_col = (255, 255, 0) if vr >= 0 else (0, 80, 255)
-            cv2.arrowedLine(bev, (pu, pv), (pu, pv - arr_len), vec_col, 2, tipLength=0.35)
-
-            # Text Callout Tag
-            vr_str = f"+{vr:.1f}" if vr >= 0 else f"{vr:.1f}"
-            lbl1 = f"{cname}"
-            lbl2 = f"{dist:.1f}m | vr:{vr_str}m/s"
-
-            tx = pu + 12 if pu < bev_w - 145 else pu - 125
-            ty = pv - 4
-            cv2.rectangle(bev, (tx - 3, ty - 22), (tx + 120, ty + 10), (20, 10, 30), -1)
-            cv2.rectangle(bev, (tx - 3, ty - 22), (tx + 120, ty + 10), COLOR_RADAR_MAGENTA, 1, cv2.LINE_AA)
-            cv2.putText(bev, lbl1, (tx, ty - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.36, (255, 150, 255), 1, cv2.LINE_AA)
-            cv2.putText(bev, lbl2, (tx, ty + 6), cv2.FONT_HERSHEY_SIMPLEX, 0.34, (220, 220, 255), 1, cv2.LINE_AA)
+            # Clean Glowing Circular Radar Point (Blip)
+            cv2.circle(bev, (pu, pv), 9, (255, 0, 255), 1, cv2.LINE_AA)  # Subtle outer ring
+            cv2.circle(bev, (pu, pv), 6, COLOR_RADAR_MAGENTA, -1, cv2.LINE_AA)  # Magenta solid point
+            cv2.circle(bev, (pu, pv), 2, (255, 255, 255), -1, cv2.LINE_AA)  # White core dot
 
     # 5. Bottom Telemetry Card (v=950 to 1080)
     cv2.rectangle(bev, (0, 950), (bev_w, bev_h), (25, 18, 14), -1)

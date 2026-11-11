@@ -627,7 +627,7 @@
                     <span>77 GHz mmWave FMCW RADAR (BEV SURROUND SCOPE)</span>
                 </div>
                 <div class="panel-pills">
-                    <span class="pill pill-magenta">RADAR LOCKS (MAGENTA &diams;)</span>
+                    <span class="pill pill-magenta">RADAR TARGETS (POINTS &bull;)</span>
                     <span class="pill" style="background:rgba(0,229,255,0.15); color:var(--cyan-accent); border:1px solid rgba(0,229,255,0.4)">EGO ORIGIN (&Delta;)</span>
                 </div>
             </div>
@@ -917,7 +917,7 @@
             ctx.font = 'bold 10px sans-serif';
             ctx.fillText('EGO', u0 - 11, v0 + 24);
 
-            // Draw Tracked Radar Obstacles (Ahead & Behind)
+            // Draw Tracked Radar Obstacles (Ahead & Behind) - ONLY CLEAN RADAR POINTS
             const rec = DASHBOARD_DATA[currentFrameIdx];
             if (rec && rec.radar_targets) {
                 rec.radar_targets.forEach(tgt => {
@@ -925,44 +925,24 @@
                     const pv = v0 - tgt.x * scale;
 
                     if (pu >= 10 && pu < W - 10 && pv >= 10 && pv < H - 10) {
-                        // Magenta Glowing Diamond
+                        // 1. Subtle Outer Glow Ring
+                        ctx.beginPath();
+                        ctx.arc(pu, pv, 7.5, 0, Math.PI * 2);
+                        ctx.strokeStyle = 'rgba(255, 0, 255, 0.45)';
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+
+                        // 2. Solid Radar Point (Blip)
+                        ctx.beginPath();
+                        ctx.arc(pu, pv, 4.5, 0, Math.PI * 2);
                         ctx.fillStyle = '#ff00ff';
-                        ctx.strokeStyle = '#ffffff';
-                        ctx.lineWidth = 1.2;
-
-                        ctx.beginPath();
-                        ctx.moveTo(pu, pv - 7);
-                        ctx.lineTo(pu + 7, pv);
-                        ctx.lineTo(pu, pv + 7);
-                        ctx.lineTo(pu - 7, pv);
-                        ctx.closePath();
                         ctx.fill();
-                        ctx.stroke();
 
-                        // Doppler Velocity Vector Arrow
-                        const vrLen = Math.max(-24, Math.min(24, tgt.vr * 3.0));
-                        const isReceding = tgt.vr >= 0;
-                        ctx.strokeStyle = isReceding ? '#00ffff' : '#ff3366';
-                        ctx.lineWidth = 2;
-
+                        // 3. Center White Core
                         ctx.beginPath();
-                        ctx.moveTo(pu, pv);
-                        ctx.lineTo(pu, pv - vrLen);
-                        ctx.stroke();
-
-                        // Tiny arrow tip
-                        if (Math.abs(vrLen) > 5) {
-                            ctx.beginPath();
-                            ctx.arc(pu, pv - vrLen, 2, 0, Math.PI * 2);
-                            ctx.fillStyle = ctx.strokeStyle;
-                            ctx.fill();
-                        }
-
-                        // Target Tag
-                        ctx.fillStyle = '#f1f5f9';
-                        ctx.font = 'bold 9px monospace';
-                        const lbl = `${tgt.class.split(' ')[0]} ${tgt.dist.toFixed(1)}m`;
-                        ctx.fillText(lbl, pu + 9, pv - 2);
+                        ctx.arc(pu, pv, 1.8, 0, Math.PI * 2);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fill();
                     }
                 });
             }
