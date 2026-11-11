@@ -1,17 +1,33 @@
 """
 ====================================================================================================
-CLEAN FULL MULTI-LOCATION SIMULATION VIDEO GENERATOR: UNCLUTTERED IMMERSIVE AR VIEW
+SPLIT-SCREEN MULTI-MODAL AUTONOMOUS COCKPIT DASHBOARD VIDEO GENERATOR
 Project: Autonomous Driving Perception-Prediction-Planning Pipeline (D:\PPD2)
 ====================================================================================================
-Clean Immersive HUD Layout:
-  1. NO TOP HUD BANNER (100% Unobstructed Windshield Horizon View)
-  2. NO DISTANT ORANGE BOXES (Distant clutter suppressed; only relevant Front Blue boxes shown)
-  3. FRONT VEHICLES (< 25m)       : Vibrant Blue 3D Bounding Boxes with Speed HUD
-  4. CAMERA VISION (Model 1 YOLO) : Clean Green 2D Bounding Boxes on real vehicles
-  5. 77 GHz mmWave FMCW RADAR     : Distinct Magenta Diamond Lock Reticles + Doppler Vectors
-  6. MODEL 3 (4-Expert MoE-GRU)   : 12 future waypoints (2.4s) motion prediction forecast
-  7. FRENET DUAL PATH PLANNER     : Nominal Centerline (Yellow Dashed) vs. Avoidance Bend (Neon Green)
-  8. CALIBRATED LIDAR OVERLAY     : Turbo colormap point cloud depth scatter
+Split-Screen Cockpit Dashboard Architecture (1920 x 1080 Full HD):
+  [LEFT PANE: 1340 x 1080] (~70% Width) - Immersive AR Windshield View
+    1. Synchronized Camera Video Feed (IDD Dataset Indian Road Conditions)
+    2. Calibrated LiDAR 3D Point Cloud Depth Overlay (Turbo Colormap)
+    3. Model 1 (YOLOv8) Real 2D Vision Detections (Green Bounding Boxes)
+    4. Model 2 (PointPillars ONNX) 3D LiDAR Bounding Boxes:
+       - ONLY FRONT VEHICLES (< 25m) IN VIBRANT BLUE with Speed HUD
+       - Distant orange boxes (>= 25m) are completely suppressed
+    5. Model 3 (4-Expert MoE-GRU) Trajectory Forecast Waypoints
+    6. Dual-Path Frenet Quintic Planner:
+       - Nominal Centerline (Yellow Dashed)
+       - Dynamic Collision Avoidance Swerve Ribbon (Neon Green)
+    7. NO TOP HUD BANNER (100% Unobstructed Clean View)
+
+  [RIGHT PANE: 580 x 1080] (~30% Width) - Dedicated 77 GHz mmWave FMCW Radar BEV Scope
+    1. Dark High-Tech Polar-Cartesian Radar Scope (#0b0e14)
+    2. Range Rings: 10m, 20m, 30m, 40m, 50m ahead and -10m behind
+    3. Azimuth Angle Rays (-45 deg to +45 deg)
+    4. Dynamic Sweeping Radar Scanner Line (Frame-by-frame rotation)
+    5. Ego Vehicle at Center/Origin (290, 820) as Bright Cyan Triangle (0, 0)
+    6. Surrounding Vehicles (Ahead & Behind) Plotted Dynamically per Frame:
+       - Glowing Magenta Diamond Reticles
+       - Doppler Velocity Vector Arrows (vr: Cyan receding, Red closing)
+       - Target Class, Distance, and Relative Doppler Speed Callouts
+    7. Real-Time Radar Telemetry Banner & Status Card (Ego Speed, Locks, Min Range)
 
 Outputs:
   - D:\PPD2\camera_vision_simulation.mp4
@@ -38,16 +54,12 @@ INDEX_CSV = os.path.join(IDD_DIR, "synchronized_index.csv")
 MODEL2_ONNX = os.path.join(BASE_DIR, "model2", "model2_lidar.onnx")
 MODEL3_ONNX = os.path.join(BASE_DIR, "Model3_MoE", "model3_moe_trajectory.onnx")
 
-DRIVE_SCENE_INFO = {
-    'd0': {'name': 'Drive 0: MG Road Urban Sector', 'tag': 'Dense Traffic & Pedestrians'},
-    'd1': {'name': 'Drive 1: Outer Ring Arterial Corridor', 'tag': 'Mixed Vehicles & High Flow'},
-    'd2': {'name': 'Drive 2: Suburban Highway Bypass', 'tag': 'Higher Speed & Wide Lanes'}
-}
-
-# Color Definitions
-COLOR_FRONT_BLUE = (255, 150, 20)    # Vibrant Blue (BGR)
-COLOR_CAM_GREEN = (0, 255, 0)        # Camera Green (BGR)
-COLOR_RADAR_MAGENTA = (255, 0, 255)  # Radar Magenta (BGR)
+# Color Definitions (BGR)
+COLOR_FRONT_BLUE = (255, 150, 20)    # Vibrant Blue
+COLOR_CAM_GREEN = (0, 255, 0)        # Camera Green
+COLOR_RADAR_MAGENTA = (255, 0, 255)  # Radar Magenta
+COLOR_EGO_CYAN = (255, 229, 0)       # Ego Cyan
+COLOR_DIVIDER = (0, 229, 255)        # Tech Cyan Border
 
 # 77 GHz Radar physical parameters
 FC_HZ = 77e9
@@ -162,7 +174,7 @@ def simulate_mmwave_radar(pts, ego_speed_kmh, obstacles):
 
 
 class VehicleTracker:
-    def __init__(self, max_missed=4):
+    def __init__(self, max_missed=5):
         self.tracks = {}
         self.next_id = 1
         self.max_missed = max_missed
@@ -205,11 +217,11 @@ class VehicleTracker:
             else:
                 new_id = self.next_id
                 self.next_id += 1
-                base_speed = ego_speed_kmh + np.random.uniform(4.0, 14.0)
+                base_speed = ego_speed_kmh + np.random.uniform(3.0, 12.0)
                 if det['class'] in ['truck_bus']:
-                    base_speed = max(18.0, ego_speed_kmh - 3.0)
+                    base_speed = max(18.0, ego_speed_kmh - 2.5)
                 elif det['class'] in ['motorcycle', 'two_wheeler']:
-                    base_speed = max(20.0, ego_speed_kmh + 3.0)
+                    base_speed = max(20.0, ego_speed_kmh + 4.0)
                 self.tracks[new_id] = {
                     'id': new_id,
                     'pos': (dx, dy, dz),
@@ -217,7 +229,7 @@ class VehicleTracker:
                     'class': det['class'],
                     'dist': float(np.sqrt(dx**2 + dy**2)),
                     'speed_lidar': float(base_speed),
-                    'speed_radar': float(base_speed - 1.0),
+                    'speed_radar': float(base_speed - 0.5),
                     'vr_radar': float((base_speed - ego_speed_kmh) / 3.6),
                     'history': [(dx, dy)],
                     'missed': 0
@@ -242,7 +254,7 @@ class VehicleTracker:
             else:
                 trk['vr_radar'] = float((trk['speed_lidar'] - ego_speed_kmh) / 3.6)
                 trk['rcs_radar'] = 14.5 if 'car' in trk['class'] else 22.0
-                trk['speed_radar'] = float(trk['speed_lidar'] + np.random.uniform(-1.0, 1.0))
+                trk['speed_radar'] = float(trk['speed_lidar'] + np.random.uniform(-0.8, 0.8))
 
             if trk_id in matched_track_ids:
                 active_tracked_objects.append(trk)
@@ -342,10 +354,149 @@ def render_dual_paths(frame, active_obstacles, ego_speed_kmh):
     return swerve_offset, blocking_obs
 
 
+def render_mmwave_radar_dashboard(bev_w=580, bev_h=1080, obstacles=[], ego_speed_kmh=24.5, frame_idx=0):
+    """
+    Renders high-tech 77 GHz FMCW mmWave Radar BEV Scope for the right cockpit panel.
+    Ego vehicle is at center (u0, v0) as a vibrant cyan vehicle glyph.
+    All surrounding vehicles (ahead & behind) are plotted dynamically as magenta diamond reticles.
+    """
+    bev = np.full((bev_h, bev_w, 3), (20, 14, 11), dtype=np.uint8)  # #0b0e14 in BGR
+
+    # 1. Header Banner
+    cv2.rectangle(bev, (0, 0), (bev_w, 140), (28, 20, 16), -1)
+    cv2.line(bev, (0, 140), (bev_w, 140), (0, 229, 255), 2, cv2.LINE_AA)
+
+    cv2.putText(bev, "77 GHz mmWave FMCW RADAR", (24, 38), cv2.FONT_HERSHEY_SIMPLEX, 0.70, (0, 229, 255), 2, cv2.LINE_AA)
+    cv2.putText(bev, "BEV RANGE-DOPPLER SCOPE (SURROUND VIEW)", (24, 65), cv2.FONT_HERSHEY_SIMPLEX, 0.42, (180, 195, 210), 1, cv2.LINE_AA)
+
+    # Badges
+    cv2.rectangle(bev, (24, 82), (185, 115), (45, 30, 20), -1)
+    cv2.rectangle(bev, (24, 82), (185, 115), (0, 255, 120), 1, cv2.LINE_AA)
+    cv2.putText(bev, "SCANNING: ACTIVE", (34, 103), cv2.FONT_HERSHEY_SIMPLEX, 0.40, (0, 255, 120), 1, cv2.LINE_AA)
+
+    cv2.rectangle(bev, (195, 82), (375, 115), (45, 30, 20), -1)
+    cv2.rectangle(bev, (195, 82), (375, 115), (255, 150, 0), 1, cv2.LINE_AA)
+    cv2.putText(bev, "BAND: 76-81 GHz (FMCW)", (203, 103), cv2.FONT_HERSHEY_SIMPLEX, 0.38, (255, 190, 80), 1, cv2.LINE_AA)
+
+    cv2.rectangle(bev, (385, 82), (bev_w - 24, 115), (45, 30, 20), -1)
+    cv2.rectangle(bev, (385, 82), (bev_w - 24, 115), (255, 0, 255), 1, cv2.LINE_AA)
+    cv2.putText(bev, f"LOCKS: {len(obstacles)}", (400, 103), cv2.FONT_HERSHEY_SIMPLEX, 0.40, (255, 120, 255), 1, cv2.LINE_AA)
+
+    # 2. Polar Radar Scope Setup
+    u0 = bev_w // 2        # 290 px
+    v0 = 820               # Ego position in Y (leaving space for -10m behind)
+    scale = 13.0           # 13 pixels per meter
+
+    # Concentric Polar Range Rings (10m, 20m, 30m, 40m, 50m ahead)
+    for r in [10, 20, 30, 40, 50]:
+        radius_px = int(r * scale)
+        cv2.circle(bev, (u0, v0), radius_px, (48, 38, 28), 1, cv2.LINE_AA)
+        cv2.putText(bev, f"{r}m", (u0 + 6, v0 - radius_px + 14), cv2.FONT_HERSHEY_SIMPLEX, 0.38, (130, 120, 100), 1, cv2.LINE_AA)
+
+    # Rear Ring (-10m Behind Ego Vehicle)
+    radius_rear = int(10 * scale)
+    for ang in range(25, 155, 8):
+        rad = np.radians(ang)
+        p_rear = (int(u0 + radius_rear * np.cos(rad)), int(v0 + radius_rear * np.sin(rad)))
+        cv2.circle(bev, p_rear, 1, (48, 38, 28), -1)
+    cv2.putText(bev, "REAR 10m", (u0 + 8, v0 + radius_rear - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.36, (130, 120, 100), 1, cv2.LINE_AA)
+
+    # Azimuth Angle Rays (-45 to +45 deg)
+    max_scope_r = 52.0 * scale
+    for az in [-45, -30, -15, 0, 15, 30, 45]:
+        rad = np.radians(az)
+        x_ray = int(u0 - max_scope_r * np.sin(rad))
+        y_ray = int(v0 - max_scope_r * np.cos(rad))
+        cv2.line(bev, (u0, v0), (x_ray, y_ray), (35, 26, 20), 1, cv2.LINE_AA)
+        if az != 0:
+            deg_str = f"+{az}°" if az > 0 else f"{az}°"
+            cv2.putText(bev, deg_str, (x_ray - 14, y_ray - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.34, (100, 90, 80), 1, cv2.LINE_AA)
+
+    # Dynamic Sweeping Radar Scanner Line
+    sweep_az = np.radians(45.0 * np.sin(frame_idx * 0.20))
+    sw_x = int(u0 - max_scope_r * np.sin(sweep_az))
+    sw_y = int(v0 - max_scope_r * np.cos(sweep_az))
+    cv2.line(bev, (u0, v0), (sw_x, sw_y), (0, 220, 255), 2, cv2.LINE_AA)
+
+    # 3. Ego Vehicle Glyph at Origin (u0, v0)
+    ego_tri = np.array([
+        [u0, v0 - 18],        # Tip
+        [u0 - 12, v0 + 14],   # Bottom-left
+        [u0 + 12, v0 + 14]    # Bottom-right
+    ], np.int32)
+    cv2.fillPoly(bev, [ego_tri], COLOR_EGO_CYAN)
+    cv2.polylines(bev, [ego_tri], True, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(bev, "EGO VEHICLE", (u0 - 45, v0 + 32), cv2.FONT_HERSHEY_SIMPLEX, 0.44, COLOR_EGO_CYAN, 1, cv2.LINE_AA)
+    cv2.putText(bev, f"{ego_speed_kmh:.1f} km/h", (u0 - 30, v0 + 48), cv2.FONT_HERSHEY_SIMPLEX, 0.40, (210, 210, 210), 1, cv2.LINE_AA)
+
+    # 4. Plot Surrounding Radar Obstacles (Ahead & Behind)
+    closest_dist = 999.0
+    for obs in obstacles:
+        ox, oy = obs['pos'][0], obs['pos'][1]
+        dist = obs['dist']
+        if dist < closest_dist:
+            closest_dist = dist
+        cname = obs.get('class', 'VEHICLE').upper()
+        vr = obs.get('vr_radar', 0.0)
+
+        # Map to BEV pixel coordinates
+        # ox: longitudinal (+ahead, -behind) -> v0 - ox * scale
+        # oy: lateral (+left, -right) -> u0 - oy * scale
+        pu = int(u0 - oy * scale)
+        pv = int(v0 - ox * scale)
+
+        if 20 <= pu < bev_w - 20 and 150 <= pv < 940:
+            # Magenta Radar Diamond Target
+            dia_pts = np.array([
+                [pu, pv - 8],
+                [pu + 8, pv],
+                [pu, pv + 8],
+                [pu - 8, pv]
+            ], np.int32)
+            cv2.fillPoly(bev, [dia_pts], COLOR_RADAR_MAGENTA)
+            cv2.polylines(bev, [dia_pts], True, (255, 255, 255), 1, cv2.LINE_AA)
+            cv2.circle(bev, (pu, pv), 2, (255, 255, 255), -1)
+
+            # Doppler velocity vector arrow (relative radial speed)
+            arr_len = int(np.clip(vr * 3.5, -28, 28))
+            vec_col = (255, 255, 0) if vr >= 0 else (0, 80, 255)
+            cv2.arrowedLine(bev, (pu, pv), (pu, pv - arr_len), vec_col, 2, tipLength=0.35)
+
+            # Text Callout Tag
+            vr_str = f"+{vr:.1f}" if vr >= 0 else f"{vr:.1f}"
+            lbl1 = f"{cname}"
+            lbl2 = f"{dist:.1f}m | vr:{vr_str}m/s"
+
+            tx = pu + 12 if pu < bev_w - 145 else pu - 125
+            ty = pv - 4
+            cv2.rectangle(bev, (tx - 3, ty - 22), (tx + 120, ty + 10), (20, 10, 30), -1)
+            cv2.rectangle(bev, (tx - 3, ty - 22), (tx + 120, ty + 10), COLOR_RADAR_MAGENTA, 1, cv2.LINE_AA)
+            cv2.putText(bev, lbl1, (tx, ty - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.36, (255, 150, 255), 1, cv2.LINE_AA)
+            cv2.putText(bev, lbl2, (tx, ty + 6), cv2.FONT_HERSHEY_SIMPLEX, 0.34, (220, 220, 255), 1, cv2.LINE_AA)
+
+    # 5. Bottom Telemetry Card (v=950 to 1080)
+    cv2.rectangle(bev, (0, 950), (bev_w, bev_h), (25, 18, 14), -1)
+    cv2.line(bev, (0, 950), (bev_w, 950), (0, 229, 255), 1, cv2.LINE_AA)
+
+    cv2.putText(bev, "RADAR REAL-TIME TELEMETRY:", (24, 978), cv2.FONT_HERSHEY_SIMPLEX, 0.44, (0, 229, 255), 1, cv2.LINE_AA)
+
+    col1_txt = f"Closest Target : {closest_dist:.1f} m" if closest_dist < 900 else "Closest Target : None (<50m)"
+    col2_txt = f"Ego Velocity   : {ego_speed_kmh:.1f} km/h ({(ego_speed_kmh/3.6):.1f} m/s)"
+    col3_txt = f"FMCW Chirp BW  : 4000 MHz (77 GHz) | Res: 0.15 m"
+
+    cv2.putText(bev, col1_txt, (24, 1004), cv2.FONT_HERSHEY_SIMPLEX, 0.40, (255, 255, 255), 1, cv2.LINE_AA)
+    cv2.putText(bev, col2_txt, (24, 1028), cv2.FONT_HERSHEY_SIMPLEX, 0.40, (200, 240, 255), 1, cv2.LINE_AA)
+    cv2.putText(bev, col3_txt, (24, 1052), cv2.FONT_HERSHEY_SIMPLEX, 0.36, (140, 160, 180), 1, cv2.LINE_AA)
+
+    # Left vertical divider glowing line
+    cv2.line(bev, (0, 0), (0, bev_h), COLOR_DIVIDER, 3, cv2.LINE_AA)
+    return bev
+
+
 def main():
     print("=" * 100)
-    print("  CLEAN FULL MULTI-LOCATION SIMULATION: UNCLUTTERED AR VIEW")
-    print("  (NO TOP BANNER | NO DISTANT ORANGE BOXES | ONLY RELEVANT BLUE FRONT VEHICLES)")
+    print("  SPLIT-SCREEN MULTI-MODAL AUTONOMOUS COCKPIT DASHBOARD VIDEO GENERATOR")
+    print("  [LEFT: 1340x1080 Camera + LiDAR + YOLO + Dual Path] | [RIGHT: 580x1080 77GHz mmWave Radar BEV Scope]")
     print("=" * 100)
 
     fps = 7.0
@@ -365,7 +516,7 @@ def main():
     selected_df = pd.concat(drives_frames, ignore_index=True)
     print(f"Sampled Multi-Location Sequences: {len(selected_df)} frames ready across d0, d1, d2.")
 
-    temp_dir = os.path.join(BASE_DIR, "temp_video_clean")
+    temp_dir = os.path.join(BASE_DIR, "temp_split_dashboard_video")
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir, exist_ok=True)
@@ -376,7 +527,7 @@ def main():
     m3_sess = ort.InferenceSession(MODEL3_ONNX, providers=['CPUExecutionProvider'])
     print("  * Sensor 1: Camera YOLOv8 -> LOADED")
     print("  * Sensor 2: LiDAR 3D PointPillars -> LOADED")
-    print("  * Sensor 3: 77 GHz mmWave FMCW Radar -> LOADED")
+    print("  * Sensor 3: 77 GHz mmWave FMCW Radar BEV Engine -> LOADED")
     print("  * Prediction: Model 3 (4-Expert MoE-GRU) -> LOADED")
 
     tracker = VehicleTracker(max_missed=5)
@@ -384,12 +535,10 @@ def main():
     t_start = time.time()
     dt = 1.0 / fps
 
-    print(f"\n[2/3] Rendering Frames with Clean Uncluttered AR Display...")
+    print(f"\n[2/3] Rendering Split-Screen Frames (1340x1080 Camera + 580x1080 Radar Scope)...")
 
     for idx in range(len(selected_df)):
         row = selected_df.iloc[idx]
-        drive_id = row['drive']
-        frame_id = row['frame_id']
         ego_speed = float(row['vehicle_speed_kmh'])
 
         img_path = os.path.join(IDD_DIR, row['camera_file'])
@@ -402,7 +551,7 @@ def main():
         H, W = raw_frame.shape[:2]
         pts = np.load(lidar_path)[:, :4].astype(np.float32)
 
-        display_frame = raw_frame.copy()
+        display_cam = raw_frame.copy()
 
         # Run YOLOv8 on pristine raw image
         yolo_results = yolo_model(raw_frame, conf=0.25, verbose=False)
@@ -524,11 +673,11 @@ def main():
                     pred_pts.append(wpt)
             trk['future_waypoints'] = pred_pts
 
-        # 6. Dual Path Planning
-        swerve_offset, blocking_obs = render_dual_paths(display_frame, active_tracks, ego_speed)
+        # 6. Dual Path Planning (rendered onto camera display)
+        swerve_offset, blocking_obs = render_dual_paths(display_cam, active_tracks, ego_speed)
 
         # ------------------------------------------------------------------------------------------
-        # 7. RENDER CLEAN VISUAL LAYERS (NO TOP BANNER | NO ORANGE BOXES)
+        # 7. RENDER CAMERA OVERLAYS (NO TOP BANNER | NO DISTANT ORANGE BOXES)
         # ------------------------------------------------------------------------------------------
         # Layer 1: LiDAR Point Cloud Depth Projection (Turbo colormap)
         u_p, v_p, d_p = project_lidar_points_fast(pts, W, H)
@@ -538,19 +687,18 @@ def main():
             colormap = cv2.applyColorMap(colors_depth, cv2.COLORMAP_TURBO)
             for i in range(0, len(u_p), 2):
                 b, g, r = colormap[i, 0]
-                cv2.circle(display_frame, (u_p[i], v_p[i]), 2, (int(b), int(g), int(r)), -1)
+                cv2.circle(display_cam, (u_p[i], v_p[i]), 2, (int(b), int(g), int(r)), -1)
 
         # Layer 2: Model 1 Camera Vision Detections (Thin Green 2D Boxes on visible vehicles)
         for vd in cam_vision_dets:
             vx, vy, vw, vh = vd['box']
-            cv2.rectangle(display_frame, (vx, vy), (vx + vw, vy + vh), COLOR_CAM_GREEN, 2, cv2.LINE_AA)
+            cv2.rectangle(display_cam, (vx, vy), (vx + vw, vy + vh), COLOR_CAM_GREEN, 2, cv2.LINE_AA)
             cam_lbl = f"{vd['class'].upper()}"
             (tw, th), _ = cv2.getTextSize(cam_lbl, cv2.FONT_HERSHEY_SIMPLEX, 0.45, 1)
-            cv2.rectangle(display_frame, (vx, vy - th - 6), (vx + tw + 6, vy), COLOR_CAM_GREEN, -1)
-            cv2.putText(display_frame, cam_lbl, (vx + 3, vy - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.rectangle(display_cam, (vx, vy - th - 6), (vx + tw + 6, vy), COLOR_CAM_GREEN, -1)
+            cv2.putText(display_cam, cam_lbl, (vx + 3, vy - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 0), 1, cv2.LINE_AA)
 
         # Layer 3: Model 2 LiDAR 3D Bounding Boxes — ONLY FRONT VEHICLES (< 25m) IN VIBRANT BLUE!
-        # DISTANT ORANGE BOXES ARE SUPPRESSED COMPLETELY!
         for trk in active_tracks:
             dist = trk['dist']
             if dist < 25.0:  # Only render Front relevant vehicles
@@ -558,79 +706,62 @@ def main():
                 col = COLOR_FRONT_BLUE
 
                 # Thick 3D Projection Box
-                cv2.rectangle(display_frame, (bx, by), (bx + bw, by + bh), col, 3, cv2.LINE_AA)
+                cv2.rectangle(display_cam, (bx, by), (bx + bw, by + bh), col, 3, cv2.LINE_AA)
                 # Tech Corner Accents
                 c_len = min(20, max(8, bw // 4), max(8, bh // 4))
-                cv2.line(display_frame, (bx, by), (bx + c_len, by), (255, 255, 255), 3, cv2.LINE_AA)
-                cv2.line(display_frame, (bx, by), (bx, by + c_len), (255, 255, 255), 3, cv2.LINE_AA)
-                cv2.line(display_frame, (bx + bw, by), (bx + bw - c_len, by), (255, 255, 255), 3, cv2.LINE_AA)
-                cv2.line(display_frame, (bx + bw, by), (bx + bw, by + c_len), (255, 255, 255), 3, cv2.LINE_AA)
+                cv2.line(display_cam, (bx, by), (bx + c_len, by), (255, 255, 255), 3, cv2.LINE_AA)
+                cv2.line(display_cam, (bx, by), (bx, by + c_len), (255, 255, 255), 3, cv2.LINE_AA)
+                cv2.line(display_cam, (bx + bw, by), (bx + bw - c_len, by), (255, 255, 255), 3, cv2.LINE_AA)
+                cv2.line(display_cam, (bx + bw, by), (bx + bw, by + c_len), (255, 255, 255), 3, cv2.LINE_AA)
 
                 # Front LiDAR Telemetry Tag
                 lidar_tag = f"FRONT: {trk['class'].upper()} {dist:.1f}m | {trk['speed_lidar']:.1f} km/h"
                 (tw, th), _ = cv2.getTextSize(lidar_tag, cv2.FONT_HERSHEY_SIMPLEX, 0.48, 2)
-                cv2.rectangle(display_frame, (bx, by + bh), (bx + tw + 8, by + bh + th + 8), col, -1)
-                cv2.putText(display_frame, lidar_tag, (bx + 4, by + bh + th + 4), cv2.FONT_HERSHEY_SIMPLEX, 0.48, (255, 255, 255), 2, cv2.LINE_AA)
+                cv2.rectangle(display_cam, (bx, by + bh), (bx + tw + 8, by + bh + th + 8), col, -1)
+                cv2.putText(display_cam, lidar_tag, (bx + 4, by + bh + th + 4), cv2.FONT_HERSHEY_SIMPLEX, 0.48, (255, 255, 255), 2, cv2.LINE_AA)
 
-        # Layer 4: SENSOR 3: 77 GHz mmWave RADAR TARGET LOCK (DISTINCT MAGENTA OVERLAY on active vehicles)
-        for trk in active_tracks:
-            dist = trk['dist']
-            if dist < 30.0:  # Relevant active radar range
-                bx, by, bw, bh = trk['box']
-                ru = bx + bw // 2
-                rv = by + bh // 2
-                vr = trk.get('vr_radar', 0.0)
-                rcs = trk.get('rcs_radar', 15.0)
-
-                # Magenta Diamond Reticle (Radar Target Lock)
-                pts_dia = np.array([[ru, rv - 10], [ru + 10, rv], [ru, rv + 10], [ru - 10, rv]], np.int32)
-                cv2.polylines(display_frame, [pts_dia], isClosed=True, color=COLOR_RADAR_MAGENTA, thickness=2, lineType=cv2.LINE_AA)
-                cv2.circle(display_frame, (ru, rv), 13, COLOR_RADAR_MAGENTA, 1, lineType=cv2.LINE_AA)
-                cv2.circle(display_frame, (ru, rv), 3, (255, 255, 255), -1, lineType=cv2.LINE_AA)
-
-                # Doppler Velocity Vector Line
-                arr_len = int(np.clip(vr * 8.0, -42, 42))
-                vec_col = (255, 255, 0) if vr >= 0 else (0, 80, 255)
-                cv2.arrowedLine(display_frame, (ru, rv), (ru, rv - arr_len), vec_col, 3, tipLength=0.35)
-
-                # Distinct mmWave Radar Identification Tag
-                vr_str = f"+{vr:.1f}" if vr >= 0 else f"{vr:.1f}"
-                rad_tag = f"RADAR LOCK: vr={vr_str}m/s | RCS={rcs:.1f}dBsm"
-                (tw, th), _ = cv2.getTextSize(rad_tag, cv2.FONT_HERSHEY_SIMPLEX, 0.46, 2)
-
-                badge_x = max(10, min(W - tw - 20, ru - tw // 2))
-                badge_y = max(35, by - 8)
-
-                overlay = display_frame.copy()
-                cv2.rectangle(overlay, (badge_x, badge_y - th - 6), (badge_x + tw + 10, badge_y + 4), (25, 10, 35), -1)
-                cv2.addWeighted(overlay, 0.85, display_frame, 0.15, 0, display_frame)
-                cv2.rectangle(display_frame, (badge_x, badge_y - th - 6), (badge_x + tw + 10, badge_y + 4), COLOR_RADAR_MAGENTA, 2, cv2.LINE_AA)
-                cv2.putText(display_frame, rad_tag, (badge_x + 5, badge_y - 2), cv2.FONT_HERSHEY_SIMPLEX, 0.46, (255, 120, 255), 2, cv2.LINE_AA)
-
-        # Layer 5: Model 3 MoE Trajectory Forecasts (Magenta dots/lines)
+        # Layer 4: Model 3 MoE Trajectory Forecasts (Magenta dots/lines)
         for trk in active_tracks:
             if trk['dist'] < 28.0:
                 pred_pts = trk.get('future_waypoints', [])
                 if len(pred_pts) >= 2:
                     for p_i in range(len(pred_pts) - 1):
-                        cv2.line(display_frame, pred_pts[p_i], pred_pts[p_i + 1], (255, 100, 255), 2, cv2.LINE_AA)
-                        cv2.circle(display_frame, pred_pts[p_i], 3, (255, 200, 255), -1, cv2.LINE_AA)
+                        cv2.line(display_cam, pred_pts[p_i], pred_pts[p_i + 1], (255, 100, 255), 2, cv2.LINE_AA)
+                        cv2.circle(display_cam, pred_pts[p_i], 3, (255, 200, 255), -1, cv2.LINE_AA)
 
-        # NOTE: TOP TELEMETRY BANNER HAS BEEN COMPLETELY REMOVED AS REQUESTED!
-        # The entire top view is clear, unobstructed windshield view.
+        # ------------------------------------------------------------------------------------------
+        # 8. CROP LEFT CAMERA PANE TO 1340 x 1080 (CENTER ROAD DRIVING CORRIDOR)
+        # ------------------------------------------------------------------------------------------
+        left_pane = display_cam[:, 290:1630].copy()
+
+        # ------------------------------------------------------------------------------------------
+        # 9. RENDER RIGHT PANEL: 77 GHz mmWave FMCW RADAR BEV SCOPE DASHBOARD (580 x 1080)
+        # ------------------------------------------------------------------------------------------
+        right_pane = render_mmwave_radar_dashboard(
+            bev_w=580,
+            bev_h=1080,
+            obstacles=active_tracks,
+            ego_speed_kmh=ego_speed,
+            frame_idx=idx
+        )
+
+        # ------------------------------------------------------------------------------------------
+        # 10. COMBINE INTO 1920 x 1080 SPLIT-SCREEN COCKPIT FRAME
+        # ------------------------------------------------------------------------------------------
+        split_dashboard_frame = np.hstack([left_pane, right_pane])
 
         # Save frame to disk
         frame_filename = os.path.join(temp_dir, f"frame_{idx:05d}.png")
-        cv2.imwrite(frame_filename, display_frame)
+        cv2.imwrite(frame_filename, split_dashboard_frame)
         rendered_frames.append(frame_filename)
 
         if (idx + 1) % 25 == 0 or idx == total_frames - 1:
             elapsed = time.time() - t_start
             fps_render = (idx + 1) / elapsed
-            print(f"  --> Processed [{idx+1:03d}/{total_frames:03d}] frames ({fps_render:.1f} FPS render speed)")
+            print(f"  --> Processed [{idx+1:03d}/{total_frames:03d}] split-screen frames ({fps_render:.1f} FPS render speed)")
 
     render_time = time.time() - t_start
-    print(f"\n[3/3] Encoding {len(rendered_frames)} Frames into Clean High-Quality H.264 MP4 @ {fps} FPS...")
+    print(f"\n[3/3] Encoding {len(rendered_frames)} Frames into High-Quality Split-Screen MP4 @ {fps} FPS...")
 
     ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
     input_pattern = os.path.join(temp_dir, "frame_%05d.png")
@@ -660,13 +791,12 @@ def main():
 
     v1_size = os.path.getsize(out_video_1) / (1024 * 1024)
     print("\n" + "=" * 100)
-    print("SUCCESSFULLY GENERATED CLEAN UNCLUTTERED AR SIMULATION VIDEO!")
-    print(f"  * Primary File  : {out_video_1} ({v1_size:.2f} MB)")
-    print(f"  * Backup File   : {out_video_2}")
-    print(f"  * Resolution    : 1920 x 1080 (Full HD)")
+    print("SUCCESSFULLY GENERATED SPLIT-SCREEN MULTI-MODAL COCKPIT DASHBOARD VIDEO!")
+    print(f"  * Primary Video : {out_video_1} ({v1_size:.2f} MB)")
+    print(f"  * Backup Video  : {out_video_2}")
+    print(f"  * Full Layout   : 1920 x 1080 (Left: 1340x1080 Camera/LiDAR | Right: 580x1080 mmWave Radar BEV)")
     print(f"  * Framerate     : {fps} FPS")
     print(f"  * Total Frames  : {len(rendered_frames)} frames")
-    print(f"  * Duration      : {len(rendered_frames)/fps:.2f} seconds")
     print(f"  * Total Time    : Render {render_time:.1f}s + Encode {enc_time:.1f}s")
     print("=" * 100)
 

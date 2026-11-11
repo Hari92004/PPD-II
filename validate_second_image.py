@@ -165,3 +165,4 @@ out_res_img = os.path.join(BASE_DIR, "validation_second_image_result.png")
 cv2.imwrite(out_res_img, vis_img)
 print(f"\n[SAVED] Result Image: {out_res_img}")
 print("=" * 90)
+
