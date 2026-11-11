@@ -284,83 +284,95 @@ def project_ego_point(x, y, z=-1.55, W=1920, H=1080):
     return (u, v)
 
 
-def render_dual_paths(frame, active_obstacles, ego_speed_kmh):
+def render_dual_paths(frame, active_obstacles, ego_speed_kmh, drive_id='d0'):
     H, W = frame.shape[:2]
     overlay = frame.copy()
-    s_ranges = np.linspace(3.2, 35.0, 32)
+    s_ranges = np.linspace(3.0, 36.0, 35)
+    cx_lane = 825.0 if drive_id == 'd0' else 960.0
+    cy_lane = 535.0
+    fx, fy = 1250.0, 1250.0
+    half_w = 0.75  # 1.5m vehicle driving corridor width
 
-    # 1. Identify critical forward obstacles (s: 3.5m - 28m, |y| < 1.8m)
+    # 1. Search for critical obstacles in the forward road corridor (x in [4.0, 24.0], |y| <= 2.2m)
     blocking_obs = None
     min_dist = 999.0
     for obs in active_obstacles:
         ox, oy, _ = obs['pos']
-        if 3.5 <= ox <= 28.0 and abs(oy) < 2.0:
+        if 4.0 <= ox <= 24.0 and abs(oy) <= 2.2:
             if ox < min_dist:
                 min_dist = ox
                 blocking_obs = obs
 
-    # Safe evasion swerve: away from obstacle into open clearance
-    # If obstacle is on right (oy <= 0), swerve LEFT (d_lat = +1.1m)
-    # If obstacle is on left (oy > 0), swerve RIGHT (d_lat = -1.1m)
-    swerve_offset = 0.0
+    # 2. Dynamic Frenet Quintic Evasion Setup
+    is_evading = False
+    d_evasion = 0.0
+    s_obs = 12.0
     if blocking_obs is not None:
         ox, oy, _ = blocking_obs['pos']
-        swerve_offset = 1.1 if oy <= 0.0 else -1.1
+        s_obs = ox
+        is_evading = True
+        # Swerve away from obstacle:
+        # If obstacle is on right (oy <= 0), smoothly bend LEFT (d_evasion = +0.85m)
+        # If obstacle is on left (oy > 0), smoothly bend RIGHT (d_evasion = -0.85m)
+        d_evasion = 0.85 if oy <= 0.0 else -0.85
 
-    # 2. Compute smooth Frenet driving carpet coordinates
     poly_left = []
     poly_right = []
     center_pts = []
-    half_w = 0.90  # 1.8m vehicle driving lane width
 
     for s in s_ranges:
-        if blocking_obs is not None:
-            ox = blocking_obs['pos'][0]
-            tau = np.clip((s - 3.2) / max(5.0, ox + 4.0), 0.0, 1.0)
-            poly_lat = 10.0 * (tau**3) - 15.0 * (tau**4) + 6.0 * (tau**5)
-            if s > ox + 7.0:
-                tau_ret = np.clip((s - (ox + 7.0)) / 10.0, 0.0, 1.0)
-                poly_ret = 10.0 * (tau_ret**3) - 15.0 * (tau_ret**4) + 6.0 * (tau_ret**5)
-                d_lat = swerve_offset * (1.0 - poly_ret)
-            else:
-                d_lat = swerve_offset * poly_lat
-        else:
+        if not is_evading:
             d_lat = 0.0
+        else:
+            # Zone 1: Starting region (s <= 4.2m) is STRICTLY STRAIGHT (Seedha)
+            if s <= 4.2:
+                d_lat = 0.0
+            # Zone 2: Smooth Frenet Quintic Evasion Bend approaching the obstacle
+            elif s <= s_obs + 4.0:
+                tau = np.clip((s - 4.2) / max(3.5, s_obs - 1.0), 0.0, 1.0)
+                poly = 10.0 * (tau**3) - 15.0 * (tau**4) + 6.0 * (tau**5)
+                d_lat = d_evasion * poly
+            # Zone 3: Smooth return to lane center past the obstacle
+            else:
+                tau_ret = np.clip((s - (s_obs + 4.0)) / 9.0, 0.0, 1.0)
+                poly_ret = 10.0 * (tau_ret**3) - 15.0 * (tau_ret**4) + 6.0 * (tau_ret**5)
+                d_lat = d_evasion * (1.0 - poly_ret)
 
-        pt_c = project_ego_point(s, d_lat, z=-1.55, W=W, H=H)
-        pt_l = project_ego_point(s, d_lat + half_w, z=-1.55, W=W, H=H)
-        pt_r = project_ego_point(s, d_lat - half_w, z=-1.55, W=W, H=H)
+        # 3. Project to Image
+        u_c = int((-d_lat * fx / s) + cx_lane)
+        v_c = int((1.90 * fy / s) + cy_lane)
 
-        if pt_c and 0 <= pt_c[0] < W and H / 2.0 <= pt_c[1] < H:
-            center_pts.append(pt_c)
-        if pt_l and 0 <= pt_l[0] < W and H / 2.0 <= pt_l[1] < H:
-            poly_left.append(pt_l)
-        if pt_r and 0 <= pt_r[0] < W and H / 2.0 <= pt_r[1] < H:
-            poly_right.append(pt_r)
+        u_l = int((-(d_lat + half_w) * fx / s) + cx_lane)
+        u_r = int((-(d_lat - half_w) * fx / s) + cx_lane)
 
-    # 3. Render High-Tech Ground Carpet (Semi-transparent ADAS Driving Ribbon)
+        if 0 <= u_c < W and H / 2.0 <= v_c < H:
+            center_pts.append((u_c, v_c))
+        if 0 <= u_l < W and H / 2.0 <= v_c < H:
+            poly_left.append((u_l, v_c))
+        if 0 <= u_r < W and H / 2.0 <= v_c < H:
+            poly_right.append((u_r, v_c))
+
+    # 4. Render Ground Corridor Ribbon (Green when clear, Amber/Cyan when actively evading)
     if len(poly_left) >= 4 and len(poly_right) >= 4:
         carpet_pts = np.array(poly_left + poly_right[::-1], np.int32)
-        carpet_col = (0, 220, 120) if blocking_obs is None else (0, 180, 255)
-        cv2.fillPoly(overlay, [carpet_pts], carpet_col)
-        cv2.addWeighted(overlay, 0.28, frame, 0.72, 0, frame)
+        ribbon_col = (0, 200, 255) if is_evading else (0, 225, 110)
+        edge_col = (0, 230, 255) if is_evading else (0, 255, 180)
 
-        # Glowing Lane Boundary Edges
-        pts_l_np = np.array(poly_left, np.int32).reshape((-1, 1, 2))
-        pts_r_np = np.array(poly_right, np.int32).reshape((-1, 1, 2))
-        edge_col = (0, 255, 180) if blocking_obs is None else (0, 220, 255)
-        cv2.polylines(frame, [pts_l_np], False, edge_col, 3, cv2.LINE_AA)
-        cv2.polylines(frame, [pts_r_np], False, edge_col, 3, cv2.LINE_AA)
+        cv2.fillPoly(overlay, [carpet_pts], ribbon_col)
+        cv2.addWeighted(overlay, 0.30, frame, 0.70, 0, frame)
 
-        # Centerline Guidance Trajectory with Waypoint Markers
-        if len(center_pts) >= 4:
-            c_np = np.array(center_pts, np.int32).reshape((-1, 1, 2))
-            cv2.polylines(frame, [c_np], False, (255, 255, 255), 2, cv2.LINE_AA)
-            for i in range(2, len(center_pts) - 1, 3):
-                cv2.circle(frame, center_pts[i], 4, (0, 240, 255), -1, cv2.LINE_AA)
-                cv2.circle(frame, center_pts[i], 6, edge_col, 1, cv2.LINE_AA)
+        pts_l = np.array(poly_left, np.int32).reshape((-1, 1, 2))
+        pts_r = np.array(poly_right, np.int32).reshape((-1, 1, 2))
+        cv2.polylines(frame, [pts_l], False, edge_col, 2, cv2.LINE_AA)
+        cv2.polylines(frame, [pts_r], False, edge_col, 2, cv2.LINE_AA)
 
-    # NO UGLY TEXT ON ROAD (Clean ADAS Highway Horizon View)
+        pts_c = np.array(center_pts, np.int32).reshape((-1, 1, 2))
+        cv2.polylines(frame, [pts_c], False, (255, 255, 255), 2, cv2.LINE_AA)
+        for i in range(2, len(center_pts) - 1, 3):
+            cv2.circle(frame, center_pts[i], 3, (0, 240, 255), -1, cv2.LINE_AA)
+            cv2.circle(frame, center_pts[i], 5, edge_col, 1, cv2.LINE_AA)
+
+    swerve_offset = d_evasion if is_evading else 0.0
     return swerve_offset, blocking_obs
 
 
@@ -661,7 +673,7 @@ def main():
             trk['future_waypoints'] = pred_pts
 
         # 6. Dual Path Planning (rendered onto camera display)
-        swerve_offset, blocking_obs = render_dual_paths(display_cam, active_tracks, ego_speed)
+        swerve_offset, blocking_obs = render_dual_paths(display_cam, active_tracks, ego_speed, drive_id=row['drive'])
 
         # ------------------------------------------------------------------------------------------
         # 7. RENDER CAMERA OVERLAYS (NO TOP BANNER | NO DISTANT ORANGE BOXES)
