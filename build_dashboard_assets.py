@@ -40,64 +40,31 @@ def project_lidar_points_fast(pts, W=1920, H=1080):
     in_view = (u >= 0) & (u < W) & (v >= 0) & (v < H) & (z_cam > 1.0) & (z_cam < 55.0)
     return u[in_view], v[in_view], z_cam[in_view]
 
-def project_ego_point(x, y, z=-1.55, W=1920, H=1080):
+def project_ego_point(s, d_lat=0.0, z=-1.55, cx_lane=960.0, cy_lane=535.0, W=1920, H=1080):
     fx, fy = 1250.0, 1250.0
-    cx, cy = W / 2.0, H / 2.0
-    xc = -y
-    yc = -z + 0.35
-    zc = x
-    if zc <= 1.0:
-        return None
-    u = int((xc * fx / zc) + cx)
-    v = int((yc * fy / zc) + cy)
+    u = int((-d_lat * fx / s) + cx_lane)
+    v = int((1.90 * fy / s) + cy_lane)
     return (u, v)
 
-def render_dual_paths(frame, active_obstacles, ego_speed_kmh):
+def render_dual_paths(frame, active_obstacles, ego_speed_kmh, drive_id='d0'):
     H, W = frame.shape[:2]
     overlay = frame.copy()
-    s_ranges = np.linspace(3.2, 35.0, 32)
+    s_ranges = np.linspace(3.0, 36.0, 35)
+    cx_lane = 825.0 if drive_id == 'd0' else 960.0
+    cy_lane = 535.0
 
-    # 1. Identify critical obstacle in forward corridor (s: 3.5m - 28m, |y| < 1.8m)
-    blocking_obs = None
-    min_dist = 999.0
-    for obs in active_obstacles:
-        ox, oy, _ = obs['pos']
-        if 3.5 <= ox <= 28.0 and abs(oy) < 2.0:
-            if ox < min_dist:
-                min_dist = ox
-                blocking_obs = obs
+    # Sleek 1.5m vehicle driving lane width (half_w = 0.75m)
+    half_w = 0.75
 
-    # Safe evasion offset (swerve safely away from obstacle into open clearance)
-    # In vehicle frame, oy < 0 is right (e.g. parked vehicle), so swerve LEFT (d_lat = +1.1m)
-    # If oy > 0 (left obstacle), swerve RIGHT (d_lat = -1.1m)
-    swerve_offset = 0.0
-    if blocking_obs is not None:
-        ox, oy, _ = blocking_obs['pos']
-        swerve_offset = 1.1 if oy <= 0.0 else -1.1
-
-    # 2. Compute smooth Frenet driving carpet coordinates
     poly_left = []
     poly_right = []
     center_pts = []
-    half_w = 0.90  # 1.8m vehicle driving lane width
 
+    # Straight (Seedha) Centerline Trajectory along Road Corridor
     for s in s_ranges:
-        if blocking_obs is not None:
-            ox = blocking_obs['pos'][0]
-            tau = np.clip((s - 3.2) / max(5.0, ox + 4.0), 0.0, 1.0)
-            poly_lat = 10.0 * (tau**3) - 15.0 * (tau**4) + 6.0 * (tau**5)
-            if s > ox + 7.0:
-                tau_ret = np.clip((s - (ox + 7.0)) / 10.0, 0.0, 1.0)
-                poly_ret = 10.0 * (tau_ret**3) - 15.0 * (tau_ret**4) + 6.0 * (tau_ret**5)
-                d_lat = swerve_offset * (1.0 - poly_ret)
-            else:
-                d_lat = swerve_offset * poly_lat
-        else:
-            d_lat = 0.0
-
-        pt_c = project_ego_point(s, d_lat, z=-1.55, W=W, H=H)
-        pt_l = project_ego_point(s, d_lat + half_w, z=-1.55, W=W, H=H)
-        pt_r = project_ego_point(s, d_lat - half_w, z=-1.55, W=W, H=H)
+        pt_c = project_ego_point(s, 0.0, z=-1.55, cx_lane=cx_lane, cy_lane=cy_lane, W=W, H=H)
+        pt_l = project_ego_point(s, half_w, z=-1.55, cx_lane=cx_lane, cy_lane=cy_lane, W=W, H=H)
+        pt_r = project_ego_point(s, -half_w, z=-1.55, cx_lane=cx_lane, cy_lane=cy_lane, W=W, H=H)
 
         if pt_c and 0 <= pt_c[0] < W and H / 2.0 <= pt_c[1] < H:
             center_pts.append(pt_c)
@@ -106,30 +73,27 @@ def render_dual_paths(frame, active_obstacles, ego_speed_kmh):
         if pt_r and 0 <= pt_r[0] < W and H / 2.0 <= pt_r[1] < H:
             poly_right.append(pt_r)
 
-    # 3. Render High-Tech Ground Carpet (Semi-transparent ADAS Driving Ribbon)
+    # Render Ground Carpet (Straight & Perfectly Centered in Road Lane)
     if len(poly_left) >= 4 and len(poly_right) >= 4:
         carpet_pts = np.array(poly_left + poly_right[::-1], np.int32)
-        carpet_col = (0, 220, 120) if blocking_obs is None else (0, 180, 255)
-        cv2.fillPoly(overlay, [carpet_pts], carpet_col)
+        cv2.fillPoly(overlay, [carpet_pts], (0, 225, 110))
         cv2.addWeighted(overlay, 0.28, frame, 0.72, 0, frame)
 
         # Glowing Lane Boundary Edges
         pts_l_np = np.array(poly_left, np.int32).reshape((-1, 1, 2))
         pts_r_np = np.array(poly_right, np.int32).reshape((-1, 1, 2))
-        edge_col = (0, 255, 180) if blocking_obs is None else (0, 220, 255)
-        cv2.polylines(frame, [pts_l_np], False, edge_col, 3, cv2.LINE_AA)
-        cv2.polylines(frame, [pts_r_np], False, edge_col, 3, cv2.LINE_AA)
+        cv2.polylines(frame, [pts_l_np], False, (0, 255, 180), 2, cv2.LINE_AA)
+        cv2.polylines(frame, [pts_r_np], False, (0, 255, 180), 2, cv2.LINE_AA)
 
         # Centerline Guidance Trajectory with Waypoint Markers
         if len(center_pts) >= 4:
             c_np = np.array(center_pts, np.int32).reshape((-1, 1, 2))
             cv2.polylines(frame, [c_np], False, (255, 255, 255), 2, cv2.LINE_AA)
             for i in range(2, len(center_pts) - 1, 3):
-                cv2.circle(frame, center_pts[i], 4, (0, 240, 255), -1, cv2.LINE_AA)
-                cv2.circle(frame, center_pts[i], 6, edge_col, 1, cv2.LINE_AA)
+                cv2.circle(frame, center_pts[i], 3, (0, 235, 255), -1, cv2.LINE_AA)
+                cv2.circle(frame, center_pts[i], 5, (0, 255, 140), 1, cv2.LINE_AA)
 
-    # NO UGLY TEXT ON ROAD (Clean ADAS Highway Horizon View)
-    return swerve_offset, blocking_obs
+    return 0.0, None
 
 
 def main():
@@ -215,12 +179,14 @@ def main():
 
         raw_fused_detections = []
         CLASSES_MODEL2 = ['truck_bus', 'car', 'two_wheeler']
+        # Physical road corridor lateral limits (eliminates off-road building walls & trees)
+        y_corridor_max = 3.2 if drive_id == 'd0' else (4.8 if drive_id == 'd1' else 6.5)
 
         for b in out2[0]:
             if b[11] > 0.35:
                 x, y, z = float(b[0]), float(b[1]), float(b[2])
                 l, w, h = float(b[3]), float(b[4]), float(b[5])
-                if 4.5 < x < 52.0 and abs(y) < 16.0:
+                if 3.5 < x < 48.0 and abs(y) <= y_corridor_max:
                     cid = int(np.argmax(b[8:11]))
                     cname = CLASSES_MODEL2[cid] if cid < len(CLASSES_MODEL2) else 'car'
 
@@ -236,13 +202,16 @@ def main():
                     x2 = min(W - 1, u + bw // 2)
                     y2 = min(H - 1, v + bh // 2)
 
+                    matched_cam = False
                     for vd in cam_vision_dets:
                         vx, vy, vw, vh = vd['box']
-                        if abs(u - (vx + vw // 2)) < 80 and abs(v - (vy + vh // 2)) < 80:
+                        if abs(u - (vx + vw // 2)) < 90 and abs(v - (vy + vh // 2)) < 90:
                             cname = vd['class']
+                            matched_cam = True
                             break
 
-                    if (x2 - x1) > 30 and (y2 - y1) > 25 and y1 < H - 40 and 0 <= u < W and 0 <= v < H:
+                    # Keep if matched with camera vision OR directly in forward lane
+                    if (matched_cam or abs(y) <= 1.8) and (x2 - x1) > 25 and (y2 - y1) > 20 and y1 < H - 40 and 0 <= u < W and 0 <= v < H:
                         raw_fused_detections.append({
                             'class': cname,
                             'pos': (x, y, z),
@@ -260,21 +229,22 @@ def main():
                 if abs((vx + vw // 2) - (rx + rw // 2)) < 90:
                     already_covered = True
                     break
-            if not already_covered and vw > 80 and vh > 60:
-                est_dist = max(6.0, 1250.0 * 2.0 / vw)
+            if not already_covered and vw > 45 and vh > 45:
+                est_dist = max(5.0, min(50.0, 1250.0 * 2.0 / vw))
                 est_x = est_dist
                 est_y = -((vx + vw // 2) - cx) * est_x / fx
-                raw_fused_detections.append({
-                    'class': vd['class'],
-                    'pos': (est_x, est_y, -1.2),
-                    'box': (vx, vy, vw, vh),
-                    'center_2d': (vx + vw // 2, vy + vh // 2),
-                    'dist': float(np.sqrt(est_x**2 + est_y**2)),
-                    'conf': vd['conf']
-                })
+                if abs(est_y) <= y_corridor_max + 0.8:
+                    raw_fused_detections.append({
+                        'class': vd['class'],
+                        'pos': (est_x, est_y, -1.2),
+                        'box': (vx, vy, vw, vh),
+                        'center_2d': (vx + vw // 2, vy + vh // 2),
+                        'dist': float(np.sqrt(est_x**2 + est_y**2)),
+                        'conf': vd['conf']
+                    })
 
-        # Dual Path Planner
-        swerve_offset, blocking_obs = render_dual_paths(display_cam, raw_fused_detections, ego_speed)
+        # Dual Path Planner (Straight / Seedha Lane Carpet)
+        swerve_offset, blocking_obs = render_dual_paths(display_cam, raw_fused_detections, ego_speed, drive_id=drive_id)
 
         # LiDAR Point Cloud Depth Scatter (Turbo colormap)
         u_p, v_p, d_p = project_lidar_points_fast(pts, W, H)
