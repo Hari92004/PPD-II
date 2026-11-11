@@ -40,13 +40,13 @@ def project_lidar_points_fast(pts, W=1920, H=1080):
     in_view = (u >= 0) & (u < W) & (v >= 0) & (v < H) & (z_cam > 1.0) & (z_cam < 55.0)
     return u[in_view], v[in_view], z_cam[in_view]
 
-def project_ego_point(x, y, z=-1.25, W=1920, H=1080):
+def project_ego_point(x, y, z=-1.55, W=1920, H=1080):
     fx, fy = 1250.0, 1250.0
     cx, cy = W / 2.0, H / 2.0
     xc = -y
     yc = -z + 0.35
     zc = x
-    if zc <= 0.8:
+    if zc <= 1.0:
         return None
     u = int((xc * fx / zc) + cx)
     v = int((yc * fy / zc) + cy)
@@ -54,69 +54,81 @@ def project_ego_point(x, y, z=-1.25, W=1920, H=1080):
 
 def render_dual_paths(frame, active_obstacles, ego_speed_kmh):
     H, W = frame.shape[:2]
-    s_ranges = np.linspace(3.5, 38.0, 35)
+    overlay = frame.copy()
+    s_ranges = np.linspace(3.2, 35.0, 32)
 
-    nom_pts = []
-    for s in s_ranges:
-        pt = project_ego_point(s, 0.0, -1.25, W, H)
-        if pt is not None and 0 <= pt[0] < W and H / 2.0 <= pt[1] < H:
-            nom_pts.append(pt)
-
-    for i in range(0, len(nom_pts) - 1, 2):
-        cv2.line(frame, nom_pts[i], nom_pts[i + 1], (0, 200, 255), 3, cv2.LINE_AA)
-
-    if len(nom_pts) > 6:
-        cv2.putText(frame, "-- NOMINAL PATH (CENTERLINE) --", (nom_pts[4][0] + 15, nom_pts[4][1] + 5),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.50, (0, 200, 255), 2, cv2.LINE_AA)
-
+    # 1. Identify critical obstacle in forward corridor (s: 3.5m - 28m, |y| < 1.8m)
     blocking_obs = None
     min_dist = 999.0
     for obs in active_obstacles:
         ox, oy, _ = obs['pos']
-        if 4.0 <= ox <= 32.0 and abs(oy) < 2.2:
+        if 3.5 <= ox <= 28.0 and abs(oy) < 2.0:
             if ox < min_dist:
                 min_dist = ox
                 blocking_obs = obs
 
+    # Safe evasion offset (swerve safely away from obstacle into open clearance)
+    # In vehicle frame, oy < 0 is right (e.g. parked vehicle), so swerve LEFT (d_lat = +1.1m)
+    # If oy > 0 (left obstacle), swerve RIGHT (d_lat = -1.1m)
     swerve_offset = 0.0
     if blocking_obs is not None:
         ox, oy, _ = blocking_obs['pos']
-        swerve_offset = -1.8 if oy >= 0.0 else 1.8
+        swerve_offset = 1.1 if oy <= 0.0 else -1.1
 
-    planned_pts = []
+    # 2. Compute smooth Frenet driving carpet coordinates
+    poly_left = []
+    poly_right = []
+    center_pts = []
+    half_w = 0.90  # 1.8m vehicle driving lane width
+
     for s in s_ranges:
         if blocking_obs is not None:
             ox = blocking_obs['pos'][0]
-            tau = np.clip((s - 3.5) / max(6.0, ox + 6.0), 0.0, 1.0)
-            poly = 10.0 * (tau**3) - 15.0 * (tau**4) + 6.0 * (tau**5)
-            if s > ox + 8.0:
-                tau_return = np.clip((s - (ox + 8.0)) / 12.0, 0.0, 1.0)
-                poly_return = 10.0 * (tau_return**3) - 15.0 * (tau_return**4) + 6.0 * (tau_return**5)
-                d_lat = swerve_offset * (1.0 - poly_return)
+            tau = np.clip((s - 3.2) / max(5.0, ox + 4.0), 0.0, 1.0)
+            poly_lat = 10.0 * (tau**3) - 15.0 * (tau**4) + 6.0 * (tau**5)
+            if s > ox + 7.0:
+                tau_ret = np.clip((s - (ox + 7.0)) / 10.0, 0.0, 1.0)
+                poly_ret = 10.0 * (tau_ret**3) - 15.0 * (tau_ret**4) + 6.0 * (tau_ret**5)
+                d_lat = swerve_offset * (1.0 - poly_ret)
             else:
-                d_lat = swerve_offset * poly
+                d_lat = swerve_offset * poly_lat
         else:
             d_lat = 0.0
 
-        pt = project_ego_point(s, d_lat, -1.25, W, H)
-        if pt is not None and 0 <= pt[0] < W and H / 2.0 <= pt[1] < H:
-            planned_pts.append(pt)
+        pt_c = project_ego_point(s, d_lat, z=-1.55, W=W, H=H)
+        pt_l = project_ego_point(s, d_lat + half_w, z=-1.55, W=W, H=H)
+        pt_r = project_ego_point(s, d_lat - half_w, z=-1.55, W=W, H=H)
 
-    if len(planned_pts) >= 3:
-        pts_np = np.array(planned_pts, np.int32).reshape((-1, 1, 2))
-        cv2.polylines(frame, [pts_np], isClosed=False, color=(0, 255, 102), thickness=6, lineType=cv2.LINE_AA)
-        cv2.polylines(frame, [pts_np], isClosed=False, color=(210, 255, 230), thickness=2, lineType=cv2.LINE_AA)
+        if pt_c and 0 <= pt_c[0] < W and H / 2.0 <= pt_c[1] < H:
+            center_pts.append(pt_c)
+        if pt_l and 0 <= pt_l[0] < W and H / 2.0 <= pt_l[1] < H:
+            poly_left.append(pt_l)
+        if pt_r and 0 <= pt_r[0] < W and H / 2.0 <= pt_r[1] < H:
+            poly_right.append(pt_r)
 
-        for w_idx in range(1, len(planned_pts), 3):
-            cv2.circle(frame, planned_pts[w_idx], 5, (255, 255, 0), -1, cv2.LINE_AA)
-            cv2.circle(frame, planned_pts[w_idx], 7, (0, 255, 102), 1, cv2.LINE_AA)
+    # 3. Render High-Tech Ground Carpet (Semi-transparent ADAS Driving Ribbon)
+    if len(poly_left) >= 4 and len(poly_right) >= 4:
+        carpet_pts = np.array(poly_left + poly_right[::-1], np.int32)
+        carpet_col = (0, 220, 120) if blocking_obs is None else (0, 180, 255)
+        cv2.fillPoly(overlay, [carpet_pts], carpet_col)
+        cv2.addWeighted(overlay, 0.28, frame, 0.72, 0, frame)
 
-        lbl_idx = min(8, len(planned_pts) - 1)
-        lbl_pt = planned_pts[lbl_idx]
-        txt = "== FINAL PLANNED PATH (BENT FRENET QUINTIC) ==" if blocking_obs else "== FINAL PLANNED PATH (CLEAR) =="
-        cv2.putText(frame, txt, (lbl_pt[0] - 180, lbl_pt[1] + 32),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.54, (0, 255, 102), 2, cv2.LINE_AA)
+        # Glowing Lane Boundary Edges
+        pts_l_np = np.array(poly_left, np.int32).reshape((-1, 1, 2))
+        pts_r_np = np.array(poly_right, np.int32).reshape((-1, 1, 2))
+        edge_col = (0, 255, 180) if blocking_obs is None else (0, 220, 255)
+        cv2.polylines(frame, [pts_l_np], False, edge_col, 3, cv2.LINE_AA)
+        cv2.polylines(frame, [pts_r_np], False, edge_col, 3, cv2.LINE_AA)
 
+        # Centerline Guidance Trajectory with Waypoint Markers
+        if len(center_pts) >= 4:
+            c_np = np.array(center_pts, np.int32).reshape((-1, 1, 2))
+            cv2.polylines(frame, [c_np], False, (255, 255, 255), 2, cv2.LINE_AA)
+            for i in range(2, len(center_pts) - 1, 3):
+                cv2.circle(frame, center_pts[i], 4, (0, 240, 255), -1, cv2.LINE_AA)
+                cv2.circle(frame, center_pts[i], 6, edge_col, 1, cv2.LINE_AA)
+
+    # NO UGLY TEXT ON ROAD (Clean ADAS Highway Horizon View)
     return swerve_offset, blocking_obs
 
 

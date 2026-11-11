@@ -39,7 +39,7 @@ const DASHBOARD_DATA = [
         "x": 22.97,
         "y": 5.68,
         "dist": 23.7,
-        "vr": 1.64,
+        "vr": 1.23,
         "rcs": 14.5,
         "is_front": true
       },
@@ -69,7 +69,7 @@ const DASHBOARD_DATA = [
         "x": 39.87,
         "y": 12.57,
         "dist": 41.8,
-        "vr": 1.02,
+        "vr": 0.81,
         "rcs": 14.5,
         "is_front": false
       },
@@ -89,7 +89,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.54,
         "dist": 7.0,
-        "vr": 1.21,
+        "vr": 1.74,
         "rcs": 14.5,
         "is_front": true
       }
@@ -114,7 +114,7 @@ const DASHBOARD_DATA = [
         "x": 27.17,
         "y": 5.37,
         "dist": 27.7,
-        "vr": 0.82,
+        "vr": 1.35,
         "rcs": 14.5,
         "is_front": false
       },
@@ -134,7 +134,7 @@ const DASHBOARD_DATA = [
         "x": 23.17,
         "y": 5.74,
         "dist": 23.9,
-        "vr": 0.55,
+        "vr": 0.8,
         "rcs": 14.5,
         "is_front": true
       },
@@ -164,7 +164,7 @@ const DASHBOARD_DATA = [
         "x": 40.37,
         "y": 12.67,
         "dist": 42.3,
-        "vr": 1.34,
+        "vr": 1.99,
         "rcs": 14.5,
         "is_front": false
       },
@@ -174,7 +174,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.54,
         "dist": 7.0,
-        "vr": 0.59,
+        "vr": 0.9,
         "rcs": 14.5,
         "is_front": true
       }
@@ -199,7 +199,7 @@ const DASHBOARD_DATA = [
         "x": 26.99,
         "y": 5.0,
         "dist": 27.4,
-        "vr": 1.07,
+        "vr": 1.72,
         "rcs": 14.5,
         "is_front": false
       },
@@ -219,7 +219,7 @@ const DASHBOARD_DATA = [
         "x": 22.84,
         "y": 5.65,
         "dist": 23.5,
-        "vr": 1.65,
+        "vr": 1.95,
         "rcs": 14.5,
         "is_front": true
       },
@@ -249,7 +249,7 @@ const DASHBOARD_DATA = [
         "x": 39.97,
         "y": 12.74,
         "dist": 42.0,
-        "vr": 1.36,
+        "vr": 0.57,
         "rcs": 14.5,
         "is_front": false
       },
@@ -259,7 +259,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.54,
         "dist": 7.0,
-        "vr": 0.71,
+        "vr": 1.72,
         "rcs": 14.5,
         "is_front": true
       }
@@ -284,7 +284,7 @@ const DASHBOARD_DATA = [
         "x": 27.07,
         "y": 4.92,
         "dist": 27.5,
-        "vr": 1.86,
+        "vr": 1.02,
         "rcs": 14.5,
         "is_front": false
       },
@@ -304,7 +304,7 @@ const DASHBOARD_DATA = [
         "x": 22.86,
         "y": 5.63,
         "dist": 23.5,
-        "vr": 1.7,
+        "vr": 1.71,
         "rcs": 14.5,
         "is_front": true
       },
@@ -334,7 +334,7 @@ const DASHBOARD_DATA = [
         "x": 40.1,
         "y": 12.81,
         "dist": 42.1,
-        "vr": 1.57,
+        "vr": 1.62,
         "rcs": 14.5,
         "is_front": false
       },
@@ -344,7 +344,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.54,
         "dist": 7.0,
-        "vr": 0.66,
+        "vr": 1.01,
         "rcs": 14.5,
         "is_front": true
       }
@@ -389,7 +389,7 @@ const DASHBOARD_DATA = [
         "x": 32.8,
         "y": 2.96,
         "dist": 32.9,
-        "vr": 1.84,
+        "vr": 1.07,
         "rcs": 14.5,
         "is_front": false
       },
@@ -429,7 +429,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.54,
         "dist": 7.0,
-        "vr": 1.15,
+        "vr": 1.63,
         "rcs": 14.5,
         "is_front": true
       }
@@ -454,7 +454,7 @@ const DASHBOARD_DATA = [
         "x": 27.17,
         "y": 4.85,
         "dist": 27.6,
-        "vr": 1.18,
+        "vr": 1.21,
         "rcs": 14.5,
         "is_front": false
       },
@@ -474,7 +474,7 @@ const DASHBOARD_DATA = [
         "x": 22.89,
         "y": 5.71,
         "dist": 23.6,
-        "vr": 0.97,
+        "vr": 1.53,
         "rcs": 14.5,
         "is_front": true
       },
@@ -504,7 +504,7 @@ const DASHBOARD_DATA = [
         "x": 40.3,
         "y": 12.93,
         "dist": 42.3,
-        "vr": 1.33,
+        "vr": 1.24,
         "rcs": 14.5,
         "is_front": false
       },
@@ -514,7 +514,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.54,
         "dist": 7.0,
-        "vr": 1.3,
+        "vr": 1.53,
         "rcs": 14.5,
         "is_front": true
       }
@@ -539,7 +539,7 @@ const DASHBOARD_DATA = [
         "x": 27.27,
         "y": 4.86,
         "dist": 27.7,
-        "vr": 2.01,
+        "vr": 1.61,
         "rcs": 14.5,
         "is_front": false
       },
@@ -559,7 +559,7 @@ const DASHBOARD_DATA = [
         "x": 22.74,
         "y": 5.91,
         "dist": 23.5,
-        "vr": 1.65,
+        "vr": 2.02,
         "rcs": 14.5,
         "is_front": true
       },
@@ -589,7 +589,7 @@ const DASHBOARD_DATA = [
         "x": 40.53,
         "y": 13.15,
         "dist": 42.6,
-        "vr": 1.71,
+        "vr": 1.85,
         "rcs": 14.5,
         "is_front": false
       },
@@ -644,7 +644,7 @@ const DASHBOARD_DATA = [
         "x": 33.02,
         "y": 2.79,
         "dist": 33.1,
-        "vr": 0.56,
+        "vr": 1.64,
         "rcs": 14.5,
         "is_front": false
       },
@@ -694,7 +694,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.55,
         "dist": 7.0,
-        "vr": 1.08,
+        "vr": 1.21,
         "rcs": 14.5,
         "is_front": true
       }
@@ -719,7 +719,7 @@ const DASHBOARD_DATA = [
         "x": 27.66,
         "y": 3.83,
         "dist": 27.9,
-        "vr": 1.05,
+        "vr": 1.12,
         "rcs": 14.5,
         "is_front": false
       },
@@ -739,7 +739,7 @@ const DASHBOARD_DATA = [
         "x": 22.69,
         "y": 6.98,
         "dist": 23.7,
-        "vr": 1.05,
+        "vr": 1.19,
         "rcs": 14.5,
         "is_front": true
       },
@@ -779,7 +779,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.55,
         "dist": 7.0,
-        "vr": 1.09,
+        "vr": 1.11,
         "rcs": 14.5,
         "is_front": true
       }
@@ -824,7 +824,7 @@ const DASHBOARD_DATA = [
         "x": 32.53,
         "y": 1.9,
         "dist": 32.6,
-        "vr": 1.17,
+        "vr": 0.78,
         "rcs": 14.5,
         "is_front": false
       },
@@ -854,7 +854,7 @@ const DASHBOARD_DATA = [
         "x": 39.22,
         "y": 1.51,
         "dist": 39.2,
-        "vr": 0.59,
+        "vr": 0.76,
         "rcs": 14.5,
         "is_front": false
       },
@@ -874,7 +874,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.55,
         "dist": 7.0,
-        "vr": 0.83,
+        "vr": 0.86,
         "rcs": 14.5,
         "is_front": true
       }
@@ -909,7 +909,7 @@ const DASHBOARD_DATA = [
         "x": 26.86,
         "y": 2.5,
         "dist": 27.0,
-        "vr": 1.39,
+        "vr": 1.28,
         "rcs": 14.5,
         "is_front": false
       },
@@ -939,7 +939,7 @@ const DASHBOARD_DATA = [
         "x": 33.11,
         "y": -1.11,
         "dist": 33.1,
-        "vr": 2.2,
+        "vr": 1.51,
         "rcs": 14.5,
         "is_front": false
       },
@@ -1004,7 +1004,7 @@ const DASHBOARD_DATA = [
         "x": 27.28,
         "y": 2.58,
         "dist": 27.4,
-        "vr": 0.55,
+        "vr": 1.54,
         "rcs": 14.5,
         "is_front": false
       },
@@ -1089,7 +1089,7 @@ const DASHBOARD_DATA = [
         "x": 27.13,
         "y": 2.66,
         "dist": 27.3,
-        "vr": 0.61,
+        "vr": 0.79,
         "rcs": 14.5,
         "is_front": false
       },
@@ -1174,7 +1174,7 @@ const DASHBOARD_DATA = [
         "x": 39.13,
         "y": 2.49,
         "dist": 39.2,
-        "vr": 2.04,
+        "vr": 1.82,
         "rcs": 14.5,
         "is_front": false
       },
@@ -1204,7 +1204,7 @@ const DASHBOARD_DATA = [
         "x": 47.33,
         "y": 1.32,
         "dist": 47.4,
-        "vr": 0.76,
+        "vr": 1.54,
         "rcs": 14.5,
         "is_front": false
       },
@@ -1224,7 +1224,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.59,
         "dist": 7.0,
-        "vr": 0.5,
+        "vr": 0.82,
         "rcs": 14.5,
         "is_front": true
       },
@@ -1250,7 +1250,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.0,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -1329,7 +1329,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.6,
         "dist": 7.0,
-        "vr": 1.69,
+        "vr": 0.85,
         "rcs": 14.5,
         "is_front": true
       },
@@ -1355,7 +1355,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.1,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -1434,7 +1434,7 @@ const DASHBOARD_DATA = [
         "x": 6.07,
         "y": -3.65,
         "dist": 7.1,
-        "vr": 1.53,
+        "vr": 0.78,
         "rcs": 14.5,
         "is_front": true
       },
@@ -1460,7 +1460,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.1,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -1479,7 +1479,7 @@ const DASHBOARD_DATA = [
         "x": 24.12,
         "y": 0.27,
         "dist": 24.1,
-        "vr": 1.8,
+        "vr": 1.71,
         "rcs": 14.5,
         "is_front": true
       },
@@ -1555,7 +1555,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.4,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -1614,7 +1614,7 @@ const DASHBOARD_DATA = [
         "x": 30.85,
         "y": 1.57,
         "dist": 30.9,
-        "vr": 1.93,
+        "vr": 2.13,
         "rcs": 14.5,
         "is_front": false
       },
@@ -1644,7 +1644,7 @@ const DASHBOARD_DATA = [
         "x": 6.31,
         "y": -3.84,
         "dist": 7.4,
-        "vr": 0.76,
+        "vr": 1.9,
         "rcs": 14.5,
         "is_front": true
       }
@@ -1660,7 +1660,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.7,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -1719,7 +1719,7 @@ const DASHBOARD_DATA = [
         "x": 30.52,
         "y": 1.72,
         "dist": 30.6,
-        "vr": 1.64,
+        "vr": 0.6,
         "rcs": 14.5,
         "is_front": false
       },
@@ -1749,7 +1749,7 @@ const DASHBOARD_DATA = [
         "x": 6.6,
         "y": -4.06,
         "dist": 7.7,
-        "vr": 1.48,
+        "vr": 0.63,
         "rcs": 14.5,
         "is_front": true
       }
@@ -1765,7 +1765,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.9,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -1844,7 +1844,7 @@ const DASHBOARD_DATA = [
         "x": 6.74,
         "y": -4.17,
         "dist": 7.9,
-        "vr": 1.11,
+        "vr": 1.65,
         "rcs": 14.5,
         "is_front": true
       }
@@ -1860,7 +1860,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.4,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -1939,7 +1939,7 @@ const DASHBOARD_DATA = [
         "x": 7.1,
         "y": -4.44,
         "dist": 8.4,
-        "vr": 1.76,
+        "vr": 0.93,
         "rcs": 14.5,
         "is_front": true
       },
@@ -1975,7 +1975,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.0,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -2090,7 +2090,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.7,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -2185,7 +2185,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.8,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -2214,7 +2214,7 @@ const DASHBOARD_DATA = [
         "x": 22.41,
         "y": 0.06,
         "dist": 22.4,
-        "vr": 1.89,
+        "vr": 0.56,
         "rcs": 14.5,
         "is_front": true
       },
@@ -2325,7 +2325,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 9.5,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -2354,7 +2354,7 @@ const DASHBOARD_DATA = [
         "x": 21.74,
         "y": 1.26,
         "dist": 21.8,
-        "vr": 1.61,
+        "vr": 1.08,
         "rcs": 14.5,
         "is_front": true
       },
@@ -2420,7 +2420,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 9.2,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -2525,7 +2525,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 18.3,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -2564,7 +2564,7 @@ const DASHBOARD_DATA = [
         "x": 24.29,
         "y": -0.31,
         "dist": 24.3,
-        "vr": 0.65,
+        "vr": 1.15,
         "rcs": 14.5,
         "is_front": true
       },
@@ -2620,7 +2620,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 18.6,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -2715,7 +2715,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 9.4,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -2820,7 +2820,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 9.1,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -2849,7 +2849,7 @@ const DASHBOARD_DATA = [
         "x": 20.55,
         "y": 1.2,
         "dist": 20.6,
-        "vr": 0.73,
+        "vr": 1.15,
         "rcs": 14.5,
         "is_front": true
       },
@@ -2915,7 +2915,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.4,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -2944,7 +2944,7 @@ const DASHBOARD_DATA = [
         "x": 18.71,
         "y": 1.08,
         "dist": 18.7,
-        "vr": 0.88,
+        "vr": 1.81,
         "rcs": 14.5,
         "is_front": true
       },
@@ -3030,7 +3030,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.4,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -3039,7 +3039,7 @@ const DASHBOARD_DATA = [
         "x": 22.71,
         "y": -10.48,
         "dist": 25.0,
-        "vr": 1.57,
+        "vr": 0.51,
         "rcs": 14.5,
         "is_front": false
       },
@@ -3049,7 +3049,7 @@ const DASHBOARD_DATA = [
         "x": 23.97,
         "y": -0.07,
         "dist": 24.0,
-        "vr": 2.18,
+        "vr": 1.75,
         "rcs": 14.5,
         "is_front": true
       },
@@ -3059,7 +3059,7 @@ const DASHBOARD_DATA = [
         "x": 19.47,
         "y": 0.81,
         "dist": 19.5,
-        "vr": 1.47,
+        "vr": 1.61,
         "rcs": 14.5,
         "is_front": true
       },
@@ -3125,7 +3125,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.7,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -3144,7 +3144,7 @@ const DASHBOARD_DATA = [
         "x": 23.23,
         "y": 0.44,
         "dist": 23.2,
-        "vr": 0.73,
+        "vr": 1.78,
         "rcs": 14.5,
         "is_front": true
       },
@@ -3154,7 +3154,7 @@ const DASHBOARD_DATA = [
         "x": 18.84,
         "y": 0.39,
         "dist": 18.8,
-        "vr": 0.89,
+        "vr": 1.56,
         "rcs": 14.5,
         "is_front": true
       },
@@ -3449,7 +3449,7 @@ const DASHBOARD_DATA = [
         "x": 22.66,
         "y": 3.92,
         "dist": 23.0,
-        "vr": 0.67,
+        "vr": 1.87,
         "rcs": 14.5,
         "is_front": true
       },
@@ -3535,7 +3535,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.0,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -3640,7 +3640,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.9,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -3659,7 +3659,7 @@ const DASHBOARD_DATA = [
         "x": 29.74,
         "y": 0.69,
         "dist": 29.7,
-        "vr": 0.82,
+        "vr": 1.4,
         "rcs": 14.5,
         "is_front": false
       },
@@ -3669,7 +3669,7 @@ const DASHBOARD_DATA = [
         "x": 23.98,
         "y": 1.19,
         "dist": 24.0,
-        "vr": 0.73,
+        "vr": 1.41,
         "rcs": 14.5,
         "is_front": true
       },
@@ -3745,7 +3745,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.4,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -3764,7 +3764,7 @@ const DASHBOARD_DATA = [
         "x": 30.62,
         "y": 0.35,
         "dist": 30.6,
-        "vr": 1.78,
+        "vr": 1.17,
         "rcs": 14.5,
         "is_front": false
       },
@@ -3774,7 +3774,7 @@ const DASHBOARD_DATA = [
         "x": 24.41,
         "y": 1.86,
         "dist": 24.5,
-        "vr": 1.36,
+        "vr": 1.38,
         "rcs": 14.5,
         "is_front": true
       },
@@ -3859,8 +3859,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 11.0,
     "closest_dist_m": 7.6,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -3879,7 +3879,7 @@ const DASHBOARD_DATA = [
         "x": 29.95,
         "y": -0.0,
         "dist": 29.9,
-        "vr": 0.65,
+        "vr": 0.73,
         "rcs": 14.5,
         "is_front": false
       },
@@ -3965,7 +3965,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.2,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -4099,7 +4099,7 @@ const DASHBOARD_DATA = [
         "x": 26.54,
         "y": 3.35,
         "dist": 26.8,
-        "vr": 2.2,
+        "vr": 0.61,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4175,7 +4175,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.1,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -4289,8 +4289,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 11.0,
     "closest_dist_m": 16.3,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -4319,7 +4319,7 @@ const DASHBOARD_DATA = [
         "x": 23.61,
         "y": 2.94,
         "dist": 23.8,
-        "vr": 0.94,
+        "vr": 1.54,
         "rcs": 14.5,
         "is_front": true
       },
@@ -4394,8 +4394,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 11.0,
     "closest_dist_m": 19.2,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -4434,7 +4434,7 @@ const DASHBOARD_DATA = [
         "x": 16.62,
         "y": 9.62,
         "dist": 19.2,
-        "vr": 1.73,
+        "vr": 1.55,
         "rcs": 14.5,
         "is_front": true
       },
@@ -4490,7 +4490,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 22.2,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -4519,7 +4519,7 @@ const DASHBOARD_DATA = [
         "x": 27.17,
         "y": -2.46,
         "dist": 27.3,
-        "vr": 1.98,
+        "vr": 2.05,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4539,7 +4539,7 @@ const DASHBOARD_DATA = [
         "x": 42.8,
         "y": -2.58,
         "dist": 42.9,
-        "vr": 0.89,
+        "vr": 1.93,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4604,7 +4604,7 @@ const DASHBOARD_DATA = [
         "x": 26.0,
         "y": 2.82,
         "dist": 26.2,
-        "vr": 1.2,
+        "vr": 1.42,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4624,7 +4624,7 @@ const DASHBOARD_DATA = [
         "x": 19.28,
         "y": 10.27,
         "dist": 21.8,
-        "vr": 0.67,
+        "vr": 1.95,
         "rcs": 14.5,
         "is_front": true
       },
@@ -4634,7 +4634,7 @@ const DASHBOARD_DATA = [
         "x": 39.21,
         "y": -2.64,
         "dist": 39.3,
-        "vr": 2.21,
+        "vr": 0.81,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4680,7 +4680,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 18.0,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -4699,7 +4699,7 @@ const DASHBOARD_DATA = [
         "x": 31.69,
         "y": -4.56,
         "dist": 32.0,
-        "vr": 1.01,
+        "vr": 0.83,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4719,7 +4719,7 @@ const DASHBOARD_DATA = [
         "x": 22.2,
         "y": 5.88,
         "dist": 23.0,
-        "vr": 1.74,
+        "vr": 1.53,
         "rcs": 14.5,
         "is_front": true
       },
@@ -4729,7 +4729,7 @@ const DASHBOARD_DATA = [
         "x": 37.03,
         "y": -4.04,
         "dist": 37.2,
-        "vr": 1.61,
+        "vr": 1.32,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4739,7 +4739,7 @@ const DASHBOARD_DATA = [
         "x": 45.23,
         "y": -1.91,
         "dist": 45.3,
-        "vr": 0.78,
+        "vr": 1.7,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4775,7 +4775,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 15.5,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -4804,7 +4804,7 @@ const DASHBOARD_DATA = [
         "x": 19.77,
         "y": 3.51,
         "dist": 20.1,
-        "vr": 1.74,
+        "vr": 2.0,
         "rcs": 14.5,
         "is_front": true
       },
@@ -4854,7 +4854,7 @@ const DASHBOARD_DATA = [
         "x": 23.58,
         "y": 9.94,
         "dist": 25.6,
-        "vr": 0.9,
+        "vr": 1.68,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4880,7 +4880,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.1,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -4889,7 +4889,7 @@ const DASHBOARD_DATA = [
         "x": 44.65,
         "y": -12.85,
         "dist": 46.5,
-        "vr": 0.7,
+        "vr": 2.12,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4909,7 +4909,7 @@ const DASHBOARD_DATA = [
         "x": 27.95,
         "y": 1.9,
         "dist": 28.0,
-        "vr": 1.53,
+        "vr": 1.8,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4919,7 +4919,7 @@ const DASHBOARD_DATA = [
         "x": 31.52,
         "y": -5.53,
         "dist": 32.0,
-        "vr": 1.36,
+        "vr": 1.82,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4939,7 +4939,7 @@ const DASHBOARD_DATA = [
         "x": 36.56,
         "y": 0.86,
         "dist": 36.6,
-        "vr": 1.67,
+        "vr": 2.21,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4949,7 +4949,7 @@ const DASHBOARD_DATA = [
         "x": 41.85,
         "y": -1.8,
         "dist": 41.9,
-        "vr": 1.78,
+        "vr": 0.94,
         "rcs": 14.5,
         "is_front": false
       },
@@ -4959,7 +4959,7 @@ const DASHBOARD_DATA = [
         "x": 6.08,
         "y": -3.63,
         "dist": 7.1,
-        "vr": 1.39,
+        "vr": 1.35,
         "rcs": 14.5,
         "is_front": true
       },
@@ -4994,7 +4994,7 @@ const DASHBOARD_DATA = [
         "x": 32.95,
         "y": -13.66,
         "dist": 35.7,
-        "vr": 1.62,
+        "vr": 1.7,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5034,7 +5034,7 @@ const DASHBOARD_DATA = [
         "x": 39.16,
         "y": -2.81,
         "dist": 39.3,
-        "vr": 0.84,
+        "vr": 0.69,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5044,7 +5044,7 @@ const DASHBOARD_DATA = [
         "x": 46.58,
         "y": -8.25,
         "dist": 47.3,
-        "vr": 0.87,
+        "vr": 1.46,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5054,7 +5054,7 @@ const DASHBOARD_DATA = [
         "x": 6.19,
         "y": -3.75,
         "dist": 7.2,
-        "vr": 1.6,
+        "vr": 0.67,
         "rcs": 14.5,
         "is_front": true
       },
@@ -5089,7 +5089,7 @@ const DASHBOARD_DATA = [
         "x": 33.81,
         "y": -12.44,
         "dist": 36.0,
-        "vr": 2.07,
+        "vr": 1.7,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5109,7 +5109,7 @@ const DASHBOARD_DATA = [
         "x": 27.71,
         "y": -6.04,
         "dist": 28.4,
-        "vr": 1.07,
+        "vr": 1.22,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5129,7 +5129,7 @@ const DASHBOARD_DATA = [
         "x": 38.27,
         "y": -2.06,
         "dist": 38.3,
-        "vr": 1.59,
+        "vr": 2.18,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5139,7 +5139,7 @@ const DASHBOARD_DATA = [
         "x": 45.65,
         "y": -6.51,
         "dist": 46.1,
-        "vr": 0.74,
+        "vr": 2.15,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5149,7 +5149,7 @@ const DASHBOARD_DATA = [
         "x": 6.36,
         "y": -3.88,
         "dist": 7.5,
-        "vr": 1.08,
+        "vr": 1.5,
         "rcs": 14.5,
         "is_front": true
       },
@@ -5175,7 +5175,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.9,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -5184,7 +5184,7 @@ const DASHBOARD_DATA = [
         "x": 33.72,
         "y": -10.23,
         "dist": 35.2,
-        "vr": 1.79,
+        "vr": 0.87,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5194,7 +5194,7 @@ const DASHBOARD_DATA = [
         "x": 27.52,
         "y": 2.32,
         "dist": 27.6,
-        "vr": 0.79,
+        "vr": 1.74,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5204,7 +5204,7 @@ const DASHBOARD_DATA = [
         "x": 26.88,
         "y": -1.99,
         "dist": 27.0,
-        "vr": 1.03,
+        "vr": 0.57,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5214,7 +5214,7 @@ const DASHBOARD_DATA = [
         "x": 37.43,
         "y": -1.73,
         "dist": 37.5,
-        "vr": 2.21,
+        "vr": 2.14,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5224,7 +5224,7 @@ const DASHBOARD_DATA = [
         "x": 45.17,
         "y": -4.42,
         "dist": 45.4,
-        "vr": 0.96,
+        "vr": 1.12,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5244,7 +5244,7 @@ const DASHBOARD_DATA = [
         "x": 6.74,
         "y": -4.16,
         "dist": 7.9,
-        "vr": 1.65,
+        "vr": 0.54,
         "rcs": 14.5,
         "is_front": true
       },
@@ -5269,8 +5269,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 0.0,
     "closest_dist_m": 8.4,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -5279,7 +5279,7 @@ const DASHBOARD_DATA = [
         "x": 31.11,
         "y": 1.95,
         "dist": 31.2,
-        "vr": 1.82,
+        "vr": 0.79,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5309,7 +5309,7 @@ const DASHBOARD_DATA = [
         "x": 43.23,
         "y": -2.53,
         "dist": 43.3,
-        "vr": 0.6,
+        "vr": 1.05,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5319,7 +5319,7 @@ const DASHBOARD_DATA = [
         "x": 50.64,
         "y": -11.81,
         "dist": 52.0,
-        "vr": 1.54,
+        "vr": 0.77,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5339,7 +5339,7 @@ const DASHBOARD_DATA = [
         "x": 7.1,
         "y": -4.44,
         "dist": 8.4,
-        "vr": 1.18,
+        "vr": 0.53,
         "rcs": 14.5,
         "is_front": true
       },
@@ -5374,7 +5374,7 @@ const DASHBOARD_DATA = [
         "x": 32.27,
         "y": 1.44,
         "dist": 32.3,
-        "vr": 1.34,
+        "vr": 1.01,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5384,7 +5384,7 @@ const DASHBOARD_DATA = [
         "x": 27.96,
         "y": -6.05,
         "dist": 28.6,
-        "vr": 1.72,
+        "vr": 1.6,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5434,7 +5434,7 @@ const DASHBOARD_DATA = [
         "x": 7.96,
         "y": -5.11,
         "dist": 9.5,
-        "vr": 1.01,
+        "vr": 1.81,
         "rcs": 14.5,
         "is_front": true
       },
@@ -5459,8 +5459,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 0.0,
     "closest_dist_m": 10.2,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -5469,7 +5469,7 @@ const DASHBOARD_DATA = [
         "x": 31.99,
         "y": 0.92,
         "dist": 32.0,
-        "vr": 1.8,
+        "vr": 2.18,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5479,7 +5479,7 @@ const DASHBOARD_DATA = [
         "x": 27.55,
         "y": -5.51,
         "dist": 28.1,
-        "vr": 0.88,
+        "vr": 1.04,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5499,7 +5499,7 @@ const DASHBOARD_DATA = [
         "x": 42.85,
         "y": -2.45,
         "dist": 42.9,
-        "vr": 1.47,
+        "vr": 2.03,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5509,7 +5509,7 @@ const DASHBOARD_DATA = [
         "x": 49.57,
         "y": -12.5,
         "dist": 51.1,
-        "vr": 1.53,
+        "vr": 0.96,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5529,7 +5529,7 @@ const DASHBOARD_DATA = [
         "x": 8.53,
         "y": -5.54,
         "dist": 10.2,
-        "vr": 1.58,
+        "vr": 0.64,
         "rcs": 14.5,
         "is_front": true
       },
@@ -5539,7 +5539,7 @@ const DASHBOARD_DATA = [
         "x": 30.49,
         "y": -12.1,
         "dist": 32.8,
-        "vr": 0.54,
+        "vr": 1.89,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5574,7 +5574,7 @@ const DASHBOARD_DATA = [
         "x": 42.12,
         "y": 1.67,
         "dist": 42.2,
-        "vr": 1.78,
+        "vr": 0.63,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5584,7 +5584,7 @@ const DASHBOARD_DATA = [
         "x": 36.01,
         "y": -9.63,
         "dist": 37.3,
-        "vr": 2.04,
+        "vr": 2.14,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5614,7 +5614,7 @@ const DASHBOARD_DATA = [
         "x": 10.33,
         "y": -6.93,
         "dist": 12.4,
-        "vr": 1.63,
+        "vr": 1.32,
         "rcs": 14.5,
         "is_front": true
       },
@@ -5624,7 +5624,7 @@ const DASHBOARD_DATA = [
         "x": 26.32,
         "y": -14.65,
         "dist": 30.1,
-        "vr": 1.34,
+        "vr": 1.36,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5659,7 +5659,7 @@ const DASHBOARD_DATA = [
         "x": 44.13,
         "y": 2.44,
         "dist": 44.2,
-        "vr": 0.71,
+        "vr": 1.26,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5699,7 +5699,7 @@ const DASHBOARD_DATA = [
         "x": 11.52,
         "y": -7.83,
         "dist": 13.9,
-        "vr": 1.42,
+        "vr": 1.29,
         "rcs": 14.5,
         "is_front": true
       },
@@ -5744,7 +5744,7 @@ const DASHBOARD_DATA = [
         "x": 36.65,
         "y": 1.67,
         "dist": 36.7,
-        "vr": 0.74,
+        "vr": 0.67,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5754,7 +5754,7 @@ const DASHBOARD_DATA = [
         "x": 31.51,
         "y": -8.34,
         "dist": 32.6,
-        "vr": 1.16,
+        "vr": 1.84,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5794,7 +5794,7 @@ const DASHBOARD_DATA = [
         "x": 17.48,
         "y": -12.41,
         "dist": 21.4,
-        "vr": 0.91,
+        "vr": 1.22,
         "rcs": 14.5,
         "is_front": true
       },
@@ -5829,7 +5829,7 @@ const DASHBOARD_DATA = [
         "x": 34.64,
         "y": 2.11,
         "dist": 34.7,
-        "vr": 1.09,
+        "vr": 1.26,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5859,7 +5859,7 @@ const DASHBOARD_DATA = [
         "x": 49.85,
         "y": -4.45,
         "dist": 50.1,
-        "vr": 1.07,
+        "vr": 1.55,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5879,7 +5879,7 @@ const DASHBOARD_DATA = [
         "x": 23.58,
         "y": -17.09,
         "dist": 29.1,
-        "vr": 1.34,
+        "vr": 0.75,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5889,7 +5889,7 @@ const DASHBOARD_DATA = [
         "x": 27.17,
         "y": -12.61,
         "dist": 30.0,
-        "vr": 0.64,
+        "vr": 1.82,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5934,7 +5934,7 @@ const DASHBOARD_DATA = [
         "x": 31.44,
         "y": -4.89,
         "dist": 31.8,
-        "vr": 1.2,
+        "vr": 1.71,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5954,7 +5954,7 @@ const DASHBOARD_DATA = [
         "x": 51.66,
         "y": -3.52,
         "dist": 51.8,
-        "vr": 1.35,
+        "vr": 1.91,
         "rcs": 14.5,
         "is_front": false
       },
@@ -5974,7 +5974,7 @@ const DASHBOARD_DATA = [
         "x": 26.04,
         "y": -12.98,
         "dist": 29.1,
-        "vr": 0.73,
+        "vr": 0.69,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6039,7 +6039,7 @@ const DASHBOARD_DATA = [
         "x": 51.24,
         "y": -3.86,
         "dist": 51.4,
-        "vr": 0.74,
+        "vr": 1.56,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6179,7 +6179,7 @@ const DASHBOARD_DATA = [
         "x": 34.66,
         "y": 3.28,
         "dist": 34.8,
-        "vr": 1.58,
+        "vr": 1.97,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6229,7 +6229,7 @@ const DASHBOARD_DATA = [
         "x": 21.55,
         "y": -7.34,
         "dist": 22.8,
-        "vr": 0.73,
+        "vr": 1.07,
         "rcs": 14.5,
         "is_front": true
       },
@@ -6239,7 +6239,7 @@ const DASHBOARD_DATA = [
         "x": 17.86,
         "y": -11.01,
         "dist": 21.0,
-        "vr": 1.53,
+        "vr": 1.69,
         "rcs": 14.5,
         "is_front": true
       },
@@ -6274,7 +6274,7 @@ const DASHBOARD_DATA = [
         "x": 34.37,
         "y": 2.79,
         "dist": 34.5,
-        "vr": 2.19,
+        "vr": 2.18,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6324,7 +6324,7 @@ const DASHBOARD_DATA = [
         "x": 17.12,
         "y": -6.81,
         "dist": 18.4,
-        "vr": 1.75,
+        "vr": 1.61,
         "rcs": 14.5,
         "is_front": true
       },
@@ -6334,7 +6334,7 @@ const DASHBOARD_DATA = [
         "x": 24.04,
         "y": -15.83,
         "dist": 28.8,
-        "vr": 0.52,
+        "vr": 1.19,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6369,7 +6369,7 @@ const DASHBOARD_DATA = [
         "x": 34.05,
         "y": 3.2,
         "dist": 34.2,
-        "vr": 1.87,
+        "vr": 1.11,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6399,7 +6399,7 @@ const DASHBOARD_DATA = [
         "x": 50.77,
         "y": -5.77,
         "dist": 51.1,
-        "vr": 1.06,
+        "vr": 1.72,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6419,7 +6419,7 @@ const DASHBOARD_DATA = [
         "x": 11.79,
         "y": -5.72,
         "dist": 13.1,
-        "vr": 1.52,
+        "vr": 0.53,
         "rcs": 14.5,
         "is_front": true
       },
@@ -6429,7 +6429,7 @@ const DASHBOARD_DATA = [
         "x": 25.25,
         "y": -18.34,
         "dist": 31.2,
-        "vr": 1.46,
+        "vr": 1.74,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6464,7 +6464,7 @@ const DASHBOARD_DATA = [
         "x": 35.57,
         "y": 2.66,
         "dist": 35.7,
-        "vr": 1.14,
+        "vr": 1.66,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6494,7 +6494,7 @@ const DASHBOARD_DATA = [
         "x": 51.43,
         "y": -5.59,
         "dist": 51.7,
-        "vr": 1.16,
+        "vr": 0.55,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6514,7 +6514,7 @@ const DASHBOARD_DATA = [
         "x": 10.55,
         "y": -5.62,
         "dist": 12.0,
-        "vr": 1.4,
+        "vr": 1.02,
         "rcs": 14.5,
         "is_front": true
       },
@@ -6524,7 +6524,7 @@ const DASHBOARD_DATA = [
         "x": 23.36,
         "y": -16.04,
         "dist": 28.3,
-        "vr": 1.09,
+        "vr": 1.6,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6589,7 +6589,7 @@ const DASHBOARD_DATA = [
         "x": 49.01,
         "y": -5.88,
         "dist": 49.4,
-        "vr": 2.07,
+        "vr": 0.59,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6609,7 +6609,7 @@ const DASHBOARD_DATA = [
         "x": 8.17,
         "y": -5.11,
         "dist": 9.6,
-        "vr": 1.18,
+        "vr": 1.39,
         "rcs": 14.5,
         "is_front": true
       },
@@ -6674,7 +6674,7 @@ const DASHBOARD_DATA = [
         "x": 50.2,
         "y": -6.03,
         "dist": 50.6,
-        "vr": 0.76,
+        "vr": 2.14,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6694,7 +6694,7 @@ const DASHBOARD_DATA = [
         "x": 9.73,
         "y": -6.46,
         "dist": 11.7,
-        "vr": 1.69,
+        "vr": 1.06,
         "rcs": 14.5,
         "is_front": true
       },
@@ -6719,8 +6719,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 0.0,
     "closest_dist_m": 16.1,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -6739,7 +6739,7 @@ const DASHBOARD_DATA = [
         "x": 28.99,
         "y": 1.73,
         "dist": 29.0,
-        "vr": 1.19,
+        "vr": 0.96,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6769,7 +6769,7 @@ const DASHBOARD_DATA = [
         "x": 44.69,
         "y": -5.25,
         "dist": 45.0,
-        "vr": 1.16,
+        "vr": 2.21,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6815,7 +6815,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 20.5,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 7,
     "radar_targets": [
       {
@@ -6844,7 +6844,7 @@ const DASHBOARD_DATA = [
         "x": 23.99,
         "y": -1.12,
         "dist": 24.0,
-        "vr": 0.65,
+        "vr": 1.56,
         "rcs": 14.5,
         "is_front": true
       },
@@ -6864,7 +6864,7 @@ const DASHBOARD_DATA = [
         "x": 44.32,
         "y": -8.59,
         "dist": 45.1,
-        "vr": 0.89,
+        "vr": 1.71,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6900,7 +6900,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 20.0,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -6949,7 +6949,7 @@ const DASHBOARD_DATA = [
         "x": 43.19,
         "y": -5.62,
         "dist": 43.6,
-        "vr": 1.59,
+        "vr": 0.78,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6959,7 +6959,7 @@ const DASHBOARD_DATA = [
         "x": 51.99,
         "y": -7.75,
         "dist": 52.6,
-        "vr": 0.76,
+        "vr": 1.1,
         "rcs": 14.5,
         "is_front": false
       },
@@ -6995,7 +6995,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 19.8,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -7024,7 +7024,7 @@ const DASHBOARD_DATA = [
         "x": 23.4,
         "y": 0.0,
         "dist": 23.4,
-        "vr": 0.91,
+        "vr": 1.44,
         "rcs": 14.5,
         "is_front": true
       },
@@ -7044,7 +7044,7 @@ const DASHBOARD_DATA = [
         "x": 43.65,
         "y": -8.7,
         "dist": 44.5,
-        "vr": 1.89,
+        "vr": 1.42,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7074,7 +7074,7 @@ const DASHBOARD_DATA = [
         "x": 30.12,
         "y": -2.63,
         "dist": 30.2,
-        "vr": 1.48,
+        "vr": 0.9,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7100,7 +7100,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 15.0,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -7119,7 +7119,7 @@ const DASHBOARD_DATA = [
         "x": 30.0,
         "y": 2.48,
         "dist": 30.1,
-        "vr": 1.58,
+        "vr": 1.59,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7129,7 +7129,7 @@ const DASHBOARD_DATA = [
         "x": 24.4,
         "y": -0.47,
         "dist": 24.4,
-        "vr": 0.8,
+        "vr": 1.58,
         "rcs": 14.5,
         "is_front": true
       },
@@ -7149,7 +7149,7 @@ const DASHBOARD_DATA = [
         "x": 45.12,
         "y": -8.93,
         "dist": 46.0,
-        "vr": 0.68,
+        "vr": 1.68,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7169,7 +7169,7 @@ const DASHBOARD_DATA = [
         "x": 13.89,
         "y": -5.61,
         "dist": 15.0,
-        "vr": 1.78,
+        "vr": 0.54,
         "rcs": 14.5,
         "is_front": true
       },
@@ -7195,7 +7195,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 20.7,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -7224,7 +7224,7 @@ const DASHBOARD_DATA = [
         "x": 24.24,
         "y": -1.21,
         "dist": 24.3,
-        "vr": 0.81,
+        "vr": 1.91,
         "rcs": 14.5,
         "is_front": true
       },
@@ -7244,7 +7244,7 @@ const DASHBOARD_DATA = [
         "x": 45.24,
         "y": -9.29,
         "dist": 46.2,
-        "vr": 0.8,
+        "vr": 2.13,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7274,7 +7274,7 @@ const DASHBOARD_DATA = [
         "x": 23.58,
         "y": -10.25,
         "dist": 25.7,
-        "vr": 0.75,
+        "vr": 1.66,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7339,7 +7339,7 @@ const DASHBOARD_DATA = [
         "x": 50.09,
         "y": -7.97,
         "dist": 50.7,
-        "vr": 0.72,
+        "vr": 1.12,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7359,7 +7359,7 @@ const DASHBOARD_DATA = [
         "x": 17.48,
         "y": -12.41,
         "dist": 21.4,
-        "vr": 1.06,
+        "vr": 0.5,
         "rcs": 14.5,
         "is_front": true
       },
@@ -7369,7 +7369,7 @@ const DASHBOARD_DATA = [
         "x": 30.49,
         "y": -2.41,
         "dist": 30.6,
-        "vr": 1.78,
+        "vr": 1.73,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7444,7 +7444,7 @@ const DASHBOARD_DATA = [
         "x": 30.86,
         "y": -2.32,
         "dist": 31.0,
-        "vr": 0.64,
+        "vr": 1.28,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7464,7 +7464,7 @@ const DASHBOARD_DATA = [
         "x": 19.23,
         "y": -3.02,
         "dist": 19.5,
-        "vr": 1.85,
+        "vr": 1.97,
         "rcs": 14.5,
         "is_front": true
       },
@@ -7529,7 +7529,7 @@ const DASHBOARD_DATA = [
         "x": 51.15,
         "y": -8.32,
         "dist": 51.8,
-        "vr": 1.72,
+        "vr": 0.83,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7549,7 +7549,7 @@ const DASHBOARD_DATA = [
         "x": 30.86,
         "y": -2.22,
         "dist": 30.9,
-        "vr": 1.8,
+        "vr": 1.19,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7585,7 +7585,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 17.1,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -7604,7 +7604,7 @@ const DASHBOARD_DATA = [
         "x": 26.24,
         "y": 0.52,
         "dist": 26.2,
-        "vr": 1.96,
+        "vr": 0.8,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7634,7 +7634,7 @@ const DASHBOARD_DATA = [
         "x": 37.99,
         "y": -7.17,
         "dist": 38.7,
-        "vr": 0.76,
+        "vr": 1.39,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7664,7 +7664,7 @@ const DASHBOARD_DATA = [
         "x": 29.41,
         "y": -2.07,
         "dist": 29.5,
-        "vr": 2.14,
+        "vr": 0.63,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7699,8 +7699,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 0.0,
     "closest_dist_m": 17.6,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 11,
     "radar_targets": [
       {
@@ -7789,7 +7789,7 @@ const DASHBOARD_DATA = [
         "x": 29.76,
         "y": -2.05,
         "dist": 29.8,
-        "vr": 1.41,
+        "vr": 0.8,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7824,8 +7824,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 0.0,
     "closest_dist_m": 18.7,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -7844,7 +7844,7 @@ const DASHBOARD_DATA = [
         "x": 26.32,
         "y": 3.78,
         "dist": 26.6,
-        "vr": 1.0,
+        "vr": 1.57,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7854,7 +7854,7 @@ const DASHBOARD_DATA = [
         "x": 23.92,
         "y": 2.55,
         "dist": 24.1,
-        "vr": 1.03,
+        "vr": 1.61,
         "rcs": 14.5,
         "is_front": true
       },
@@ -7874,7 +7874,7 @@ const DASHBOARD_DATA = [
         "x": 42.46,
         "y": -9.13,
         "dist": 43.4,
-        "vr": 1.34,
+        "vr": 2.09,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7904,7 +7904,7 @@ const DASHBOARD_DATA = [
         "x": 29.41,
         "y": -2.0,
         "dist": 29.5,
-        "vr": 2.12,
+        "vr": 1.3,
         "rcs": 14.5,
         "is_front": false
       },
@@ -7940,7 +7940,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 19.5,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -7969,7 +7969,7 @@ const DASHBOARD_DATA = [
         "x": 24.85,
         "y": 1.5,
         "dist": 24.9,
-        "vr": 1.63,
+        "vr": 0.68,
         "rcs": 14.5,
         "is_front": true
       },
@@ -7989,7 +7989,7 @@ const DASHBOARD_DATA = [
         "x": 43.52,
         "y": -9.4,
         "dist": 44.5,
-        "vr": 0.89,
+        "vr": 1.09,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8019,7 +8019,7 @@ const DASHBOARD_DATA = [
         "x": 27.17,
         "y": -1.7,
         "dist": 27.2,
-        "vr": 1.76,
+        "vr": 0.65,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8055,7 +8055,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 19.9,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -8074,7 +8074,7 @@ const DASHBOARD_DATA = [
         "x": 23.57,
         "y": -3.55,
         "dist": 23.8,
-        "vr": 1.69,
+        "vr": 1.36,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8104,7 +8104,7 @@ const DASHBOARD_DATA = [
         "x": 30.33,
         "y": -4.28,
         "dist": 30.6,
-        "vr": 1.49,
+        "vr": 1.64,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8124,7 +8124,7 @@ const DASHBOARD_DATA = [
         "x": 31.32,
         "y": -3.44,
         "dist": 31.5,
-        "vr": 0.98,
+        "vr": 1.47,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8170,7 +8170,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 22.3,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -8189,7 +8189,7 @@ const DASHBOARD_DATA = [
         "x": 26.62,
         "y": -3.97,
         "dist": 26.9,
-        "vr": 1.14,
+        "vr": 1.04,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8219,7 +8219,7 @@ const DASHBOARD_DATA = [
         "x": 33.37,
         "y": -4.06,
         "dist": 33.6,
-        "vr": 1.15,
+        "vr": 0.72,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8229,7 +8229,7 @@ const DASHBOARD_DATA = [
         "x": 35.11,
         "y": -3.72,
         "dist": 35.3,
-        "vr": 1.8,
+        "vr": 1.65,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8275,7 +8275,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 21.3,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -8294,7 +8294,7 @@ const DASHBOARD_DATA = [
         "x": 24.85,
         "y": -5.42,
         "dist": 25.4,
-        "vr": 1.48,
+        "vr": 1.11,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8324,7 +8324,7 @@ const DASHBOARD_DATA = [
         "x": 33.35,
         "y": -4.28,
         "dist": 33.6,
-        "vr": 1.75,
+        "vr": 1.88,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8334,7 +8334,7 @@ const DASHBOARD_DATA = [
         "x": 34.93,
         "y": -5.93,
         "dist": 35.4,
-        "vr": 1.72,
+        "vr": 1.2,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8370,7 +8370,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 17.9,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -8409,7 +8409,7 @@ const DASHBOARD_DATA = [
         "x": 35.77,
         "y": -4.87,
         "dist": 36.1,
-        "vr": 1.42,
+        "vr": 1.71,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8449,7 +8449,7 @@ const DASHBOARD_DATA = [
         "x": 23.81,
         "y": -1.33,
         "dist": 23.8,
-        "vr": 1.32,
+        "vr": 0.62,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8484,8 +8484,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 0.0,
     "closest_dist_m": 20.9,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 7,
     "radar_targets": [
       {
@@ -8494,7 +8494,7 @@ const DASHBOARD_DATA = [
         "x": 30.13,
         "y": 4.31,
         "dist": 30.4,
-        "vr": 1.93,
+        "vr": 0.84,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8504,7 +8504,7 @@ const DASHBOARD_DATA = [
         "x": 25.29,
         "y": -2.11,
         "dist": 25.4,
-        "vr": 1.71,
+        "vr": 1.97,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8570,7 +8570,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 16.0,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 11,
     "radar_targets": [
       {
@@ -8589,7 +8589,7 @@ const DASHBOARD_DATA = [
         "x": 24.51,
         "y": 1.66,
         "dist": 24.6,
-        "vr": 0.73,
+        "vr": 2.16,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8599,7 +8599,7 @@ const DASHBOARD_DATA = [
         "x": 19.85,
         "y": 1.92,
         "dist": 19.9,
-        "vr": 1.76,
+        "vr": 0.87,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8619,7 +8619,7 @@ const DASHBOARD_DATA = [
         "x": 35.81,
         "y": -7.78,
         "dist": 36.6,
-        "vr": 0.59,
+        "vr": 1.26,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8659,7 +8659,7 @@ const DASHBOARD_DATA = [
         "x": 21.37,
         "y": -1.04,
         "dist": 21.4,
-        "vr": 0.83,
+        "vr": 0.81,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8694,8 +8694,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 0.0,
     "closest_dist_m": 13.9,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -8704,7 +8704,7 @@ const DASHBOARD_DATA = [
         "x": 34.47,
         "y": -6.67,
         "dist": 35.1,
-        "vr": 1.02,
+        "vr": 1.63,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8714,7 +8714,7 @@ const DASHBOARD_DATA = [
         "x": 28.62,
         "y": -0.05,
         "dist": 28.6,
-        "vr": 1.07,
+        "vr": 1.44,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8724,7 +8724,7 @@ const DASHBOARD_DATA = [
         "x": 23.14,
         "y": -4.41,
         "dist": 23.6,
-        "vr": 0.97,
+        "vr": 1.94,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8744,7 +8744,7 @@ const DASHBOARD_DATA = [
         "x": 28.31,
         "y": -0.99,
         "dist": 28.3,
-        "vr": 0.95,
+        "vr": 1.21,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8754,7 +8754,7 @@ const DASHBOARD_DATA = [
         "x": 35.5,
         "y": 4.55,
         "dist": 35.8,
-        "vr": 0.87,
+        "vr": 1.95,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8764,7 +8764,7 @@ const DASHBOARD_DATA = [
         "x": 29.74,
         "y": -6.76,
         "dist": 30.5,
-        "vr": 1.78,
+        "vr": 1.87,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8829,7 +8829,7 @@ const DASHBOARD_DATA = [
         "x": 24.29,
         "y": -4.16,
         "dist": 24.6,
-        "vr": 0.97,
+        "vr": 1.45,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8839,7 +8839,7 @@ const DASHBOARD_DATA = [
         "x": 17.76,
         "y": 2.27,
         "dist": 17.9,
-        "vr": 2.13,
+        "vr": 1.06,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8849,7 +8849,7 @@ const DASHBOARD_DATA = [
         "x": 20.24,
         "y": 3.08,
         "dist": 20.5,
-        "vr": 1.82,
+        "vr": 0.98,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8859,7 +8859,7 @@ const DASHBOARD_DATA = [
         "x": 26.94,
         "y": -3.57,
         "dist": 27.2,
-        "vr": 0.87,
+        "vr": 0.58,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8879,7 +8879,7 @@ const DASHBOARD_DATA = [
         "x": 26.87,
         "y": -3.24,
         "dist": 27.1,
-        "vr": 1.86,
+        "vr": 1.14,
         "rcs": 14.5,
         "is_front": false
       },
@@ -8925,7 +8925,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 17.6,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -8944,7 +8944,7 @@ const DASHBOARD_DATA = [
         "x": 21.23,
         "y": -3.48,
         "dist": 21.5,
-        "vr": 0.97,
+        "vr": 0.7,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8954,7 +8954,7 @@ const DASHBOARD_DATA = [
         "x": 19.09,
         "y": -0.55,
         "dist": 19.1,
-        "vr": 1.22,
+        "vr": 1.03,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8974,7 +8974,7 @@ const DASHBOARD_DATA = [
         "x": 24.14,
         "y": -3.28,
         "dist": 24.4,
-        "vr": 2.09,
+        "vr": 1.6,
         "rcs": 14.5,
         "is_front": true
       },
@@ -8994,7 +8994,7 @@ const DASHBOARD_DATA = [
         "x": 27.68,
         "y": -2.2,
         "dist": 27.8,
-        "vr": 1.44,
+        "vr": 0.91,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9004,7 +9004,7 @@ const DASHBOARD_DATA = [
         "x": 23.42,
         "y": -4.84,
         "dist": 23.9,
-        "vr": 0.81,
+        "vr": 1.24,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9030,7 +9030,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.5,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 12,
     "radar_targets": [
       {
@@ -9049,7 +9049,7 @@ const DASHBOARD_DATA = [
         "x": 25.35,
         "y": -4.95,
         "dist": 25.8,
-        "vr": 0.66,
+        "vr": 1.44,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9059,7 +9059,7 @@ const DASHBOARD_DATA = [
         "x": 18.84,
         "y": 2.4,
         "dist": 19.0,
-        "vr": 1.53,
+        "vr": 1.72,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9069,7 +9069,7 @@ const DASHBOARD_DATA = [
         "x": 21.12,
         "y": 2.05,
         "dist": 21.2,
-        "vr": 2.11,
+        "vr": 0.9,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9079,7 +9079,7 @@ const DASHBOARD_DATA = [
         "x": 28.37,
         "y": -3.63,
         "dist": 28.6,
-        "vr": 1.07,
+        "vr": 0.99,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9099,7 +9099,7 @@ const DASHBOARD_DATA = [
         "x": 28.25,
         "y": -4.37,
         "dist": 28.6,
-        "vr": 1.25,
+        "vr": 1.31,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9129,7 +9129,7 @@ const DASHBOARD_DATA = [
         "x": 19.69,
         "y": -0.96,
         "dist": 19.7,
-        "vr": 2.2,
+        "vr": 2.02,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9164,8 +9164,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 0.0,
     "closest_dist_m": 9.1,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -9174,7 +9174,7 @@ const DASHBOARD_DATA = [
         "x": 38.84,
         "y": -2.2,
         "dist": 38.9,
-        "vr": 1.85,
+        "vr": 1.0,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9184,7 +9184,7 @@ const DASHBOARD_DATA = [
         "x": 32.61,
         "y": 1.07,
         "dist": 32.6,
-        "vr": 2.03,
+        "vr": 1.29,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9194,7 +9194,7 @@ const DASHBOARD_DATA = [
         "x": 24.06,
         "y": -4.82,
         "dist": 24.5,
-        "vr": 1.96,
+        "vr": 0.69,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9234,7 +9234,7 @@ const DASHBOARD_DATA = [
         "x": 31.65,
         "y": -7.27,
         "dist": 32.5,
-        "vr": 1.28,
+        "vr": 1.63,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9280,7 +9280,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 13.0,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -9289,7 +9289,7 @@ const DASHBOARD_DATA = [
         "x": 39.03,
         "y": -9.06,
         "dist": 40.1,
-        "vr": 0.97,
+        "vr": 1.97,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9299,7 +9299,7 @@ const DASHBOARD_DATA = [
         "x": 35.41,
         "y": -5.73,
         "dist": 35.9,
-        "vr": 1.84,
+        "vr": 1.25,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9329,7 +9329,7 @@ const DASHBOARD_DATA = [
         "x": 19.08,
         "y": -1.01,
         "dist": 19.1,
-        "vr": 1.82,
+        "vr": 0.67,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9375,7 +9375,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 9.5,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -9394,7 +9394,7 @@ const DASHBOARD_DATA = [
         "x": 35.88,
         "y": -2.06,
         "dist": 35.9,
-        "vr": 1.51,
+        "vr": 1.24,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9424,7 +9424,7 @@ const DASHBOARD_DATA = [
         "x": 9.26,
         "y": -1.96,
         "dist": 9.5,
-        "vr": 0.65,
+        "vr": 1.43,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9470,7 +9470,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.5,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 7,
     "radar_targets": [
       {
@@ -9489,7 +9489,7 @@ const DASHBOARD_DATA = [
         "x": 35.16,
         "y": 0.18,
         "dist": 35.2,
-        "vr": 1.41,
+        "vr": 1.75,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9499,7 +9499,7 @@ const DASHBOARD_DATA = [
         "x": 49.43,
         "y": 5.12,
         "dist": 49.7,
-        "vr": 1.3,
+        "vr": 2.07,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9509,7 +9509,7 @@ const DASHBOARD_DATA = [
         "x": 43.6,
         "y": 5.4,
         "dist": 43.9,
-        "vr": 2.0,
+        "vr": 0.56,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9519,7 +9519,7 @@ const DASHBOARD_DATA = [
         "x": 8.25,
         "y": -1.89,
         "dist": 8.5,
-        "vr": 0.57,
+        "vr": 0.66,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9555,7 +9555,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.2,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 7,
     "radar_targets": [
       {
@@ -9574,7 +9574,7 @@ const DASHBOARD_DATA = [
         "x": 34.86,
         "y": -0.44,
         "dist": 34.9,
-        "vr": 0.86,
+        "vr": 1.05,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9584,7 +9584,7 @@ const DASHBOARD_DATA = [
         "x": 48.77,
         "y": 7.09,
         "dist": 49.3,
-        "vr": 0.66,
+        "vr": 1.29,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9594,7 +9594,7 @@ const DASHBOARD_DATA = [
         "x": 42.17,
         "y": 5.78,
         "dist": 42.6,
-        "vr": 1.04,
+        "vr": 1.87,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9604,7 +9604,7 @@ const DASHBOARD_DATA = [
         "x": 8.01,
         "y": -1.91,
         "dist": 8.2,
-        "vr": 0.57,
+        "vr": 1.49,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9640,7 +9640,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.6,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -9659,7 +9659,7 @@ const DASHBOARD_DATA = [
         "x": 35.31,
         "y": 0.37,
         "dist": 35.3,
-        "vr": 1.79,
+        "vr": 1.56,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9669,7 +9669,7 @@ const DASHBOARD_DATA = [
         "x": 50.27,
         "y": 6.28,
         "dist": 50.7,
-        "vr": 0.67,
+        "vr": 1.12,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9679,7 +9679,7 @@ const DASHBOARD_DATA = [
         "x": 43.58,
         "y": 5.64,
         "dist": 43.9,
-        "vr": 1.3,
+        "vr": 0.71,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9689,7 +9689,7 @@ const DASHBOARD_DATA = [
         "x": 7.35,
         "y": -1.92,
         "dist": 7.6,
-        "vr": 0.95,
+        "vr": 2.08,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9699,7 +9699,7 @@ const DASHBOARD_DATA = [
         "x": 17.12,
         "y": -1.07,
         "dist": 17.2,
-        "vr": 1.61,
+        "vr": 2.0,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9735,7 +9735,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.2,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 7,
     "radar_targets": [
       {
@@ -9754,7 +9754,7 @@ const DASHBOARD_DATA = [
         "x": 34.76,
         "y": -0.06,
         "dist": 34.8,
-        "vr": 1.22,
+        "vr": 1.62,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9764,7 +9764,7 @@ const DASHBOARD_DATA = [
         "x": 49.5,
         "y": 6.47,
         "dist": 49.9,
-        "vr": 1.2,
+        "vr": 1.95,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9774,7 +9774,7 @@ const DASHBOARD_DATA = [
         "x": 42.84,
         "y": 5.23,
         "dist": 43.2,
-        "vr": 1.48,
+        "vr": 1.16,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9784,7 +9784,7 @@ const DASHBOARD_DATA = [
         "x": 6.98,
         "y": -1.91,
         "dist": 7.2,
-        "vr": 1.36,
+        "vr": 0.57,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9819,8 +9819,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 9.0,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -9829,7 +9829,7 @@ const DASHBOARD_DATA = [
         "x": 19.86,
         "y": -5.37,
         "dist": 20.6,
-        "vr": 1.11,
+        "vr": 1.27,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9859,7 +9859,7 @@ const DASHBOARD_DATA = [
         "x": 24.75,
         "y": -2.14,
         "dist": 24.8,
-        "vr": 1.41,
+        "vr": 1.86,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9879,7 +9879,7 @@ const DASHBOARD_DATA = [
         "x": 16.03,
         "y": -10.54,
         "dist": 19.2,
-        "vr": 0.82,
+        "vr": 1.24,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9899,7 +9899,7 @@ const DASHBOARD_DATA = [
         "x": 30.12,
         "y": 2.39,
         "dist": 30.2,
-        "vr": 0.68,
+        "vr": 1.26,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9925,7 +9925,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.3,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -9934,7 +9934,7 @@ const DASHBOARD_DATA = [
         "x": 23.38,
         "y": -5.26,
         "dist": 24.0,
-        "vr": 1.39,
+        "vr": 0.72,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9944,7 +9944,7 @@ const DASHBOARD_DATA = [
         "x": 50.29,
         "y": -7.98,
         "dist": 50.9,
-        "vr": 1.9,
+        "vr": 1.85,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9954,7 +9954,7 @@ const DASHBOARD_DATA = [
         "x": 43.27,
         "y": -4.42,
         "dist": 43.5,
-        "vr": 2.15,
+        "vr": 0.74,
         "rcs": 14.5,
         "is_front": false
       },
@@ -9964,7 +9964,7 @@ const DASHBOARD_DATA = [
         "x": 24.1,
         "y": -1.01,
         "dist": 24.1,
-        "vr": 0.97,
+        "vr": 1.96,
         "rcs": 14.5,
         "is_front": true
       },
@@ -9984,7 +9984,7 @@ const DASHBOARD_DATA = [
         "x": 19.53,
         "y": -13.98,
         "dist": 24.0,
-        "vr": 1.65,
+        "vr": 0.98,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10004,7 +10004,7 @@ const DASHBOARD_DATA = [
         "x": 28.74,
         "y": 1.7,
         "dist": 28.8,
-        "vr": 1.35,
+        "vr": 1.28,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10030,7 +10030,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.0,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -10039,7 +10039,7 @@ const DASHBOARD_DATA = [
         "x": 22.96,
         "y": -4.44,
         "dist": 23.4,
-        "vr": 1.73,
+        "vr": 0.66,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10049,7 +10049,7 @@ const DASHBOARD_DATA = [
         "x": 51.48,
         "y": -6.02,
         "dist": 51.8,
-        "vr": 1.68,
+        "vr": 1.25,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10069,7 +10069,7 @@ const DASHBOARD_DATA = [
         "x": 25.34,
         "y": -1.9,
         "dist": 25.4,
-        "vr": 1.9,
+        "vr": 1.24,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10099,7 +10099,7 @@ const DASHBOARD_DATA = [
         "x": 30.86,
         "y": -22.67,
         "dist": 38.3,
-        "vr": 1.35,
+        "vr": 0.96,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10109,7 +10109,7 @@ const DASHBOARD_DATA = [
         "x": 28.41,
         "y": 1.39,
         "dist": 28.4,
-        "vr": 1.74,
+        "vr": 1.31,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10135,7 +10135,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.5,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -10144,7 +10144,7 @@ const DASHBOARD_DATA = [
         "x": 24.23,
         "y": -4.01,
         "dist": 24.6,
-        "vr": 0.68,
+        "vr": 1.38,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10164,7 +10164,7 @@ const DASHBOARD_DATA = [
         "x": 26.62,
         "y": -1.68,
         "dist": 26.7,
-        "vr": 0.96,
+        "vr": 1.49,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10194,7 +10194,7 @@ const DASHBOARD_DATA = [
         "x": 12.82,
         "y": -3.54,
         "dist": 13.3,
-        "vr": 1.49,
+        "vr": 1.11,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10204,7 +10204,7 @@ const DASHBOARD_DATA = [
         "x": 27.78,
         "y": 0.71,
         "dist": 27.8,
-        "vr": 1.58,
+        "vr": 0.7,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10230,7 +10230,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.6,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -10239,7 +10239,7 @@ const DASHBOARD_DATA = [
         "x": 24.56,
         "y": -7.64,
         "dist": 25.7,
-        "vr": 2.12,
+        "vr": 1.07,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10269,7 +10269,7 @@ const DASHBOARD_DATA = [
         "x": 25.69,
         "y": -0.11,
         "dist": 25.7,
-        "vr": 1.49,
+        "vr": 1.16,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10325,7 +10325,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.7,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 7,
     "radar_targets": [
       {
@@ -10334,7 +10334,7 @@ const DASHBOARD_DATA = [
         "x": 24.82,
         "y": -6.23,
         "dist": 25.6,
-        "vr": 1.27,
+        "vr": 1.73,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10354,7 +10354,7 @@ const DASHBOARD_DATA = [
         "x": 27.92,
         "y": -0.79,
         "dist": 27.9,
-        "vr": 2.21,
+        "vr": 2.16,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10374,7 +10374,7 @@ const DASHBOARD_DATA = [
         "x": 11.74,
         "y": -3.78,
         "dist": 12.3,
-        "vr": 1.66,
+        "vr": 0.54,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10410,7 +10410,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 7.8,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -10419,7 +10419,7 @@ const DASHBOARD_DATA = [
         "x": 24.85,
         "y": -5.56,
         "dist": 25.5,
-        "vr": 0.74,
+        "vr": 1.27,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10429,7 +10429,7 @@ const DASHBOARD_DATA = [
         "x": 51.91,
         "y": -7.46,
         "dist": 52.4,
-        "vr": 1.03,
+        "vr": 0.87,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10449,7 +10449,7 @@ const DASHBOARD_DATA = [
         "x": 26.44,
         "y": -0.3,
         "dist": 26.4,
-        "vr": 1.55,
+        "vr": 0.77,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10479,7 +10479,7 @@ const DASHBOARD_DATA = [
         "x": 11.63,
         "y": -3.88,
         "dist": 12.3,
-        "vr": 0.57,
+        "vr": 1.05,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10515,7 +10515,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.4,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "steer_deg": 2.64,
     "active_locks": 7,
     "radar_targets": [
       {
@@ -10524,7 +10524,7 @@ const DASHBOARD_DATA = [
         "x": 25.33,
         "y": -7.55,
         "dist": 26.4,
-        "vr": 1.45,
+        "vr": 0.58,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10544,7 +10544,7 @@ const DASHBOARD_DATA = [
         "x": 27.01,
         "y": 0.23,
         "dist": 27.0,
-        "vr": 0.92,
+        "vr": 1.4,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10600,7 +10600,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 11.2,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 4,
     "radar_targets": [
       {
@@ -10609,7 +10609,7 @@ const DASHBOARD_DATA = [
         "x": 42.39,
         "y": 1.31,
         "dist": 42.4,
-        "vr": 2.12,
+        "vr": 2.11,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10619,7 +10619,7 @@ const DASHBOARD_DATA = [
         "x": 10.42,
         "y": -4.07,
         "dist": 11.2,
-        "vr": 1.25,
+        "vr": 1.76,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10629,7 +10629,7 @@ const DASHBOARD_DATA = [
         "x": 22.12,
         "y": -1.06,
         "dist": 22.1,
-        "vr": 1.04,
+        "vr": 1.13,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10655,7 +10655,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 21.6,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 6,
     "radar_targets": [
       {
@@ -10664,7 +10664,7 @@ const DASHBOARD_DATA = [
         "x": 31.43,
         "y": -12.32,
         "dist": 33.8,
-        "vr": 1.31,
+        "vr": 1.15,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10674,7 +10674,7 @@ const DASHBOARD_DATA = [
         "x": 42.69,
         "y": -12.69,
         "dist": 44.5,
-        "vr": 0.68,
+        "vr": 1.89,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10694,7 +10694,7 @@ const DASHBOARD_DATA = [
         "x": 43.33,
         "y": 4.57,
         "dist": 43.6,
-        "vr": 1.68,
+        "vr": 1.49,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10704,7 +10704,7 @@ const DASHBOARD_DATA = [
         "x": 21.55,
         "y": -1.21,
         "dist": 21.6,
-        "vr": 1.43,
+        "vr": 1.61,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10730,7 +10730,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 10.3,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -10739,7 +10739,7 @@ const DASHBOARD_DATA = [
         "x": 31.57,
         "y": -10.39,
         "dist": 33.2,
-        "vr": 1.14,
+        "vr": 1.32,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10749,7 +10749,7 @@ const DASHBOARD_DATA = [
         "x": 41.35,
         "y": -12.55,
         "dist": 43.2,
-        "vr": 1.97,
+        "vr": 1.15,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10779,7 +10779,7 @@ const DASHBOARD_DATA = [
         "x": 9.47,
         "y": -4.07,
         "dist": 10.3,
-        "vr": 1.76,
+        "vr": 1.08,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10789,7 +10789,7 @@ const DASHBOARD_DATA = [
         "x": 20.33,
         "y": -1.4,
         "dist": 20.4,
-        "vr": 0.64,
+        "vr": 1.63,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10825,7 +10825,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 13.4,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 8,
     "radar_targets": [
       {
@@ -10834,7 +10834,7 @@ const DASHBOARD_DATA = [
         "x": 30.33,
         "y": -11.96,
         "dist": 32.6,
-        "vr": 1.7,
+        "vr": 1.05,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10844,7 +10844,7 @@ const DASHBOARD_DATA = [
         "x": 38.72,
         "y": -13.58,
         "dist": 41.0,
-        "vr": 1.86,
+        "vr": 1.97,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10884,7 +10884,7 @@ const DASHBOARD_DATA = [
         "x": 19.38,
         "y": -1.52,
         "dist": 19.4,
-        "vr": 1.03,
+        "vr": 1.59,
         "rcs": 14.5,
         "is_front": true
       },
@@ -10920,7 +10920,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 9.8,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 11,
     "radar_targets": [
       {
@@ -10939,7 +10939,7 @@ const DASHBOARD_DATA = [
         "x": 36.03,
         "y": -10.12,
         "dist": 37.4,
-        "vr": 1.09,
+        "vr": 0.96,
         "rcs": 14.5,
         "is_front": false
       },
@@ -10999,7 +10999,7 @@ const DASHBOARD_DATA = [
         "x": 8.87,
         "y": -4.2,
         "dist": 9.8,
-        "vr": 1.95,
+        "vr": 1.82,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11009,7 +11009,7 @@ const DASHBOARD_DATA = [
         "x": 17.73,
         "y": -1.66,
         "dist": 17.8,
-        "vr": 1.55,
+        "vr": 1.26,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11044,8 +11044,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 9.6,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -11074,7 +11074,7 @@ const DASHBOARD_DATA = [
         "x": 48.09,
         "y": -3.17,
         "dist": 48.2,
-        "vr": 1.04,
+        "vr": 1.4,
         "rcs": 14.5,
         "is_front": false
       },
@@ -11124,7 +11124,7 @@ const DASHBOARD_DATA = [
         "x": 8.59,
         "y": -4.18,
         "dist": 9.6,
-        "vr": 1.68,
+        "vr": 1.51,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11189,7 +11189,7 @@ const DASHBOARD_DATA = [
         "x": 50.62,
         "y": -3.9,
         "dist": 50.8,
-        "vr": 1.23,
+        "vr": 1.17,
         "rcs": 14.5,
         "is_front": false
       },
@@ -11229,7 +11229,7 @@ const DASHBOARD_DATA = [
         "x": 38.42,
         "y": 1.44,
         "dist": 38.4,
-        "vr": 0.82,
+        "vr": 1.37,
         "rcs": 14.5,
         "is_front": false
       },
@@ -11239,7 +11239,7 @@ const DASHBOARD_DATA = [
         "x": 7.96,
         "y": -4.13,
         "dist": 9.0,
-        "vr": 1.79,
+        "vr": 0.91,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11265,7 +11265,7 @@ const DASHBOARD_DATA = [
     "closest_dist_m": 8.8,
     "min_ttc_s": null,
     "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "steer_deg": -2.64,
     "active_locks": 6,
     "radar_targets": [
       {
@@ -11304,7 +11304,7 @@ const DASHBOARD_DATA = [
         "x": 7.76,
         "y": -4.17,
         "dist": 8.8,
-        "vr": 0.82,
+        "vr": 0.89,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11314,7 +11314,7 @@ const DASHBOARD_DATA = [
         "x": 15.43,
         "y": -1.98,
         "dist": 15.6,
-        "vr": 1.84,
+        "vr": 2.01,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11339,8 +11339,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 6.8,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -11409,7 +11409,7 @@ const DASHBOARD_DATA = [
         "x": 13.97,
         "y": -5.91,
         "dist": 15.2,
-        "vr": 0.67,
+        "vr": 1.92,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11419,7 +11419,7 @@ const DASHBOARD_DATA = [
         "x": 13.66,
         "y": -2.03,
         "dist": 13.8,
-        "vr": 2.14,
+        "vr": 1.26,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11454,8 +11454,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 6.8,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 6,
     "radar_targets": [
       {
@@ -11474,7 +11474,7 @@ const DASHBOARD_DATA = [
         "x": 6.81,
         "y": -4.02,
         "dist": 7.9,
-        "vr": 1.16,
+        "vr": 1.31,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11484,7 +11484,7 @@ const DASHBOARD_DATA = [
         "x": 13.09,
         "y": -2.07,
         "dist": 13.3,
-        "vr": 1.23,
+        "vr": 1.76,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11494,7 +11494,7 @@ const DASHBOARD_DATA = [
         "x": 13.97,
         "y": -6.04,
         "dist": 15.2,
-        "vr": 1.37,
+        "vr": 0.58,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11529,8 +11529,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 8.0,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 6,
     "radar_targets": [
       {
@@ -11539,7 +11539,7 @@ const DASHBOARD_DATA = [
         "x": 40.58,
         "y": 0.62,
         "dist": 40.6,
-        "vr": 1.77,
+        "vr": 1.88,
         "rcs": 14.5,
         "is_front": false
       },
@@ -11549,7 +11549,7 @@ const DASHBOARD_DATA = [
         "x": 50.95,
         "y": 2.61,
         "dist": 51.0,
-        "vr": 2.1,
+        "vr": 0.56,
         "rcs": 14.5,
         "is_front": false
       },
@@ -11559,7 +11559,7 @@ const DASHBOARD_DATA = [
         "x": 6.81,
         "y": -4.23,
         "dist": 8.0,
-        "vr": 1.06,
+        "vr": 0.85,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11569,7 +11569,7 @@ const DASHBOARD_DATA = [
         "x": 11.63,
         "y": -2.11,
         "dist": 11.8,
-        "vr": 1.75,
+        "vr": 1.3,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11579,7 +11579,7 @@ const DASHBOARD_DATA = [
         "x": 12.89,
         "y": -5.93,
         "dist": 14.2,
-        "vr": 1.45,
+        "vr": 0.62,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11604,8 +11604,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 11.2,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 10,
     "radar_targets": [
       {
@@ -11614,7 +11614,7 @@ const DASHBOARD_DATA = [
         "x": 26.82,
         "y": -15.33,
         "dist": 30.9,
-        "vr": 1.19,
+        "vr": 0.5,
         "rcs": 14.5,
         "is_front": false
       },
@@ -11624,7 +11624,7 @@ const DASHBOARD_DATA = [
         "x": 47.27,
         "y": -0.46,
         "dist": 47.3,
-        "vr": 1.92,
+        "vr": 0.91,
         "rcs": 14.5,
         "is_front": false
       },
@@ -11684,7 +11684,7 @@ const DASHBOARD_DATA = [
         "x": 10.96,
         "y": -2.14,
         "dist": 11.2,
-        "vr": 2.0,
+        "vr": 0.97,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11694,7 +11694,7 @@ const DASHBOARD_DATA = [
         "x": 13.74,
         "y": -6.4,
         "dist": 15.2,
-        "vr": 1.52,
+        "vr": 0.94,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11719,8 +11719,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 6.9,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 7,
     "radar_targets": [
       {
@@ -11749,7 +11749,7 @@ const DASHBOARD_DATA = [
         "x": 8.25,
         "y": -5.32,
         "dist": 9.8,
-        "vr": 1.26,
+        "vr": 0.83,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11759,7 +11759,7 @@ const DASHBOARD_DATA = [
         "x": 9.33,
         "y": -2.1,
         "dist": 9.6,
-        "vr": 1.34,
+        "vr": 0.79,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11804,8 +11804,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 6.9,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 7,
     "radar_targets": [
       {
@@ -11834,7 +11834,7 @@ const DASHBOARD_DATA = [
         "x": 8.99,
         "y": -5.9,
         "dist": 10.8,
-        "vr": 1.21,
+        "vr": 0.85,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11844,7 +11844,7 @@ const DASHBOARD_DATA = [
         "x": 8.74,
         "y": -2.12,
         "dist": 9.0,
-        "vr": 1.76,
+        "vr": 1.92,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11889,8 +11889,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 7.7,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 5,
     "radar_targets": [
       {
@@ -11919,7 +11919,7 @@ const DASHBOARD_DATA = [
         "x": 7.37,
         "y": -2.09,
         "dist": 7.7,
-        "vr": 1.88,
+        "vr": 1.08,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11929,7 +11929,7 @@ const DASHBOARD_DATA = [
         "x": 10.87,
         "y": -7.34,
         "dist": 13.1,
-        "vr": 1.14,
+        "vr": 1.12,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11954,8 +11954,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 7.0,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": -4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 5,
     "radar_targets": [
       {
@@ -11974,7 +11974,7 @@ const DASHBOARD_DATA = [
         "x": 12.69,
         "y": -8.72,
         "dist": 15.4,
-        "vr": 0.7,
+        "vr": 1.07,
         "rcs": 14.5,
         "is_front": true
       },
@@ -11984,7 +11984,7 @@ const DASHBOARD_DATA = [
         "x": 6.72,
         "y": -2.08,
         "dist": 7.0,
-        "vr": 1.76,
+        "vr": 1.25,
         "rcs": 14.5,
         "is_front": true
       },
@@ -12059,7 +12059,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -2.24,
         "dist": 6.4,
-        "vr": 2.07,
+        "vr": 1.78,
         "rcs": 14.5,
         "is_front": true
       },
@@ -12069,7 +12069,7 @@ const DASHBOARD_DATA = [
         "x": 17.86,
         "y": -12.7,
         "dist": 21.9,
-        "vr": 1.51,
+        "vr": 1.66,
         "rcs": 14.5,
         "is_front": true
       },
@@ -12154,7 +12154,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -2.5,
         "dist": 6.5,
-        "vr": 1.68,
+        "vr": 1.01,
         "rcs": 14.5,
         "is_front": true
       },
@@ -12164,7 +12164,7 @@ const DASHBOARD_DATA = [
         "x": 21.93,
         "y": -15.82,
         "dist": 27.0,
-        "vr": 0.66,
+        "vr": 0.47,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12249,7 +12249,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.03,
         "dist": 6.7,
-        "vr": 1.56,
+        "vr": 1.24,
         "rcs": 14.5,
         "is_front": true
       },
@@ -12259,7 +12259,7 @@ const DASHBOARD_DATA = [
         "x": 14.62,
         "y": -10.2,
         "dist": 17.8,
-        "vr": 0.9,
+        "vr": 1.05,
         "rcs": 14.5,
         "is_front": true
       },
@@ -12314,7 +12314,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.11,
         "dist": 6.8,
-        "vr": 1.62,
+        "vr": 1.34,
         "rcs": 14.5,
         "is_front": true
       },
@@ -12359,7 +12359,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.34,
         "dist": 6.9,
-        "vr": 0.59,
+        "vr": 1.38,
         "rcs": 14.5,
         "is_front": true
       },
@@ -12404,7 +12404,7 @@ const DASHBOARD_DATA = [
         "x": 51.78,
         "y": -10.5,
         "dist": 52.8,
-        "vr": 0.63,
+        "vr": 1.11,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12424,7 +12424,7 @@ const DASHBOARD_DATA = [
         "x": 6.0,
         "y": -3.49,
         "dist": 6.9,
-        "vr": 1.6,
+        "vr": 1.15,
         "rcs": 14.5,
         "is_front": true
       },
@@ -12434,7 +12434,7 @@ const DASHBOARD_DATA = [
         "x": 29.07,
         "y": -21.3,
         "dist": 36.0,
-        "vr": 1.46,
+        "vr": 1.76,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12489,7 +12489,7 @@ const DASHBOARD_DATA = [
         "x": 9.69,
         "y": -6.43,
         "dist": 11.6,
-        "vr": 1.5,
+        "vr": 1.45,
         "rcs": 14.5,
         "is_front": true
       },
@@ -12609,7 +12609,7 @@ const DASHBOARD_DATA = [
         "x": 30.86,
         "y": -6.79,
         "dist": 31.6,
-        "vr": 1.28,
+        "vr": 2.03,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12654,7 +12654,7 @@ const DASHBOARD_DATA = [
         "x": 47.66,
         "y": -12.3,
         "dist": 49.2,
-        "vr": 1.88,
+        "vr": 1.67,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12674,7 +12674,7 @@ const DASHBOARD_DATA = [
         "x": 50.73,
         "y": -2.95,
         "dist": 50.8,
-        "vr": 1.03,
+        "vr": 2.11,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12749,7 +12749,7 @@ const DASHBOARD_DATA = [
         "x": 51.29,
         "y": -3.63,
         "dist": 51.4,
-        "vr": 1.87,
+        "vr": 1.86,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12794,7 +12794,7 @@ const DASHBOARD_DATA = [
         "x": 42.39,
         "y": -11.19,
         "dist": 43.8,
-        "vr": 1.5,
+        "vr": 2.01,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12814,7 +12814,7 @@ const DASHBOARD_DATA = [
         "x": 48.55,
         "y": -2.87,
         "dist": 48.6,
-        "vr": 0.87,
+        "vr": 2.1,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12879,7 +12879,7 @@ const DASHBOARD_DATA = [
         "x": 44.8,
         "y": -3.21,
         "dist": 44.9,
-        "vr": 2.08,
+        "vr": 2.04,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12889,7 +12889,7 @@ const DASHBOARD_DATA = [
         "x": 26.04,
         "y": -5.08,
         "dist": 26.5,
-        "vr": 0.91,
+        "vr": 1.49,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12934,7 +12934,7 @@ const DASHBOARD_DATA = [
         "x": 45.72,
         "y": -9.83,
         "dist": 46.8,
-        "vr": 0.68,
+        "vr": 0.8,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12954,7 +12954,7 @@ const DASHBOARD_DATA = [
         "x": 47.17,
         "y": -0.29,
         "dist": 47.2,
-        "vr": 1.09,
+        "vr": 1.15,
         "rcs": 14.5,
         "is_front": false
       },
@@ -12999,7 +12999,7 @@ const DASHBOARD_DATA = [
         "x": 47.97,
         "y": -9.06,
         "dist": 48.8,
-        "vr": 1.5,
+        "vr": 0.57,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13019,7 +13019,7 @@ const DASHBOARD_DATA = [
         "x": 49.59,
         "y": -0.2,
         "dist": 49.6,
-        "vr": 1.9,
+        "vr": 2.18,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13064,7 +13064,7 @@ const DASHBOARD_DATA = [
         "x": 49.54,
         "y": -11.78,
         "dist": 50.9,
-        "vr": 1.52,
+        "vr": 1.04,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13109,7 +13109,7 @@ const DASHBOARD_DATA = [
         "x": 43.79,
         "y": 5.19,
         "dist": 44.1,
-        "vr": 1.49,
+        "vr": 0.88,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13174,7 +13174,7 @@ const DASHBOARD_DATA = [
         "x": 40.57,
         "y": -8.5,
         "dist": 41.4,
-        "vr": 0.63,
+        "vr": 2.03,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13194,7 +13194,7 @@ const DASHBOARD_DATA = [
         "x": 44.27,
         "y": -1.97,
         "dist": 44.3,
-        "vr": 1.53,
+        "vr": 0.59,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13259,7 +13259,7 @@ const DASHBOARD_DATA = [
         "x": 40.29,
         "y": -3.49,
         "dist": 40.4,
-        "vr": 1.65,
+        "vr": 1.57,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13269,7 +13269,7 @@ const DASHBOARD_DATA = [
         "x": 24.51,
         "y": -4.25,
         "dist": 24.9,
-        "vr": 1.59,
+        "vr": 1.26,
         "rcs": 14.5,
         "is_front": true
       },
@@ -13334,7 +13334,7 @@ const DASHBOARD_DATA = [
         "x": 41.23,
         "y": -4.95,
         "dist": 41.5,
-        "vr": 0.71,
+        "vr": 1.77,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13409,7 +13409,7 @@ const DASHBOARD_DATA = [
         "x": 22.32,
         "y": -3.8,
         "dist": 22.6,
-        "vr": 1.67,
+        "vr": 0.78,
         "rcs": 14.5,
         "is_front": true
       },
@@ -13444,7 +13444,7 @@ const DASHBOARD_DATA = [
         "x": 39.19,
         "y": 6.69,
         "dist": 39.8,
-        "vr": 1.92,
+        "vr": 0.73,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13474,7 +13474,7 @@ const DASHBOARD_DATA = [
         "x": 21.37,
         "y": -3.61,
         "dist": 21.7,
-        "vr": 0.83,
+        "vr": 1.14,
         "rcs": 14.5,
         "is_front": true
       },
@@ -13509,7 +13509,7 @@ const DASHBOARD_DATA = [
         "x": 35.79,
         "y": 4.65,
         "dist": 36.1,
-        "vr": 1.72,
+        "vr": 2.19,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13539,7 +13539,7 @@ const DASHBOARD_DATA = [
         "x": 44.99,
         "y": -1.73,
         "dist": 45.0,
-        "vr": 1.65,
+        "vr": 1.57,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13559,7 +13559,7 @@ const DASHBOARD_DATA = [
         "x": 16.89,
         "y": -2.76,
         "dist": 17.1,
-        "vr": 2.09,
+        "vr": 1.4,
         "rcs": 14.5,
         "is_front": true
       },
@@ -13634,7 +13634,7 @@ const DASHBOARD_DATA = [
         "x": 43.24,
         "y": -2.49,
         "dist": 43.3,
-        "vr": 1.72,
+        "vr": 1.26,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13654,7 +13654,7 @@ const DASHBOARD_DATA = [
         "x": 14.88,
         "y": -2.43,
         "dist": 15.1,
-        "vr": 1.31,
+        "vr": 2.17,
         "rcs": 14.5,
         "is_front": true
       },
@@ -13689,8 +13689,8 @@ const DASHBOARD_DATA = [
     "ego_speed_kmh": 18.9,
     "closest_dist_m": 23.8,
     "min_ttc_s": null,
-    "decision": "EVASION SWERVE (FRENET QUINTIC)",
-    "steer_deg": 4.32,
+    "decision": "FOLLOW NOMINAL CENTERLINE",
+    "steer_deg": -0.0,
     "active_locks": 9,
     "radar_targets": [
       {
@@ -13729,7 +13729,7 @@ const DASHBOARD_DATA = [
         "x": 33.95,
         "y": -6.92,
         "dist": 34.6,
-        "vr": 1.74,
+        "vr": 0.69,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13749,7 +13749,7 @@ const DASHBOARD_DATA = [
         "x": 35.55,
         "y": 0.6,
         "dist": 35.6,
-        "vr": 1.33,
+        "vr": 0.76,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13759,7 +13759,7 @@ const DASHBOARD_DATA = [
         "x": 34.18,
         "y": -6.07,
         "dist": 34.7,
-        "vr": 0.91,
+        "vr": 0.63,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13804,7 +13804,7 @@ const DASHBOARD_DATA = [
         "x": 38.67,
         "y": -0.72,
         "dist": 38.7,
-        "vr": 1.77,
+        "vr": 1.26,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13814,7 +13814,7 @@ const DASHBOARD_DATA = [
         "x": 48.85,
         "y": -2.62,
         "dist": 48.9,
-        "vr": 1.77,
+        "vr": 2.14,
         "rcs": 14.5,
         "is_front": false
       },
@@ -13834,7 +13834,7 @@ const DASHBOARD_DATA = [
         "x": 38.1,
         "y": -4.97,
         "dist": 38.4,
-        "vr": 1.46,
+        "vr": 2.05,
         "rcs": 14.5,
         "is_front": false
       },

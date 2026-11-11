@@ -612,12 +612,6 @@
             <div class="cam-frame-box">
                 <img id="cam-img" src="" alt="Live Synchronized Autonomous Driving Camera Feed">
             </div>
-
-            <div class="cam-footer">
-                <span id="cam-info-drive">Location: Drive 0 Urban Sector</span>
-                <span>Calibrated Indian Road Corridor &bull; Windshield View</span>
-                <span id="cam-info-frame">Frame: #0000</span>
-            </div>
         </div>
 
         <!-- Right Side: 77 GHz mmWave FMCW Radar BEV Scope -->
@@ -750,10 +744,7 @@
             const camImg = document.getElementById('cam-img');
             camImg.src = rec.image_file;
 
-            // 2. Update Header & Drive Tabs
-            document.getElementById('cam-info-drive').innerText = `Location: ${rec.drive_name}`;
-            document.getElementById('cam-info-frame').innerText = `Frame: #${rec.frame_id} (Global ${idx+1}/${totalFrames})`;
-
+            // 2. Update Drive Tabs
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             const activeTab = document.getElementById(`tab-${rec.drive}`);
             if (activeTab) activeTab.classList.add('active');
