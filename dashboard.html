@@ -589,9 +589,16 @@
                 const vrColor = isReceding ? "var(--accent-green)" : "var(--accent-red)";
                 const vrSign = isReceding ? `+${tgt.vr.toFixed(1)}` : tgt.vr.toFixed(1);
 
+                const cRaw = (tgt.class || '').toLowerCase();
+                let cPretty = 'Car';
+                if (cRaw.includes('truck') || cRaw.includes('bus')) cPretty = 'Truck/Bus';
+                else if (cRaw.includes('two') || cRaw.includes('bike') || cRaw.includes('motor')) cPretty = 'Two-Wheeler';
+                else if (cRaw.includes('pedestrian') || cRaw.includes('person') || cRaw.includes('human')) cPretty = 'Human';
+                else if (cRaw.includes('auto')) cPretty = 'Auto';
+
                 tr.innerHTML = `
                     <td style="color:var(--accent-blue); font-weight:600;">#${tgt.id}</td>
-                    <td>${tgt.class}</td>
+                    <td>${cPretty}</td>
                     <td>${tgt.dist.toFixed(1)} m</td>
                     <td>${tgt.x >= 0 ? "+" : ""}${tgt.x.toFixed(1)}</td>
                     <td>${tgt.y >= 0 ? "+" : ""}${tgt.y.toFixed(1)}</td>
@@ -748,17 +755,32 @@
             let boxL = 36;
             let fillColor = 'rgba(59, 130, 246, 0.25)';
             let strokeColor = '#3b82f6';
+            let labelText = 'Car';
 
             if (cls.includes('truck') || cls.includes('bus')) {
                 boxW = 24;
                 boxL = 52;
                 fillColor = 'rgba(245, 158, 11, 0.25)';
                 strokeColor = '#f59e0b';
+                labelText = 'Truck/Bus';
             } else if (cls.includes('two') || cls.includes('bike') || cls.includes('motor')) {
                 boxW = 12;
                 boxL = 22;
                 fillColor = 'rgba(16, 185, 129, 0.25)';
                 strokeColor = '#10b981';
+                labelText = 'Two-Wheeler';
+            } else if (cls.includes('pedestrian') || cls.includes('person') || cls.includes('human')) {
+                boxW = 12;
+                boxL = 12;
+                fillColor = 'rgba(239, 68, 68, 0.25)';
+                strokeColor = '#ef4444';
+                labelText = 'Human';
+            } else if (cls.includes('auto')) {
+                boxW = 16;
+                boxL = 26;
+                fillColor = 'rgba(234, 179, 8, 0.25)';
+                strokeColor = '#eab308';
+                labelText = 'Auto';
             }
 
             ctx.save();
@@ -796,11 +818,11 @@
                 ctx.fill();
             }
 
-            // Minimalist distance tag (clean, no extra labels)
-            ctx.font = '9.5px ui-monospace, Consolas, monospace';
+            // Target Class & Distance Label (e.g. "Car · 14.2m", "Human · 7.5m")
+            ctx.font = '600 10px Inter, -apple-system, sans-serif';
             ctx.fillStyle = '#f8fafc';
             ctx.textAlign = 'center';
-            ctx.fillText(`${tgt.dist.toFixed(1)}m`, 0, -boxL / 2 - 4);
+            ctx.fillText(`${labelText} · ${tgt.dist.toFixed(1)}m`, 0, -boxL / 2 - 5);
 
             ctx.restore();
         }
