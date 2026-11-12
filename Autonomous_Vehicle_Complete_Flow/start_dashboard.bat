@@ -1,7 +1,7 @@
 @echo off
-title Autonomous Vehicle Multi-Modal Cockpit Dashboard
+title AUTOSENSE AI — Intelligent Vehicle Perception System
 echo ======================================================================
-echo   Launching Autonomous Vehicle Multi-Modal Cockpit Dashboard...
+echo   Launching AUTOSENSE AI — Intelligent Vehicle Perception System...
 echo ======================================================================
 start "" "%~dp0dashboard.html"
 echo Dashboard opened in your default web browser.

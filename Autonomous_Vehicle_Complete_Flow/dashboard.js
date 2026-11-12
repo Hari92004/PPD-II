@@ -263,6 +263,18 @@
   }
 
   // ----------------------------------------------------------------------------
+  // TARGET CLASS FORMATTER & LABELS
+  // ----------------------------------------------------------------------------
+  function formatTargetClass(rawClass) {
+    const c = (rawClass || '').toLowerCase();
+    if (c.includes('truck') || c.includes('bus')) return 'Truck/Bus';
+    if (c.includes('two') || c.includes('bike') || c.includes('motor')) return 'Two-Wheeler';
+    if (c.includes('pedestrian') || c.includes('person') || c.includes('human')) return 'Human';
+    if (c.includes('auto')) return 'Auto';
+    return 'Car';
+  }
+
+  // ----------------------------------------------------------------------------
   // RADAR TARGETS MINI TABLE
   // ----------------------------------------------------------------------------
   function updateRadarTable(targets) {
@@ -277,15 +289,15 @@
       const isReceding = tgt.vr >= 0;
       const vrColor = isReceding ? 'var(--accent-primary)' : 'var(--state-critical-text)';
       const vrSign = isReceding ? '+' : '';
-      const clsName = (tgt.class || 'CAR').replace('_', ' ');
+      const prettyClass = formatTargetClass(tgt.class);
 
       rowsHtml += `
         <tr>
           <td><b style="color:var(--accent-radar);">#${tgt.id}</b></td>
-          <td><b>${clsName}</b></td>
+          <td><b>${prettyClass}</b></td>
           <td>${tgt.dist.toFixed(1)}m</td>
-          <td>${tgt.x.toFixed(1)}m</td>
-          <td>${tgt.y.toFixed(1)}m</td>
+          <td>${tgt.x >= 0 ? '+' : ''}${tgt.x.toFixed(1)}m</td>
+          <td>${tgt.y >= 0 ? '+' : ''}${tgt.y.toFixed(1)}m</td>
           <td style="color:${vrColor}; font-weight:700;">${vrSign}${tgt.vr.toFixed(2)}</td>
           <td>${tgt.rcs.toFixed(1)}</td>
         </tr>
@@ -562,11 +574,12 @@
     ctx.lineTo(0, -vrLen);
     ctx.stroke();
 
-    // Target Text Tag (ID + Range)
+    // Target Text Tag (Class + Range e.g. "Car · 14.5m" or "Human · 7.2m")
+    const prettyClass = formatTargetClass(tgt.class);
     ctx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
-    ctx.font = '700 8.5px monospace';
+    ctx.font = '600 9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(`${tgt.dist.toFixed(1)}m`, 0, 19);
+    ctx.fillText(`${prettyClass} · ${tgt.dist.toFixed(1)}m`, 0, 19);
 
     ctx.restore();
   }
@@ -622,12 +635,13 @@
         // Prevent tooltip from overflowing the right edge
         const tipX = (mouseX + 160 > W) ? (mouseX - 165) : (mouseX + 12);
         const tipY = Math.max(10, mouseY - 40);
+        const prettyClass = formatTargetClass(hit.class);
 
         DOM.radarTooltip.style.left = `${tipX}px`;
         DOM.radarTooltip.style.top = `${tipY}px`;
         DOM.radarTooltip.innerHTML = `
           <div style="font-weight:700; color:var(--accent-radar); margin-bottom:2px;">
-            Target #${hit.id} (${hit.class.replace('_', ' ')})
+            Target #${hit.id} (${prettyClass})
           </div>
           <div>Range: <b>${hit.dist.toFixed(1)} m</b></div>
           <div>Position: X=${hit.x.toFixed(1)}m, Y=${hit.y.toFixed(1)}m</div>
