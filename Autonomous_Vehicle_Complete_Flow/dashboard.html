@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autonomous Driving Telemetry & Visualizer</title>
+    <title>Autonomous Vehicle Telemetry</title>
     <style>
         :root {
-            --bg-base: #0f172a;
-            --surface-panel: #1e293b;
-            --surface-sub: #0f172a;
-            --border-color: #334155;
-            --border-subtle: #1e293b;
+            --bg-base: #0b0f19;
+            --surface-panel: #141b2a;
+            --border-color: #243044;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
@@ -24,7 +22,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             -webkit-user-select: none;
             user-select: none;
         }
@@ -40,20 +38,19 @@
         body {
             display: flex;
             flex-direction: column;
-            padding: 10px 16px;
+            padding: 8px 14px;
         }
 
-        /* Top Navigation Header */
+        /* Header */
         header {
             width: 100%;
             max-width: 1720px;
-            margin: 0 auto;
+            margin: 0 auto 6px auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 8px;
+            padding-bottom: 6px;
             border-bottom: 1px solid var(--border-color);
-            margin-bottom: 8px;
             flex-shrink: 0;
         }
 
@@ -61,25 +58,11 @@
             font-size: 15px;
             font-weight: 600;
             color: var(--text-primary);
-            letter-spacing: -0.2px;
         }
 
-        .header-title-group p {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 1px;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* Drive Selector Tabs */
         .segmented-tabs {
             display: inline-flex;
-            background: #0b1120;
+            background: #090d16;
             border: 1px solid var(--border-color);
             border-radius: 5px;
             padding: 2px;
@@ -90,7 +73,7 @@
             background: transparent;
             border: none;
             color: var(--text-secondary);
-            padding: 4px 11px;
+            padding: 4px 10px;
             font-size: 11px;
             font-weight: 500;
             border-radius: 4px;
@@ -110,11 +93,11 @@
             font-weight: 600;
         }
 
-        /* Telemetry Stat Cards */
+        /* Metrics Bar */
         .metrics-bar {
             width: 100%;
             max-width: 1720px;
-            margin: 0 auto 8px auto;
+            margin: 0 auto 6px auto;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 8px;
@@ -124,8 +107,8 @@
         .stat-card {
             background: var(--surface-panel);
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 8px 12px;
+            border-radius: 5px;
+            padding: 6px 10px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -133,16 +116,14 @@
 
         .stat-label {
             font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
+            font-weight: 500;
             color: var(--text-secondary);
         }
 
         .stat-row {
             display: flex;
             align-items: baseline;
-            gap: 6px;
+            gap: 5px;
             margin-top: 2px;
         }
 
@@ -150,11 +131,11 @@
             font-size: 16px;
             font-weight: 600;
             color: var(--text-primary);
-            font-family: ui-monospace, "SF Mono", Consolas, monospace;
+            font-family: ui-monospace, Consolas, monospace;
         }
 
         .stat-unit {
-            font-size: 11px;
+            font-size: 10.5px;
             color: var(--text-muted);
         }
 
@@ -168,14 +149,14 @@
             gap: 10px;
             flex: 1;
             min-height: 0;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .panel-container {
             background: var(--surface-panel);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 10px;
+            padding: 8px 10px;
             display: flex;
             flex-direction: column;
             min-height: 0;
@@ -186,7 +167,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 6px;
-            padding-bottom: 5px;
+            padding-bottom: 4px;
             border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
         }
@@ -195,18 +176,8 @@
             font-size: 12px;
             font-weight: 600;
             color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
-        .panel-tag {
-            font-size: 10px;
-            color: var(--text-muted);
-            font-family: ui-monospace, Consolas, monospace;
-        }
-
-        /* Camera Viewport */
         .cam-viewport {
             position: relative;
             flex: 1;
@@ -227,21 +198,11 @@
             display: block;
         }
 
-        .cam-footer {
-            margin-top: 6px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 10.5px;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-
-        /* Radar BEV Viewport */
         .bev-viewport {
             position: relative;
             flex: 1;
             min-height: 0;
-            background: #090e17;
+            background: #080c14;
             border-radius: 4px;
             border: 1px solid var(--border-color);
             display: flex;
@@ -254,17 +215,16 @@
             width: 100%;
             height: 100%;
             display: block;
-            cursor: crosshair;
         }
 
         /* Radar Target Table */
         .table-container {
             margin-top: 6px;
-            height: 90px;
+            height: 85px;
             overflow-y: auto;
             border: 1px solid var(--border-color);
             border-radius: 4px;
-            background: #0b1120;
+            background: #0a0e18;
             flex-shrink: 0;
         }
 
@@ -279,15 +239,15 @@
         table.data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 11px;
-            font-family: ui-monospace, "SF Mono", Consolas, monospace;
+            font-size: 10.5px;
+            font-family: ui-monospace, Consolas, monospace;
             text-align: left;
         }
 
         table.data-table th {
-            background: #141e30;
+            background: #111827;
             color: var(--text-secondary);
-            padding: 4px 8px;
+            padding: 3px 6px;
             font-weight: 500;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
@@ -296,7 +256,7 @@
         }
 
         table.data-table td {
-            padding: 3px 8px;
+            padding: 2.5px 6px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             color: var(--text-primary);
         }
@@ -309,11 +269,11 @@
             background: var(--surface-panel);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 6px 14px;
+            padding: 6px 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 14px;
+            gap: 12px;
             flex-shrink: 0;
         }
 
@@ -324,7 +284,7 @@
         }
 
         .btn-action {
-            background: #243044;
+            background: #1e293b;
             border: 1px solid var(--border-color);
             color: var(--text-primary);
             padding: 5px 12px;
@@ -333,9 +293,6 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.15s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
         .btn-action:hover {
@@ -357,13 +314,13 @@
             flex: 1;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         input[type="range"] {
             flex: 1;
             height: 4px;
-            background: #243044;
+            background: #1e293b;
             border-radius: 2px;
             outline: none;
             cursor: pointer;
@@ -372,9 +329,9 @@
 
         .frame-indicator {
             font-size: 11px;
-            font-family: ui-monospace, "SF Mono", Consolas, monospace;
+            font-family: ui-monospace, Consolas, monospace;
             color: var(--text-secondary);
-            min-width: 130px;
+            min-width: 110px;
             text-align: right;
         }
 
@@ -382,7 +339,7 @@
             display: flex;
             align-items: center;
             gap: 2px;
-            background: #0b1120;
+            background: #090d16;
             padding: 2px;
             border-radius: 4px;
             border: 1px solid var(--border-color);
@@ -404,12 +361,6 @@
             color: var(--text-primary);
             font-weight: 600;
         }
-
-        .shortcut-hint {
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-left: 6px;
-        }
     </style>
 </head>
 <body>
@@ -417,27 +368,23 @@
     <!-- Header Navigation -->
     <header>
         <div class="header-title-group">
-            <h1>Autonomous Driving Multi-Modal Telemetry</h1>
-            <p>Indian Driving Dataset (IDD) &middot; Synchronized Monocular Camera &middot; 3D LiDAR &middot; 77 GHz mmWave Radar &middot; Frenet Path Planner</p>
+            <h1>Autonomous Vehicle Telemetry</h1>
         </div>
 
-        <div class="header-actions">
-            <!-- Drive Selection Tabs -->
-            <div class="segmented-tabs">
-                <button class="seg-btn active" id="tab-d0" onclick="switchDrive('d0')">Drive 0: Urban</button>
-                <button class="seg-btn" id="tab-d1" onclick="switchDrive('d1')">Drive 1: Arterial</button>
-                <button class="seg-btn" id="tab-d2" onclick="switchDrive('d2')">Drive 2: Highway</button>
-            </div>
+        <div class="segmented-tabs">
+            <button class="seg-btn active" id="tab-d0" onclick="switchDrive('d0')">Drive 0: Urban</button>
+            <button class="seg-btn" id="tab-d1" onclick="switchDrive('d1')">Drive 1: Arterial</button>
+            <button class="seg-btn" id="tab-d2" onclick="switchDrive('d2')">Drive 2: Highway</button>
         </div>
     </header>
 
-    <!-- Top Telemetry Metrics -->
+    <!-- Metrics Bar -->
     <div class="metrics-bar">
         <div class="stat-card">
-            <span class="stat-label">Ego Speed</span>
+            <span class="stat-label">Speed</span>
             <div class="stat-row">
                 <span class="stat-val" id="val-speed">0.0</span>
-                <span class="stat-unit" id="val-speed-ms">km/h</span>
+                <span class="stat-unit">km/h</span>
             </div>
         </div>
 
@@ -445,60 +392,50 @@
             <span class="stat-label">Closest Obstacle</span>
             <div class="stat-row">
                 <span class="stat-val" id="val-closest">--</span>
-                <span class="stat-unit">meters</span>
+                <span class="stat-unit">m</span>
             </div>
         </div>
 
         <div class="stat-card">
-            <span class="stat-label">Lead Time-to-Collision</span>
+            <span class="stat-label">Time to Collision</span>
             <div class="stat-row">
                 <span class="stat-val" id="val-ttc">--</span>
-                <span class="stat-unit">sec</span>
+                <span class="stat-unit">s</span>
             </div>
         </div>
 
         <div class="stat-card">
-            <span class="stat-label">Tracked Objects</span>
+            <span class="stat-label">Objects</span>
             <div class="stat-row">
                 <span class="stat-val" id="val-locks">0</span>
-                <span class="stat-unit">in corridor</span>
             </div>
         </div>
 
         <div class="stat-card">
-            <span class="stat-label">Planning Action</span>
+            <span class="stat-label">Steering</span>
             <div class="stat-row">
-                <span class="stat-val" id="val-steer">Nominal</span>
+                <span class="stat-val" id="val-steer">0.0&deg;</span>
             </div>
         </div>
     </div>
 
-    <!-- Main Dual Viewport -->
+    <!-- Workspace -->
     <div class="workspace-grid">
-        <!-- Left Pane: Front Camera Vision -->
+        <!-- Left: Camera View -->
         <div class="panel-container">
             <div class="panel-heading">
-                <h2>Front Camera Vision</h2>
-                <span class="panel-tag">YOLOv8 2D Perception &middot; 1080p</span>
+                <h2>Camera Vision</h2>
             </div>
-
             <div class="cam-viewport">
-                <img id="cam-img" src="" alt="Front Camera Vision Stream">
-            </div>
-
-            <div class="cam-footer">
-                <span>Focal Length: 1250 px &middot; FOV: 75&deg;</span>
-                <span id="cam-filename">frame_0000.jpg</span>
+                <img id="cam-img" src="" alt="Camera Feed">
             </div>
         </div>
 
-        <!-- Right Pane: Bird's-Eye-View (BEV) Corridor & Radar Scope -->
+        <!-- Right: Dynamic BEV Radar Scope -->
         <div class="panel-container">
             <div class="panel-heading">
-                <h2>BEV Perception &amp; 77 GHz Radar Scope</h2>
-                <span class="panel-tag">TI AWR1843 MIMO &middot; 1-to-1 LiDAR Association</span>
+                <h2>BEV Radar Scope</h2>
             </div>
-
             <div class="bev-viewport">
                 <canvas id="radarCanvas" width="600" height="600"></canvas>
             </div>
@@ -508,24 +445,24 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Target</th>
+                            <th>ID</th>
                             <th>Class</th>
-                            <th>Range</th>
-                            <th>Lateral (X)</th>
-                            <th>Longitudinal (Y)</th>
-                            <th>Radial Vel (vr)</th>
+                            <th>Distance</th>
+                            <th>X (m)</th>
+                            <th>Y (m)</th>
+                            <th>Speed</th>
                             <th>RCS</th>
                         </tr>
                     </thead>
                     <tbody id="radar-tbody">
-                        <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:6px;">Loading telemetry targets...</td></tr>
+                        <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:6px;">No targets</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- Bottom Playback Controls Bar -->
+    <!-- Controls Bar -->
     <div class="controls-toolbar">
         <div class="btn-group">
             <button class="btn-action btn-primary" id="btn-play" onclick="togglePlayback()">Pause</button>
@@ -538,13 +475,10 @@
             <span class="frame-indicator" id="frame-counter-txt">Frame 001 / 150</span>
         </div>
 
-        <div class="btn-group">
-            <div class="speed-group">
-                <button class="speed-opt" onclick="setSpeed(0.5, this)">0.5x</button>
-                <button class="speed-opt active" onclick="setSpeed(1.0, this)">1.0x</button>
-                <button class="speed-opt" onclick="setSpeed(2.0, this)">2.0x</button>
-            </div>
-            <span class="shortcut-hint">[Space] Pause &middot; [&larr;/&rarr;] Step</span>
+        <div class="speed-group">
+            <button class="speed-opt" onclick="setSpeed(0.5, this)">0.5x</button>
+            <button class="speed-opt active" onclick="setSpeed(1.0, this)">1.0x</button>
+            <button class="speed-opt" onclick="setSpeed(2.0, this)">2.0x</button>
         </div>
     </div>
 
@@ -558,19 +492,22 @@
         let fps = 10.0;
         let speedMultiplier = 1.0;
 
+        // Kinematic Road & Ego Animation State
+        let roadScrollMeters = 0.0;
+        let lastTimestamp = performance.now();
+        let egoLateralM = 0.0;
+        let egoHeadingDeg = 0.0;
+
         const canvas = document.getElementById('radarCanvas');
         const ctx = canvas.getContext('2d');
         const totalFrames = typeof DASHBOARD_DATA !== 'undefined' ? DASHBOARD_DATA.length : 0;
 
         window.addEventListener('DOMContentLoaded', () => {
-            if (totalFrames === 0) {
-                console.error("dashboard_data.js is missing or empty.");
-                return;
-            }
+            if (totalFrames === 0) return;
             document.getElementById('frame-slider').max = totalFrames - 1;
             updateDashboard(0);
             startPlayback();
-            requestAnimationFrame(renderRadarLoop);
+            requestAnimationFrame(animationLoop);
         });
 
         function switchDrive(driveId) {
@@ -596,20 +533,18 @@
             // 1. Camera Image
             const camImg = document.getElementById('cam-img');
             camImg.src = rec.image_file;
-            document.getElementById('cam-filename').innerText = rec.image_file.split('/').pop();
 
-            // 2. Drive Tab Sync
+            // 2. Drive Tabs
             document.querySelectorAll('.seg-btn').forEach(btn => btn.classList.remove('active'));
             const activeTab = document.getElementById(`tab-${rec.drive}`);
             if (activeTab) activeTab.classList.add('active');
 
-            // 3. Stat Cards
+            // 3. Stats
             document.getElementById('val-speed').innerText = rec.ego_speed_kmh.toFixed(1);
-            document.getElementById('val-speed-ms').innerText = `km/h (${(rec.ego_speed_kmh / 3.6).toFixed(1)} m/s)`;
 
             const closestEl = document.getElementById('val-closest');
             if (rec.closest_dist_m !== null) {
-                closestEl.innerText = rec.closest_dist_m.toFixed(1);
+                closestEl.innerText = `${rec.closest_dist_m.toFixed(1)} m`;
                 closestEl.style.color = rec.closest_dist_m < 15 ? "var(--accent-red)" : (rec.closest_dist_m < 25 ? "var(--accent-amber)" : "var(--text-primary)");
             } else {
                 closestEl.innerText = "--";
@@ -620,7 +555,7 @@
 
             const ttcEl = document.getElementById('val-ttc');
             if (rec.min_ttc_s !== null) {
-                ttcEl.innerText = rec.min_ttc_s.toFixed(2);
+                ttcEl.innerText = `${rec.min_ttc_s.toFixed(2)} s`;
                 ttcEl.style.color = rec.min_ttc_s < 2.5 ? "var(--accent-red)" : "var(--accent-amber)";
             } else {
                 ttcEl.innerText = "Safe";
@@ -628,19 +563,15 @@
             }
 
             const steerEl = document.getElementById('val-steer');
-            if (rec.decision && rec.decision.includes("SWERVE")) {
-                steerEl.innerText = `Evasion (${rec.steer_deg > 0 ? "+" : ""}${rec.steer_deg}\u00B0)`;
-                steerEl.style.color = "var(--accent-red)";
-            } else {
-                steerEl.innerText = "Nominal Path";
-                steerEl.style.color = "var(--accent-green)";
-            }
+            const steerVal = rec.steer_deg || 0.0;
+            steerEl.innerText = `${steerVal > 0 ? "+" : ""}${steerVal.toFixed(1)}\u00B0`;
+            steerEl.style.color = Math.abs(steerVal) > 1.5 ? "var(--accent-amber)" : "var(--accent-green)";
 
             // 4. Scrubber
             document.getElementById('frame-slider').value = idx;
             document.getElementById('frame-counter-txt').innerText = `Frame ${(idx + 1).toString().padStart(3, '0')} / ${totalFrames}`;
 
-            // 5. Radar Targets Table
+            // 5. Update Target Table
             updateRadarTable(rec.radar_targets);
         }
 
@@ -648,7 +579,7 @@
             const tbody = document.getElementById('radar-tbody');
             tbody.innerHTML = '';
             if (!targets || targets.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:6px;">No radar reflections in FOV</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:6px;">No targets</td></tr>`;
                 return;
             }
 
@@ -662,8 +593,8 @@
                     <td style="color:var(--accent-blue); font-weight:600;">#${tgt.id}</td>
                     <td>${tgt.class}</td>
                     <td>${tgt.dist.toFixed(1)} m</td>
-                    <td>${tgt.x >= 0 ? "+" : ""}${tgt.x.toFixed(1)} m</td>
-                    <td>${tgt.y >= 0 ? "+" : ""}${tgt.y.toFixed(1)} m</td>
+                    <td>${tgt.x >= 0 ? "+" : ""}${tgt.x.toFixed(1)}</td>
+                    <td>${tgt.y >= 0 ? "+" : ""}${tgt.y.toFixed(1)}</td>
                     <td style="color:${vrColor}; font-weight:600;">${vrSign} m/s</td>
                     <td style="color:var(--text-secondary);">${tgt.rcs.toFixed(1)} dBsm</td>
                 `;
@@ -671,12 +602,29 @@
             });
         }
 
-        function renderRadarLoop() {
-            renderRadarScope();
-            requestAnimationFrame(renderRadarLoop);
+        // Smooth 60 FPS Kinematic Animation Loop
+        function animationLoop(timestamp) {
+            const dtSec = Math.min(0.05, (timestamp - lastTimestamp) / 1000.0);
+            lastTimestamp = timestamp;
+
+            const rec = (typeof DASHBOARD_DATA !== 'undefined' && DASHBOARD_DATA.length > 0) ? DASHBOARD_DATA[currentFrameIdx] : null;
+            if (rec && isPlaying) {
+                const speedMs = (rec.ego_speed_kmh / 3.6) * speedMultiplier;
+                roadScrollMeters += speedMs * dtSec;
+
+                // Smooth Ego lateral & heading tracking
+                const targetSteer = rec.steer_deg || 0.0;
+                egoHeadingDeg += (targetSteer - egoHeadingDeg) * 0.12;
+
+                const targetLateralM = -(targetSteer * 0.35); // lateral evasion displacement
+                egoLateralM += (targetLateralM - egoLateralM) * 0.12;
+            }
+
+            renderDynamicBEV(rec);
+            requestAnimationFrame(animationLoop);
         }
 
-        function renderRadarScope() {
+        function renderDynamicBEV(rec) {
             const W = canvas.width;
             const H = canvas.height;
             ctx.clearRect(0, 0, W, H);
@@ -685,24 +633,13 @@
             const v0 = H * 0.80;
             const scale = 7.2; // pixels per meter
 
-            // Road Corridor Surface
+            // Road Corridor
             const roadHalfWidthM = 7.0;
             const roadLeft = u0 - roadHalfWidthM * scale;
             const roadRight = u0 + roadHalfWidthM * scale;
 
             ctx.fillStyle = '#0f172a';
             ctx.fillRect(roadLeft, 0, roadRight - roadLeft, H);
-
-            // Subtle lateral road grid lines
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
-            ctx.lineWidth = 1;
-            for (let xM = -6; xM <= 6; xM += 2) {
-                const u = u0 - xM * scale;
-                ctx.beginPath();
-                ctx.moveTo(u, 0);
-                ctx.lineTo(u, H);
-                ctx.stroke();
-            }
 
             // Road Outer Curb Boundaries
             ctx.strokeStyle = '#334155';
@@ -712,10 +649,15 @@
             ctx.moveTo(roadRight, 0); ctx.lineTo(roadRight, H);
             ctx.stroke();
 
-            // Lane Dividers (y = +/- 3.5m)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+            // Dynamic Scrolling Lane Lines (flows with vehicle speed)
+            const dashPeriodM = 6.0;
+            const dashOffsetPx = (roadScrollMeters % dashPeriodM) * scale;
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
             ctx.lineWidth = 1.5;
-            ctx.setLineDash([8, 10]);
+            ctx.setLineDash([12, 16]);
+            ctx.lineDashOffset = -dashOffsetPx;
+
             [-3.5, 3.5].forEach(yLane => {
                 const uLane = u0 - yLane * scale;
                 ctx.beginPath();
@@ -724,15 +666,17 @@
             });
 
             // Center Road Dashed Divider Line (y = 0)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.30)';
             ctx.lineWidth = 1.5;
-            ctx.setLineDash([12, 12]);
+            ctx.setLineDash([16, 20]);
+            ctx.lineDashOffset = -dashOffsetPx;
             ctx.beginPath();
             ctx.moveTo(u0, 0); ctx.lineTo(u0, H);
             ctx.stroke();
             ctx.setLineDash([]);
+            ctx.lineDashOffset = 0;
 
-            // Longitudinal Distance Markers (10m, 20m, 30m, 40m, 50m)
+            // Longitudinal Distance Markers
             ctx.font = '10px ui-monospace, Consolas, monospace';
             [10, 20, 30, 40, 50].forEach(dM => {
                 const vLine = v0 - dM * scale;
@@ -747,40 +691,31 @@
                 ctx.fillText(`+${dM}m`, roadRight + 8, vLine + 3);
             });
 
-            // Rear -10m Line
-            const vRear = v0 + 10 * scale;
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
-            ctx.setLineDash([3, 4]);
-            ctx.beginPath();
-            ctx.moveTo(roadLeft, vRear);
-            ctx.lineTo(roadRight, vRear);
-            ctx.stroke();
-            ctx.setLineDash([]);
-            ctx.fillStyle = '#475569';
-            ctx.fillText(`-10m`, roadRight + 8, vRear + 3);
-
-            // Draw Ego Vehicle (Solid blue clean car)
-            drawEgoCar(ctx, u0, v0);
+            // Draw Ego Vehicle with dynamic steering & lateral motion
+            const egoPixelX = u0 - egoLateralM * scale;
+            drawEgoCar(ctx, egoPixelX, v0, egoHeadingDeg);
 
             // Draw Surrounding Obstacles
-            const rec = DASHBOARD_DATA[currentFrameIdx];
             if (rec && rec.radar_targets) {
                 rec.radar_targets.forEach(tgt => {
+                    const isMoving = Math.abs(tgt.vr) > 0.5;
                     const pu = u0 - tgt.y * scale;
                     const pv = v0 - tgt.x * scale;
+
                     if (pu >= 10 && pu < W - 10 && pv >= 10 && pv < H - 10) {
-                        drawSurroundingVehicle(ctx, pu, pv, tgt);
+                        drawSurroundingVehicle(ctx, pu, pv, tgt, isMoving);
                     }
                 });
             }
         }
 
-        function drawEgoCar(ctx, x, y) {
+        function drawEgoCar(ctx, x, y, headingDeg) {
             const carW = 20;
             const carL = 40;
 
             ctx.save();
             ctx.translate(x, y);
+            ctx.rotate((headingDeg * Math.PI) / 180.0);
 
             // Car Body
             ctx.fillStyle = '#2563eb';
@@ -798,22 +733,16 @@
             // Forward Direction Arrow
             ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.moveTo(0, -carL / 2 - 8);
-            ctx.lineTo(-5, -carL / 2 - 1);
-            ctx.lineTo(5, -carL / 2 - 1);
+            ctx.moveTo(0, -carL / 2 - 7);
+            ctx.lineTo(-4, -carL / 2 - 1);
+            ctx.lineTo(4, -carL / 2 - 1);
             ctx.closePath();
             ctx.fill();
-
-            // Label
-            ctx.font = '10px sans-serif';
-            ctx.fillStyle = '#94a3b8';
-            ctx.textAlign = 'center';
-            ctx.fillText('Ego', 0, carL / 2 + 13);
 
             ctx.restore();
         }
 
-        function drawSurroundingVehicle(ctx, x, y, tgt) {
+        function drawSurroundingVehicle(ctx, x, y, tgt, isMoving) {
             const cls = (tgt.class || '').toLowerCase();
             let boxW = 20;
             let boxL = 36;
@@ -830,11 +759,6 @@
                 boxL = 22;
                 fillColor = 'rgba(16, 185, 129, 0.25)';
                 strokeColor = '#10b981';
-            } else if (cls.includes('pedestrian') || cls.includes('person')) {
-                boxW = 10;
-                boxL = 10;
-                fillColor = 'rgba(239, 68, 68, 0.25)';
-                strokeColor = '#ef4444';
             }
 
             ctx.save();
@@ -849,9 +773,9 @@
             ctx.fill();
             ctx.stroke();
 
-            // Doppler Velocity Vector Arrow
-            if (Math.abs(tgt.vr) >= 0.3) {
-                const vecLen = Math.min(35, Math.abs(tgt.vr) * 2.5);
+            // Doppler Velocity Vector Arrow (Only for moving vehicles)
+            if (isMoving) {
+                const vecLen = Math.min(32, Math.abs(tgt.vr) * 2.5);
                 const isClosing = tgt.vr < 0;
                 const vColor = isClosing ? '#ef4444' : '#10b981';
 
@@ -863,7 +787,6 @@
                 ctx.lineTo(0, endY);
                 ctx.stroke();
 
-                // Arrow head
                 ctx.fillStyle = vColor;
                 ctx.beginPath();
                 ctx.moveTo(0, endY);
@@ -873,11 +796,11 @@
                 ctx.fill();
             }
 
-            // Target Text Tag
+            // Minimalist distance tag (clean, no extra labels)
             ctx.font = '9.5px ui-monospace, Consolas, monospace';
             ctx.fillStyle = '#f8fafc';
             ctx.textAlign = 'center';
-            ctx.fillText(`${tgt.dist.toFixed(1)}m`, 0, -boxL / 2 - 5);
+            ctx.fillText(`${tgt.dist.toFixed(1)}m`, 0, -boxL / 2 - 4);
 
             ctx.restore();
         }
@@ -923,7 +846,6 @@
             if (isPlaying) startPlayback();
         }
 
-        // Keyboard hotkeys
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
                 e.preventDefault();
