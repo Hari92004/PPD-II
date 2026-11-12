@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autonomous Vehicle Multi-Modal Cockpit Dashboard</title>
+    <title>Autonomous Driving Telemetry & Visualizer</title>
     <style>
         :root {
-            --bg-dark: #080b10;
-            --panel-bg: #101622;
-            --panel-border: #1e293b;
-            --cyan-accent: #00e5ff;
-            --radar-magenta: #ff00ff;
-            --lidar-blue: #00a6ff;
-            --cam-green: #00ff66;
-            --amber: #ffb703;
-            --danger-red: #ff3366;
-            --text-main: #f1f5f9;
-            --text-muted: #8b9bb4;
+            --bg-base: #0f172a;
+            --surface-panel: #1e293b;
+            --surface-sub: #0f172a;
+            --border-color: #334155;
+            --border-subtle: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             -webkit-user-select: none;
             user-select: none;
         }
@@ -31,18 +32,18 @@
         html, body {
             width: 100%;
             height: 100vh;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow: hidden; /* Zero unwanted scrollbars by default */
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            overflow: hidden;
         }
 
         body {
             display: flex;
             flex-direction: column;
-            padding: 8px 14px;
+            padding: 10px 16px;
         }
 
-        /* Top Header */
+        /* Top Navigation Header */
         header {
             width: 100%;
             max-width: 1720px;
@@ -50,253 +51,179 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 6px;
-            border-bottom: 1px solid var(--panel-border);
-            margin-bottom: 6px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 8px;
             flex-shrink: 0;
         }
 
-        .title-block {
+        .header-title-group h1 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.2px;
+        }
+
+        .header-title-group p {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 1px;
+        }
+
+        .header-actions {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .title-block h1 {
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .badge-live {
-            background: rgba(0, 229, 255, 0.15);
-            border: 1px solid var(--cyan-accent);
-            color: var(--cyan-accent);
-            font-size: 10px;
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .subtitle {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
         /* Drive Selector Tabs */
-        .drive-tabs {
-            display: flex;
-            gap: 6px;
-            background: #0d121c;
-            padding: 3px;
-            border-radius: 6px;
-            border: 1px solid var(--panel-border);
+        .segmented-tabs {
+            display: inline-flex;
+            background: #0b1120;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 2px;
+            gap: 2px;
         }
 
-        .tab-btn {
+        .seg-btn {
             background: transparent;
             border: none;
-            color: var(--text-muted);
-            padding: 4px 10px;
+            color: var(--text-secondary);
+            padding: 4px 11px;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 500;
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
         }
 
-        .tab-btn:hover {
-            color: #ffffff;
+        .seg-btn:hover {
+            color: var(--text-primary);
             background: rgba(255, 255, 255, 0.05);
         }
 
-        .tab-btn.active {
-            background: var(--cyan-accent);
-            color: #080b10;
-        }
-
-        /* Zoom Scale Selector */
-        .scale-selector {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            background: #0d121c;
-            padding: 3px;
-            border-radius: 6px;
-            border: 1px solid var(--panel-border);
-        }
-
-        .scale-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 4px 8px;
-            font-size: 10px;
+        .seg-btn.active {
+            background: var(--surface-panel);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
             font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
         }
 
-        .scale-btn.active {
-            background: #1e293b;
-            color: #ffffff;
-        }
-
-        /* Top Telemetry Metrics Cards */
-        .metrics-grid {
+        /* Telemetry Stat Cards */
+        .metrics-bar {
             width: 100%;
             max-width: 1720px;
-            margin: 0 auto 6px auto;
+            margin: 0 auto 8px auto;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 8px;
             flex-shrink: 0;
         }
 
-        .metric-card {
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
+        .stat-card {
+            background: var(--surface-panel);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 6px 12px;
+            padding: 8px 12px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
         }
 
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 100%;
-            background: var(--panel-border);
-        }
-
-        .metric-card.accent-cyan::before { background: var(--cyan-accent); }
-        .metric-card.accent-blue::before { background: var(--lidar-blue); }
-        .metric-card.accent-magenta::before { background: var(--radar-magenta); }
-        .metric-card.accent-amber::before { background: var(--amber); }
-        .metric-card.accent-green::before { background: var(--cam-green); }
-
-        .metric-label {
+        .stat-label {
             font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--text-secondary);
         }
 
-        .metric-val-row {
+        .stat-row {
             display: flex;
             align-items: baseline;
-            gap: 5px;
+            gap: 6px;
             margin-top: 2px;
         }
 
-        .metric-value {
+        .stat-val {
             font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
-            font-family: monospace;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: ui-monospace, "SF Mono", Consolas, monospace;
         }
 
-        .metric-unit {
+        .stat-unit {
             font-size: 11px;
             color: var(--text-muted);
         }
 
-        /* Main Cockpit Split Workspace */
-        .workspace {
+        /* Workspace Grid */
+        .workspace-grid {
             width: 100%;
             max-width: 1720px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1.2fr 1fr;
+            grid-template-columns: 1.15fr 1fr;
             gap: 10px;
             flex: 1;
-            min-height: 0; /* Important for inner flex scrolling/auto-fitting */
-            margin-bottom: 6px;
+            min-height: 0;
+            margin-bottom: 8px;
         }
 
-        /* Left Pane: Camera Vision & LiDAR AR View */
-        .camera-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            padding: 8px 10px;
+        .panel-container {
+            background: var(--surface-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             min-height: 0;
         }
 
-        .panel-header {
+        .panel-heading {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 6px;
-            padding-bottom: 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
         }
 
-        .panel-title {
-            font-size: 11.5px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #ffffff;
+        .panel-heading h2 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .panel-pills {
-            display: flex;
-            gap: 4px;
+        .panel-tag {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: ui-monospace, Consolas, monospace;
         }
 
-        .pill {
-            font-size: 9.5px;
-            padding: 1px 5px;
-            border-radius: 3px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-
-        .pill-green { background: rgba(0, 255, 102, 0.15); color: var(--cam-green); border: 1px solid rgba(0, 255, 102, 0.4); }
-        .pill-blue { background: rgba(0, 166, 255, 0.15); color: var(--lidar-blue); border: 1px solid rgba(0, 166, 255, 0.4); }
-        .pill-magenta { background: rgba(255, 0, 255, 0.15); color: var(--radar-magenta); border: 1px solid rgba(255, 0, 255, 0.4); }
-
-        .cam-frame-box {
+        /* Camera Viewport */
+        .cam-viewport {
             position: relative;
             flex: 1;
             min-height: 0;
-            background: #000;
-            border-radius: 6px;
+            background: #000000;
+            border-radius: 4px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .cam-frame-box img {
+        .cam-viewport img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Clean letterboxed/fitted aspect ratio */
+            object-fit: contain;
             display: block;
         }
 
@@ -309,24 +236,14 @@
             flex-shrink: 0;
         }
 
-        /* Right Pane: 77 GHz mmWave FMCW Radar BEV Scope */
-        .radar-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            padding: 8px 10px;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        .radar-canvas-container {
+        /* Radar BEV Viewport */
+        .bev-viewport {
             position: relative;
             flex: 1;
             min-height: 0;
-            background: #080b12;
-            border-radius: 6px;
-            border: 1px solid rgba(0, 229, 255, 0.25);
+            background: #090e17;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -340,622 +257,314 @@
             cursor: crosshair;
         }
 
-        .radar-tooltip {
-            position: absolute;
-            background: rgba(16, 22, 34, 0.95);
-            border: 1px solid var(--radar-magenta);
-            border-radius: 6px;
-            padding: 5px 8px;
-            font-size: 10.5px;
-            color: #ffffff;
-            pointer-events: none;
-            display: none;
-            z-index: 20;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-            line-height: 1.4;
-        }
-
-        /* Radar Targets Mini Table */
-        .radar-table-wrap {
+        /* Radar Target Table */
+        .table-container {
             margin-top: 6px;
-            height: 95px;
+            height: 90px;
             overflow-y: auto;
-            border: 1px solid var(--panel-border);
+            border: 1px solid var(--border-color);
             border-radius: 4px;
-            background: #0d121c;
+            background: #0b1120;
             flex-shrink: 0;
         }
 
-        .radar-table-wrap::-webkit-scrollbar {
+        .table-container::-webkit-scrollbar {
             width: 4px;
         }
-        .radar-table-wrap::-webkit-scrollbar-thumb {
-            background: var(--panel-border);
+        .table-container::-webkit-scrollbar-thumb {
+            background: var(--border-color);
             border-radius: 2px;
         }
 
-        table.radar-table {
+        table.data-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 10.5px;
-            font-family: monospace;
+            font-size: 11px;
+            font-family: ui-monospace, "SF Mono", Consolas, monospace;
             text-align: left;
         }
 
-        table.radar-table th {
-            background: #141b29;
-            color: var(--text-muted);
-            padding: 3px 6px;
-            font-weight: 600;
-            border-bottom: 1px solid var(--panel-border);
+        table.data-table th {
+            background: #141e30;
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             font-size: 10px;
         }
 
-        table.radar-table td {
-            padding: 3px 6px;
+        table.data-table td {
+            padding: 3px 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            color: #e2e8f0;
+            color: var(--text-primary);
         }
 
         /* Bottom Controls Bar */
-        .controls-bar {
+        .controls-toolbar {
             width: 100%;
             max-width: 1720px;
             margin: 0 auto;
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            padding: 8px 14px;
+            background: var(--surface-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 6px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 14px;
             flex-shrink: 0;
         }
 
-        .playback-btns {
+        .btn-group {
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .btn-ctrl {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            padding: 6px 12px;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: 600;
+        .btn-action {
+            background: #243044;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.15s ease;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
 
-        .btn-ctrl:hover {
+        .btn-action:hover {
             background: #334155;
         }
 
-        .btn-play-pause {
-            background: var(--cyan-accent);
-            color: #080b10;
-            border: none;
-            padding: 6px 16px;
+        .btn-primary {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #ffffff;
+            font-weight: 600;
         }
 
-        .btn-play-pause:hover {
-            background: #33ecff;
+        .btn-primary:hover {
+            background: #2563eb;
         }
 
-        .scrubber-wrap {
+        .scrubber-group {
             flex: 1;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         input[type="range"] {
             flex: 1;
-            height: 5px;
-            background: #1e293b;
-            border-radius: 3px;
+            height: 4px;
+            background: #243044;
+            border-radius: 2px;
             outline: none;
             cursor: pointer;
-            accent-color: var(--cyan-accent);
+            accent-color: var(--accent-blue);
         }
 
-        .frame-counter {
-            font-size: 12px;
-            font-family: monospace;
-            font-weight: 700;
-            color: var(--cyan-accent);
-            min-width: 115px;
+        .frame-indicator {
+            font-size: 11px;
+            font-family: ui-monospace, "SF Mono", Consolas, monospace;
+            color: var(--text-secondary);
+            min-width: 130px;
             text-align: right;
         }
 
-        .speed-selector {
+        .speed-group {
             display: flex;
             align-items: center;
-            gap: 3px;
-            background: #0d121c;
+            gap: 2px;
+            background: #0b1120;
             padding: 2px;
-            border-radius: 5px;
-            border: 1px solid var(--panel-border);
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
         }
 
-        .speed-btn {
+        .speed-opt {
             background: transparent;
             border: none;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             padding: 3px 6px;
             font-size: 10px;
-            font-weight: 600;
+            font-weight: 500;
             border-radius: 3px;
             cursor: pointer;
         }
 
-        .speed-btn.active {
-            background: #1e293b;
-            color: #ffffff;
+        .speed-opt.active {
+            background: var(--surface-panel);
+            color: var(--text-primary);
+            font-weight: 600;
         }
 
-        /* Scale Modifier Modes */
-        body.scale-large {
-            overflow-y: auto;
-        }
-        body.scale-large .workspace {
-            min-height: 650px;
-        }
-        body.scale-compact .metrics-grid {
-            gap: 6px;
-        }
-        body.scale-compact .metric-card {
-            padding: 4px 8px;
-        }
-
-        /* Interactive Pipeline Studio Modal */
-        .studio-modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(4, 7, 12, 0.85);
-            -webkit-backdrop-filter: blur(8px);
-            backdrop-filter: blur(8px);
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-        }
-
-        .studio-content {
-            background: #101726;
-            border: 1px solid var(--cyan-accent);
-            box-shadow: 0 10px 40px rgba(0, 229, 255, 0.2);
-            border-radius: 10px;
-            width: 100%;
-            max-width: 820px;
-            max-height: 90vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .studio-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--panel-border);
-            background: #0d121c;
-        }
-
-        .studio-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .studio-title h3 {
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #ffffff;
-        }
-
-        .btn-close {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 22px;
-            cursor: pointer;
-            line-height: 1;
-        }
-        .btn-close:hover {
-            color: var(--danger-red);
-        }
-
-        .studio-body {
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .upload-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        .upload-box {
-            background: #141b2a;
-            border: 2px dashed rgba(0, 229, 255, 0.35);
-            border-radius: 8px;
-            padding: 18px 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .upload-box:hover {
-            border-color: var(--cyan-accent);
-            background: rgba(0, 229, 255, 0.05);
-            transform: translateY(-2px);
-        }
-
-        .upload-icon {
-            font-size: 30px;
-            margin-bottom: 8px;
-        }
-
-        .upload-box h4 {
-            font-size: 13px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-
-        .upload-box p {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .file-preview-pill {
-            display: inline-block;
-            font-size: 10.5px;
-            font-family: monospace;
-            background: #0d121c;
-            border: 1px solid var(--panel-border);
-            color: var(--cyan-accent);
-            padding: 3px 8px;
-            border-radius: 4px;
-            max-width: 90%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .quick-samples {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            background: #0d121c;
-            padding: 10px 14px;
-            border-radius: 6px;
-            border: 1px solid var(--panel-border);
-        }
-
-        .sample-btn {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .sample-btn:hover {
-            background: #334155;
-            border-color: var(--cyan-accent);
-        }
-        .sample-btn.active {
-            background: rgba(0, 229, 255, 0.2);
-            border-color: var(--cyan-accent);
-            color: var(--cyan-accent);
-            font-weight: 700;
-        }
-
-        .btn-process-run {
-            background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
-            border: 1px solid var(--cyan-accent);
-            color: #ffffff;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            padding: 12px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.35);
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-        .btn-process-run:hover {
-            background: linear-gradient(135deg, #00d4ff 0%, #0096c7 100%);
-            box-shadow: 0 6px 22px rgba(0, 229, 255, 0.5);
-            transform: translateY(-1px);
-        }
-        .btn-process-run:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .pipeline-console {
-            background: #070a10;
-            border: 1px solid var(--panel-border);
-            border-radius: 6px;
-            padding: 12px;
-            font-family: monospace;
-            font-size: 11px;
-        }
-
-        .console-title {
-            color: var(--text-muted);
+        .shortcut-hint {
             font-size: 10px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding-bottom: 4px;
-        }
-
-        .console-logs {
-            max-height: 140px;
-            overflow-y: auto;
-            color: #00ff66;
-            line-height: 1.5;
-            white-space: pre-wrap;
+            color: var(--text-muted);
+            margin-left: 6px;
         }
     </style>
 </head>
-<body id="dash-body">
+<body>
 
-    <!-- Header -->
+    <!-- Header Navigation -->
     <header>
-        <div class="title-block">
-            <h1>AV MULTI-MODAL COCKPIT DASHBOARD</h1>
+        <div class="header-title-group">
+            <h1>Autonomous Driving Multi-Modal Telemetry</h1>
+            <p>Indian Driving Dataset (IDD) &middot; Synchronized Monocular Camera &middot; 3D LiDAR &middot; 77 GHz mmWave Radar &middot; Frenet Path Planner</p>
         </div>
 
-        <div class="header-controls">
-            <!-- Upload & Process Studio Button -->
-            <button class="tab-btn" id="btn-studio-toggle" style="background:rgba(0,229,255,0.18); border:1px solid var(--cyan-accent); color:#ffffff; font-weight:700;" onclick="toggleStudioModal()">🧪 Upload & Process Flow</button>
-
-            <!-- Drive Selector Tabs -->
-            <div class="drive-tabs">
-                <button class="tab-btn active" id="tab-d0" onclick="switchDrive('d0')">Drive 0: Urban</button>
-                <button class="tab-btn" id="tab-d1" onclick="switchDrive('d1')">Drive 1: Arterial</button>
-                <button class="tab-btn" id="tab-d2" onclick="switchDrive('d2')">Drive 2: Highway</button>
-            </div>
-
-            <!-- Dashboard Size Selector -->
-            <div class="scale-selector">
-                <button class="scale-btn active" id="scale-fit" onclick="setScaleMode('fit', this)">Fit Viewport</button>
-                <button class="scale-btn" id="scale-std" onclick="setScaleMode('standard', this)">Medium</button>
-                <button class="scale-btn" id="scale-large" onclick="setScaleMode('large', this)">Expanded</button>
+        <div class="header-actions">
+            <!-- Drive Selection Tabs -->
+            <div class="segmented-tabs">
+                <button class="seg-btn active" id="tab-d0" onclick="switchDrive('d0')">Drive 0: Urban</button>
+                <button class="seg-btn" id="tab-d1" onclick="switchDrive('d1')">Drive 1: Arterial</button>
+                <button class="seg-btn" id="tab-d2" onclick="switchDrive('d2')">Drive 2: Highway</button>
             </div>
         </div>
     </header>
 
-    <!-- Multi-Sensor Pipeline Studio Modal -->
-    <div id="studio-modal" class="studio-modal" style="display:none;">
-        <div class="studio-content">
-            <div class="studio-header">
-                <div class="studio-title">
-                    <span style="font-size:16px;">🧪</span>
-                    <h3>MULTI-SENSOR PIPELINE STUDIO (IMAGE + LIDAR &rarr; MMWAVE RADAR)</h3>
-                </div>
-                <button class="btn-close" onclick="closeStudioModal()">&times;</button>
+    <!-- Top Telemetry Metrics -->
+    <div class="metrics-bar">
+        <div class="stat-card">
+            <span class="stat-label">Ego Speed</span>
+            <div class="stat-row">
+                <span class="stat-val" id="val-speed">0.0</span>
+                <span class="stat-unit" id="val-speed-ms">km/h</span>
             </div>
-            
-            <div class="studio-body">
-                <!-- Upload Grid -->
-                <div class="upload-grid">
-                    <!-- Box 1: Camera Image -->
-                    <div class="upload-box" id="box-cam" onclick="document.getElementById('input-cam-file').click()">
-                        <div class="upload-icon">📷</div>
-                        <h4>1. Front Camera Image</h4>
-                        <p>Click to browse or drop .jpg / .png image</p>
-                        <input type="file" id="input-cam-file" accept="image/*" style="display:none;" onchange="handleCamUpload(event)">
-                        <div id="cam-upload-preview" class="file-preview-pill">d0_cam_0000016.jpg (Loaded)</div>
-                    </div>
+        </div>
 
-                    <!-- Box 2: LiDAR Point Cloud -->
-                    <div class="upload-box" id="box-lidar" onclick="document.getElementById('input-lidar-file').click()">
-                        <div class="upload-icon">📡</div>
-                        <h4>2. LiDAR Point Cloud (.npy)</h4>
-                        <p>Click to browse or drop .npy point cloud</p>
-                        <input type="file" id="input-lidar-file" accept=".npy" style="display:none;" onchange="handleLidarUpload(event)">
-                        <div id="lidar-upload-preview" class="file-preview-pill">d0_lidar_0000016.npy (Loaded)</div>
-                    </div>
-                </div>
+        <div class="stat-card">
+            <span class="stat-label">Closest Obstacle</span>
+            <div class="stat-row">
+                <span class="stat-val" id="val-closest">--</span>
+                <span class="stat-unit">meters</span>
+            </div>
+        </div>
 
-                <!-- Quick Benchmark Sample Selectors -->
-                <div class="quick-samples">
-                    <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Or Select Benchmark IDD Multimodal Pair:</span>
-                    <button class="sample-btn active" id="smp-d0" onclick="loadSamplePair('d0', 16, this)">Drive 0: Urban MG Road (#16)</button>
-                    <button class="sample-btn" id="smp-d1" onclick="loadSamplePair('d1', 70, this)">Drive 1: Arterial Corridor (#70)</button>
-                    <button class="sample-btn" id="smp-d2" onclick="loadSamplePair('d2', 120, this)">Drive 2: Highway Bypass (#120)</button>
-                </div>
+        <div class="stat-card">
+            <span class="stat-label">Lead Time-to-Collision</span>
+            <div class="stat-row">
+                <span class="stat-val" id="val-ttc">--</span>
+                <span class="stat-unit">sec</span>
+            </div>
+        </div>
 
-                <!-- Action Process Button -->
-                <button id="btn-run-pipeline" class="btn-process-run" onclick="executeFullPipeline()">
-                    ⚡ RUN MULTI-SENSOR PERCEPTION &amp; GENERATE MMWAVE RADAR
-                </button>
+        <div class="stat-card">
+            <span class="stat-label">Tracked Objects</span>
+            <div class="stat-row">
+                <span class="stat-val" id="val-locks">0</span>
+                <span class="stat-unit">in corridor</span>
+            </div>
+        </div>
 
-                <!-- Animated Execution Console -->
-                <div id="pipeline-console" class="pipeline-console">
-                    <div class="console-title">PIPELINE EXECUTION LOGS &amp; TELEMETRY:</div>
-                    <div id="console-logs" class="console-logs">Ready. Upload custom files or choose a benchmark sample, then click 'Run Multi-Sensor Perception'.</div>
-                </div>
+        <div class="stat-card">
+            <span class="stat-label">Planning Action</span>
+            <div class="stat-row">
+                <span class="stat-val" id="val-steer">Nominal</span>
             </div>
         </div>
     </div>
 
-    <!-- Top Telemetry Metrics Bar -->
-    <div class="metrics-grid">
-        <div class="metric-card accent-cyan">
-            <span class="metric-label">Ego Velocity</span>
-            <div class="metric-val-row">
-                <span class="metric-value" id="val-speed">0.0</span>
-                <span class="metric-unit">km/h</span>
-                <span class="metric-unit" id="val-speed-ms" style="color:var(--cyan-accent); margin-left:auto;">(0.0 m/s)</span>
+    <!-- Main Dual Viewport -->
+    <div class="workspace-grid">
+        <!-- Left Pane: Front Camera Vision -->
+        <div class="panel-container">
+            <div class="panel-heading">
+                <h2>Front Camera Vision</h2>
+                <span class="panel-tag">YOLOv8 2D Perception &middot; 1080p</span>
+            </div>
+
+            <div class="cam-viewport">
+                <img id="cam-img" src="" alt="Front Camera Vision Stream">
+            </div>
+
+            <div class="cam-footer">
+                <span>Focal Length: 1250 px &middot; FOV: 75&deg;</span>
+                <span id="cam-filename">frame_0000.jpg</span>
             </div>
         </div>
 
-        <div class="metric-card accent-amber">
-            <span class="metric-label">Closest Obstacle</span>
-            <div class="metric-val-row">
-                <span class="metric-value" id="val-closest">--</span>
-                <span class="metric-unit">meters</span>
-            </div>
-        </div>
-
-        <div class="metric-card accent-magenta">
-            <span class="metric-label">Radar Active Locks</span>
-            <div class="metric-val-row">
-                <span class="metric-value" id="val-locks">0</span>
-                <span class="metric-unit">targets</span>
-                <span class="metric-unit" style="color:var(--radar-magenta); margin-left:auto;">77GHz Doppler</span>
-            </div>
-        </div>
-
-        <div class="metric-card accent-blue">
-            <span class="metric-label">Min TTC</span>
-            <div class="metric-val-row">
-                <span class="metric-value" id="val-ttc">--</span>
-                <span class="metric-unit">seconds</span>
-            </div>
-        </div>
-
-        <div class="metric-card accent-green">
-            <span class="metric-label">Frenet Steering</span>
-            <div class="metric-val-row">
-                <span class="metric-value" id="val-steer" style="font-size:14px;">FOLLOW NOMINAL</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Cockpit Split Workspace -->
-    <div class="workspace">
-        
-        <!-- Left Side: Live Processed Camera & LiDAR AR View -->
-        <div class="camera-panel">
-            <div class="panel-header">
-                <div class="panel-title">
-                    <span>CAMERA VISION + CALIBRATED LIDAR AR VIEW</span>
-                </div>
-                <div class="panel-pills">
-                    <span class="pill pill-green">CAM: YOLOv8 (GREEN)</span>
-                    <span class="pill pill-blue">LiDAR: FRONT &lt;25m (BLUE)</span>
-                    <span class="pill pill-green">FRENET DUAL-PATH</span>
-                </div>
+        <!-- Right Pane: Bird's-Eye-View (BEV) Corridor & Radar Scope -->
+        <div class="panel-container">
+            <div class="panel-heading">
+                <h2>BEV Perception &amp; 77 GHz Radar Scope</h2>
+                <span class="panel-tag">TI AWR1843 MIMO &middot; 1-to-1 LiDAR Association</span>
             </div>
 
-            <div class="cam-frame-box">
-                <img id="cam-img" src="" alt="Live Synchronized Autonomous Driving Camera Feed">
-            </div>
-        </div>
-
-        <!-- Right Side: 77 GHz mmWave FMCW Radar BEV Scope -->
-        <div class="radar-panel">
-            <div class="panel-header">
-                <div class="panel-title">
-                    <span>77 GHz mmWave FMCW RADAR (ADAS BEV SURROUND VIEW)</span>
-                </div>
-                <div class="panel-pills">
-                    <span class="pill" style="background:rgba(0,229,255,0.18); color:var(--cyan-accent); border:1px solid var(--cyan-accent);">EGO VEHICLE</span>
-                    <span class="pill pill-magenta">SURROUND VEHICLES (BEV)</span>
-                    <span class="pill pill-green">77 GHz FMCW</span>
-                </div>
-            </div>
-
-            <div class="radar-canvas-container" id="radar-container">
+            <div class="bev-viewport">
                 <canvas id="radarCanvas" width="600" height="600"></canvas>
-                <div class="radar-tooltip" id="radarTooltip"></div>
             </div>
 
-            <!-- Real-Time Radar Tracked Targets Table -->
-            <div class="radar-table-wrap">
-                <table class="radar-table">
+            <!-- Target Table -->
+            <div class="table-container">
+                <table class="data-table">
                     <thead>
                         <tr>
-                            <th>TGT</th>
-                            <th>CLASS</th>
-                            <th>RANGE (R)</th>
-                            <th>X (LONG)</th>
-                            <th>Y (LAT)</th>
-                            <th>vr (DOPPLER)</th>
-                            <th>RCS (&sigma;)</th>
+                            <th>Target</th>
+                            <th>Class</th>
+                            <th>Range</th>
+                            <th>Lateral (X)</th>
+                            <th>Longitudinal (Y)</th>
+                            <th>Radial Vel (vr)</th>
+                            <th>RCS</th>
                         </tr>
                     </thead>
                     <tbody id="radar-tbody">
-                        <!-- Populated by JS -->
+                        <tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:6px;">Loading telemetry targets...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
-
     </div>
 
-    <!-- Bottom Playback & Frame Scrubber Controls -->
-    <div class="controls-bar">
-        <div class="playback-btns">
-            <button class="btn-ctrl btn-play-pause" id="btn-play" onclick="togglePlay()">Pause</button>
-            <button class="btn-ctrl" onclick="stepFrame(-1)">&larr; Prev Frame</button>
-            <button class="btn-ctrl" onclick="stepFrame(1)">Next Frame &rarr;</button>
+    <!-- Bottom Playback Controls Bar -->
+    <div class="controls-toolbar">
+        <div class="btn-group">
+            <button class="btn-action btn-primary" id="btn-play" onclick="togglePlayback()">Pause</button>
+            <button class="btn-action" onclick="stepFrame(-1)">&larr; Prev</button>
+            <button class="btn-action" onclick="stepFrame(1)">Next &rarr;</button>
         </div>
 
-        <div class="scrubber-wrap">
-            <input type="range" id="frame-slider" min="0" max="149" value="0" oninput="onSliderInput(this.value)">
-            <div class="frame-counter" id="frame-counter-txt">Frame: 001 / 150</div>
+        <div class="scrubber-group">
+            <input type="range" id="frame-slider" min="0" max="149" value="0" oninput="onScrub(this.value)">
+            <span class="frame-indicator" id="frame-counter-txt">Frame 001 / 150</span>
         </div>
 
-        <div class="speed-selector">
-            <button class="speed-btn" onclick="setSpeed(0.5, this)">0.5x</button>
-            <button class="speed-btn active" onclick="setSpeed(1.0, this)">1.0x (7 FPS)</button>
-            <button class="speed-btn" onclick="setSpeed(2.0, this)">2.0x</button>
-            <button class="speed-btn" onclick="setSpeed(4.0, this)">4.0x</button>
+        <div class="btn-group">
+            <div class="speed-group">
+                <button class="speed-opt" onclick="setSpeed(0.5, this)">0.5x</button>
+                <button class="speed-opt active" onclick="setSpeed(1.0, this)">1.0x</button>
+                <button class="speed-opt" onclick="setSpeed(2.0, this)">2.0x</button>
+            </div>
+            <span class="shortcut-hint">[Space] Pause &middot; [&larr;/&rarr;] Step</span>
         </div>
     </div>
 
-    <!-- Load Pre-Extracted Multi-Modal Dataset -->
+    <!-- Pre-extracted dataset -->
     <script src="dashboard_data.js"></script>
 
     <script>
-        // State variables
         let currentFrameIdx = 0;
         let isPlaying = true;
         let playbackInterval = null;
-        let fps = 7.0;
+        let fps = 10.0;
         let speedMultiplier = 1.0;
-        let scannerAngle = 0;
 
         const canvas = document.getElementById('radarCanvas');
         const ctx = canvas.getContext('2d');
-        const tooltip = document.getElementById('radarTooltip');
-        const bodyEl = document.getElementById('dash-body');
-
         const totalFrames = typeof DASHBOARD_DATA !== 'undefined' ? DASHBOARD_DATA.length : 0;
 
-        // Initialize
         window.addEventListener('DOMContentLoaded', () => {
             if (totalFrames === 0) {
-                alert("Error: dashboard_data.js could not be loaded or is empty!");
+                console.error("dashboard_data.js is missing or empty.");
                 return;
             }
             document.getElementById('frame-slider').max = totalFrames - 1;
@@ -964,23 +573,10 @@
             requestAnimationFrame(renderRadarLoop);
         });
 
-        // Set Scale Mode
-        function setScaleMode(mode, btnEl) {
-            document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
-            btnEl.classList.add('active');
-
-            bodyEl.classList.remove('scale-compact', 'scale-large');
-            if (mode === 'compact') {
-                bodyEl.classList.add('scale-compact');
-            } else if (mode === 'large') {
-                bodyEl.classList.add('scale-large');
-            }
-        }
-
-        // Drive Switcher
         function switchDrive(driveId) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`tab-${driveId}`).classList.add('active');
+            document.querySelectorAll('.seg-btn').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`tab-${driveId}`);
+            if (activeBtn) activeBtn.classList.add('active');
 
             let targetIdx = 0;
             if (driveId === 'd1') targetIdx = 50;
@@ -989,7 +585,6 @@
             updateDashboard(targetIdx);
         }
 
-        // Frame Update
         function updateDashboard(idx) {
             if (idx < 0) idx = 0;
             if (idx >= totalFrames) idx = totalFrames - 1;
@@ -998,26 +593,27 @@
             const rec = DASHBOARD_DATA[currentFrameIdx];
             if (!rec) return;
 
-            // 1. Update Camera View Image
+            // 1. Camera Image
             const camImg = document.getElementById('cam-img');
             camImg.src = rec.image_file;
+            document.getElementById('cam-filename').innerText = rec.image_file.split('/').pop();
 
-            // 2. Update Drive Tabs
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            // 2. Drive Tab Sync
+            document.querySelectorAll('.seg-btn').forEach(btn => btn.classList.remove('active'));
             const activeTab = document.getElementById(`tab-${rec.drive}`);
             if (activeTab) activeTab.classList.add('active');
 
-            // 3. Update Metrics Cards
+            // 3. Stat Cards
             document.getElementById('val-speed').innerText = rec.ego_speed_kmh.toFixed(1);
-            document.getElementById('val-speed-ms').innerText = `(${(rec.ego_speed_kmh / 3.6).toFixed(1)} m/s)`;
+            document.getElementById('val-speed-ms').innerText = `km/h (${(rec.ego_speed_kmh / 3.6).toFixed(1)} m/s)`;
 
             const closestEl = document.getElementById('val-closest');
             if (rec.closest_dist_m !== null) {
                 closestEl.innerText = rec.closest_dist_m.toFixed(1);
-                closestEl.style.color = rec.closest_dist_m < 15 ? "var(--danger-red)" : (rec.closest_dist_m < 25 ? "var(--amber)" : "#ffffff");
+                closestEl.style.color = rec.closest_dist_m < 15 ? "var(--accent-red)" : (rec.closest_dist_m < 25 ? "var(--accent-amber)" : "var(--text-primary)");
             } else {
                 closestEl.innerText = "--";
-                closestEl.style.color = "#ffffff";
+                closestEl.style.color = "var(--text-primary)";
             }
 
             document.getElementById('val-locks').innerText = rec.active_locks;
@@ -1025,30 +621,29 @@
             const ttcEl = document.getElementById('val-ttc');
             if (rec.min_ttc_s !== null) {
                 ttcEl.innerText = rec.min_ttc_s.toFixed(2);
-                ttcEl.style.color = rec.min_ttc_s < 2.5 ? "var(--danger-red)" : "var(--amber)";
+                ttcEl.style.color = rec.min_ttc_s < 2.5 ? "var(--accent-red)" : "var(--accent-amber)";
             } else {
-                ttcEl.innerText = "SAFE";
-                ttcEl.style.color = "var(--cam-green)";
+                ttcEl.innerText = "Safe";
+                ttcEl.style.color = "var(--accent-green)";
             }
 
             const steerEl = document.getElementById('val-steer');
-            if (rec.decision.includes("SWERVE")) {
-                steerEl.innerText = `EVASION (${rec.steer_deg > 0 ? "+" : ""}${rec.steer_deg}°)`;
-                steerEl.style.color = "var(--danger-red)";
+            if (rec.decision && rec.decision.includes("SWERVE")) {
+                steerEl.innerText = `Evasion (${rec.steer_deg > 0 ? "+" : ""}${rec.steer_deg}\u00B0)`;
+                steerEl.style.color = "var(--accent-red)";
             } else {
-                steerEl.innerText = "FOLLOW NOMINAL";
-                steerEl.style.color = "var(--cam-green)";
+                steerEl.innerText = "Nominal Path";
+                steerEl.style.color = "var(--accent-green)";
             }
 
-            // 4. Update Scrubber
+            // 4. Scrubber
             document.getElementById('frame-slider').value = idx;
-            document.getElementById('frame-counter-txt').innerText = `Frame: ${(idx + 1).toString().padStart(3, '0')} / ${totalFrames}`;
+            document.getElementById('frame-counter-txt').innerText = `Frame ${(idx + 1).toString().padStart(3, '0')} / ${totalFrames}`;
 
-            // 5. Update Radar Table
+            // 5. Radar Targets Table
             updateRadarTable(rec.radar_targets);
         }
 
-        // Radar Table Populator
         function updateRadarTable(targets) {
             const tbody = document.getElementById('radar-tbody');
             tbody.innerHTML = '';
@@ -1060,23 +655,22 @@
             targets.forEach((tgt) => {
                 const tr = document.createElement('tr');
                 const isReceding = tgt.vr >= 0;
-                const vrColor = isReceding ? "var(--cyan-accent)" : "var(--danger-red)";
+                const vrColor = isReceding ? "var(--accent-green)" : "var(--accent-red)";
                 const vrSign = isReceding ? `+${tgt.vr.toFixed(1)}` : tgt.vr.toFixed(1);
 
                 tr.innerHTML = `
-                    <td style="color:var(--radar-magenta); font-weight:bold;">#${tgt.id}</td>
+                    <td style="color:var(--accent-blue); font-weight:600;">#${tgt.id}</td>
                     <td>${tgt.class}</td>
-                    <td style="font-weight:bold;">${tgt.dist.toFixed(1)}m</td>
-                    <td>${tgt.x >= 0 ? "+" : ""}${tgt.x.toFixed(1)}m</td>
-                    <td>${tgt.y >= 0 ? "+" : ""}${tgt.y.toFixed(1)}m</td>
-                    <td style="color:${vrColor}; font-weight:bold;">${vrSign} m/s</td>
-                    <td style="color:var(--text-muted);">${tgt.rcs.toFixed(1)} dBsm</td>
+                    <td>${tgt.dist.toFixed(1)} m</td>
+                    <td>${tgt.x >= 0 ? "+" : ""}${tgt.x.toFixed(1)} m</td>
+                    <td>${tgt.y >= 0 ? "+" : ""}${tgt.y.toFixed(1)} m</td>
+                    <td style="color:${vrColor}; font-weight:600;">${vrSign} m/s</td>
+                    <td style="color:var(--text-secondary);">${tgt.rcs.toFixed(1)} dBsm</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        // Continuous Automotive ADAS BEV View Renderer (Steady 60 FPS, No Military Rotating Line)
         function renderRadarLoop() {
             renderRadarScope();
             requestAnimationFrame(renderRadarLoop);
@@ -1087,21 +681,20 @@
             const H = canvas.height;
             ctx.clearRect(0, 0, W, H);
 
-            // Origin of Ego Vehicle
-            const u0 = W / 2;       // 300 px
-            const v0 = H * 0.78;    // 468 px (allowing room for rear vehicle tracking)
-            const scale = 7.2;      // 7.2 pixels per meter (50m ahead * 7.2 = 360 px)
+            const u0 = W / 2;
+            const v0 = H * 0.80;
+            const scale = 7.2; // pixels per meter
 
-            // 1. Dark Digital Asphalt Road Corridor
-            const roadHalfWidthM = 7.0; // 14m wide road corridor
+            // Road Corridor Surface
+            const roadHalfWidthM = 7.0;
             const roadLeft = u0 - roadHalfWidthM * scale;
             const roadRight = u0 + roadHalfWidthM * scale;
 
-            ctx.fillStyle = '#0a101d';
+            ctx.fillStyle = '#0f172a';
             ctx.fillRect(roadLeft, 0, roadRight - roadLeft, H);
 
-            // Subtle Lateral Road Grid Lines
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            // Subtle lateral road grid lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
             ctx.lineWidth = 1;
             for (let xM = -6; xM <= 6; xM += 2) {
                 const u = u0 - xM * scale;
@@ -1111,17 +704,16 @@
                 ctx.stroke();
             }
 
-            // 2. Road Lane Markings
-            // Outer Curb Boundaries (Cyan Subtle Accent)
-            ctx.strokeStyle = 'rgba(0, 229, 255, 0.35)';
+            // Road Outer Curb Boundaries
+            ctx.strokeStyle = '#334155';
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(roadLeft, 0); ctx.lineTo(roadLeft, H);
             ctx.moveTo(roadRight, 0); ctx.lineTo(roadRight, H);
             ctx.stroke();
 
-            // Intermediate Lane Dividers (y = +/- 3.5m)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+            // Lane Dividers (y = +/- 3.5m)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
             ctx.lineWidth = 1.5;
             ctx.setLineDash([8, 10]);
             [-3.5, 3.5].forEach(yLane => {
@@ -1132,19 +724,19 @@
             });
 
             // Center Road Dashed Divider Line (y = 0)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([14, 14]);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([12, 12]);
             ctx.beginPath();
             ctx.moveTo(u0, 0); ctx.lineTo(u0, H);
             ctx.stroke();
             ctx.setLineDash([]);
 
-            // 3. Longitudinal Road Distance Ticks & Markers (10m, 20m, 30m, 40m, 50m ahead & -10m rear)
-            ctx.font = '10px monospace';
+            // Longitudinal Distance Markers (10m, 20m, 30m, 40m, 50m)
+            ctx.font = '10px ui-monospace, Consolas, monospace';
             [10, 20, 30, 40, 50].forEach(dM => {
                 const vLine = v0 - dM * scale;
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(roadLeft, vLine);
@@ -1157,7 +749,7 @@
 
             // Rear -10m Line
             const vRear = v0 + 10 * scale;
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
             ctx.setLineDash([3, 4]);
             ctx.beginPath();
             ctx.moveTo(roadLeft, vRear);
@@ -1167,10 +759,10 @@
             ctx.fillStyle = '#475569';
             ctx.fillText(`-10m`, roadRight + 8, vRear + 3);
 
-            // 4. Draw Ego Vehicle (Realistic Top-Down Car at u0, v0)
+            // Draw Ego Vehicle (Solid blue clean car)
             drawEgoCar(ctx, u0, v0);
 
-            // 5. Draw Surrounding Vehicles (Cars, Trucks/Buses, Two-Wheelers, Pedestrians)
+            // Draw Surrounding Obstacles
             const rec = DASHBOARD_DATA[currentFrameIdx];
             if (rec && rec.radar_targets) {
                 rec.radar_targets.forEach(tgt => {
@@ -1183,397 +775,165 @@
             }
         }
 
-        // Top-Down Ego Vehicle Model
         function drawEgoCar(ctx, x, y) {
-            const carW = 24;
-            const carL = 46;
+            const carW = 20;
+            const carL = 40;
 
             ctx.save();
             ctx.translate(x, y);
 
-            // Headlight Glow Cones shining forward
-            const gradBeam = ctx.createLinearGradient(0, -carL / 2, 0, -carL / 2 - 50);
-            gradBeam.addColorStop(0, 'rgba(0, 229, 255, 0.35)');
-            gradBeam.addColorStop(1, 'rgba(0, 229, 255, 0.0)');
-            ctx.fillStyle = gradBeam;
+            // Car Body
+            ctx.fillStyle = '#2563eb';
+            ctx.strokeStyle = '#60a5fa';
+            ctx.lineWidth = 1.5;
             ctx.beginPath();
-            ctx.moveTo(-10, -carL / 2);
-            ctx.lineTo(-28, -carL / 2 - 50);
-            ctx.lineTo(28, -carL / 2 - 50);
-            ctx.lineTo(10, -carL / 2);
-            ctx.closePath();
-            ctx.fill();
-
-            // Car Body Shadow & Glow
-            ctx.shadowColor = 'rgba(0, 229, 255, 0.8)';
-            ctx.shadowBlur = 10;
-            ctx.fillStyle = '#081e2e';
-            ctx.strokeStyle = '#00e5ff';
-            ctx.lineWidth = 2;
-            drawRoundedRect(ctx, -carW / 2, -carL / 2, carW, carL, 5);
+            ctx.roundRect(-carW / 2, -carL / 2, carW, carL, 4);
             ctx.fill();
             ctx.stroke();
-            ctx.shadowBlur = 0;
 
-            // Front Windshield
-            ctx.fillStyle = 'rgba(0, 229, 255, 0.7)';
-            ctx.beginPath();
-            ctx.moveTo(-carW / 2 + 3, -carL / 2 + 10);
-            ctx.lineTo(carW / 2 - 3, -carL / 2 + 10);
-            ctx.lineTo(carW / 2 - 5, -carL / 2 + 19);
-            ctx.lineTo(-carW / 2 + 5, -carL / 2 + 19);
-            ctx.closePath();
-            ctx.fill();
+            // Windshield
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(-carW / 2 + 2, -carL / 2 + 6, carW - 4, 7);
 
-            // Rear Glass
-            ctx.fillStyle = 'rgba(0, 229, 255, 0.4)';
-            ctx.beginPath();
-            ctx.moveTo(-carW / 2 + 4, carL / 2 - 14);
-            ctx.lineTo(carW / 2 - 4, carL / 2 - 14);
-            ctx.lineTo(carW / 2 - 3, carL / 2 - 7);
-            ctx.lineTo(-carW / 2 + 3, carL / 2 - 7);
-            ctx.closePath();
-            ctx.fill();
-
-            // Side Mirrors
-            ctx.fillStyle = '#00e5ff';
-            ctx.fillRect(-carW / 2 - 3, -carL / 2 + 12, 3, 5);
-            ctx.fillRect(carW / 2, -carL / 2 + 12, 3, 5);
-
-            // Front Headlights
+            // Forward Direction Arrow
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(-carW / 2 + 3, -carL / 2 + 1, 4, 2);
-            ctx.fillRect(carW / 2 - 7, -carL / 2 + 1, 4, 2);
+            ctx.beginPath();
+            ctx.moveTo(0, -carL / 2 - 8);
+            ctx.lineTo(-5, -carL / 2 - 1);
+            ctx.lineTo(5, -carL / 2 - 1);
+            ctx.closePath();
+            ctx.fill();
 
-            // Ego Badge Label
-            ctx.fillStyle = '#00e5ff';
-            ctx.font = 'bold 9px sans-serif';
+            // Label
+            ctx.font = '10px sans-serif';
+            ctx.fillStyle = '#94a3b8';
             ctx.textAlign = 'center';
-            ctx.fillText('EGO VEHICLE', 0, carL / 2 + 14);
+            ctx.fillText('Ego', 0, carL / 2 + 13);
 
             ctx.restore();
         }
 
-        // Top-Down Surrounding Vehicle Model (Cars, Trucks, Bikes, Pedestrians)
         function drawSurroundingVehicle(ctx, x, y, tgt) {
-            ctx.save();
-            ctx.translate(x, y);
-
-            const isReceding = tgt.vr >= 0;
-            const accentCol = isReceding ? '#ff00ff' : '#ff3366';
-            const bgCol = isReceding ? '#2b093d' : '#380a14';
             const cls = (tgt.class || '').toLowerCase();
+            let boxW = 20;
+            let boxL = 36;
+            let fillColor = 'rgba(59, 130, 246, 0.25)';
+            let strokeColor = '#3b82f6';
 
             if (cls.includes('truck') || cls.includes('bus')) {
-                // Truck / Bus Top-Down Model
-                const w = 26, l = 60;
-                ctx.fillStyle = bgCol;
-                ctx.strokeStyle = '#ff9900';
-                ctx.lineWidth = 1.8;
-                drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 4);
-                ctx.fill();
-                ctx.stroke();
-
-                // Cab divider line
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-                ctx.beginPath();
-                ctx.moveTo(-w / 2, -l / 2 + 16);
-                ctx.lineTo(w / 2, -l / 2 + 16);
-                ctx.stroke();
-
-                // Windshield
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.fillRect(-w / 2 + 4, -l / 2 + 4, w - 8, 8);
-
-            } else if (cls.includes('two_wheeler') || cls.includes('bike') || cls.includes('motorcycle')) {
-                // Two-Wheeler (Motorcycle / Scooter)
-                const w = 10, l = 26;
-                ctx.fillStyle = bgCol;
-                ctx.strokeStyle = '#00ffcc';
-                ctx.lineWidth = 1.8;
-                drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 5);
-                ctx.fill();
-                ctx.stroke();
-
-                // Handlebars
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(-7, -l / 2 + 6);
-                ctx.lineTo(7, -l / 2 + 6);
-                ctx.stroke();
-
-                // Tires
-                ctx.fillStyle = '#000000';
-                ctx.fillRect(-2, -l / 2, 4, 5);
-                ctx.fillRect(-2, l / 2 - 5, 4, 5);
-
-            } else if (cls.includes('person') || cls.includes('pedestrian')) {
-                // Pedestrian
-                ctx.fillStyle = '#00ff66';
-                ctx.beginPath();
-                ctx.arc(0, 0, 5, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-
-            } else {
-                // Standard Car / Passenger Vehicle
-                const w = 22, l = 38;
-                ctx.fillStyle = bgCol;
-                ctx.strokeStyle = accentCol;
-                ctx.lineWidth = 1.8;
-                drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 4);
-                ctx.fill();
-                ctx.stroke();
-
-                // Front Windshield
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
-                ctx.fillRect(-w / 2 + 3, -l / 2 + 8, w - 6, 7);
-                // Rear Glass
-                ctx.fillRect(-w / 2 + 4, l / 2 - 11, w - 8, 5);
+                boxW = 24;
+                boxL = 52;
+                fillColor = 'rgba(245, 158, 11, 0.25)';
+                strokeColor = '#f59e0b';
+            } else if (cls.includes('two') || cls.includes('bike') || cls.includes('motor')) {
+                boxW = 12;
+                boxL = 22;
+                fillColor = 'rgba(16, 185, 129, 0.25)';
+                strokeColor = '#10b981';
+            } else if (cls.includes('pedestrian') || cls.includes('person')) {
+                boxW = 10;
+                boxL = 10;
+                fillColor = 'rgba(239, 68, 68, 0.25)';
+                strokeColor = '#ef4444';
             }
 
-            // Velocity Doppler Vector Arrow
-            const vrLen = Math.max(-24, Math.min(24, tgt.vr * 2.2));
-            ctx.strokeStyle = isReceding ? '#00e5ff' : '#ff3366';
-            ctx.lineWidth = 2;
+            ctx.save();
+            ctx.translate(x, y);
+
+            // Bounding Box
+            ctx.fillStyle = fillColor;
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = 1.5;
             ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(0, -vrLen);
+            ctx.roundRect(-boxW / 2, -boxL / 2, boxW, boxL, 3);
+            ctx.fill();
             ctx.stroke();
 
-            // Vehicle Label (Class + Distance)
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 9px monospace';
+            // Doppler Velocity Vector Arrow
+            if (Math.abs(tgt.vr) >= 0.3) {
+                const vecLen = Math.min(35, Math.abs(tgt.vr) * 2.5);
+                const isClosing = tgt.vr < 0;
+                const vColor = isClosing ? '#ef4444' : '#10b981';
+
+                ctx.strokeStyle = vColor;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                const endY = isClosing ? vecLen : -vecLen;
+                ctx.lineTo(0, endY);
+                ctx.stroke();
+
+                // Arrow head
+                ctx.fillStyle = vColor;
+                ctx.beginPath();
+                ctx.moveTo(0, endY);
+                ctx.lineTo(-3, endY - (isClosing ? 4 : -4));
+                ctx.lineTo(3, endY - (isClosing ? 4 : -4));
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            // Target Text Tag
+            ctx.font = '9.5px ui-monospace, Consolas, monospace';
+            ctx.fillStyle = '#f8fafc';
             ctx.textAlign = 'center';
-            const tagText = `${tgt.class.replace('_', ' ')} ${tgt.dist.toFixed(1)}m`;
-            ctx.fillText(tagText, 0, 24);
+            ctx.fillText(`${tgt.dist.toFixed(1)}m`, 0, -boxL / 2 - 5);
 
             ctx.restore();
         }
 
-        // Helper: Rounded Rectangle
-        function drawRoundedRect(ctx, x, y, width, height, radius) {
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-            ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
-        }
-
-        // Interactive Canvas Hover Tooltip
-        canvas.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
-            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
-
-            const u0 = canvas.width / 2;
-            const v0 = canvas.height * 0.78;
-            const scale = 7.2;
-
-            const rec = DASHBOARD_DATA[currentFrameIdx];
-            if (!rec || !rec.radar_targets) return;
-
-            let hit = null;
-            rec.radar_targets.forEach(tgt => {
-                const pu = u0 - tgt.y * scale;
-                const pv = v0 - tgt.x * scale;
-                const dist = Math.hypot(mouseX - pu, mouseY - pv);
-                if (dist < 12) hit = tgt;
-            });
-
-            if (hit) {
-                tooltip.style.display = 'block';
-                tooltip.style.left = `${e.clientX - rect.left + 15}px`;
-                tooltip.style.top = `${e.clientY - rect.top - 10}px`;
-                tooltip.innerHTML = `
-                    <div style="color:var(--radar-magenta); font-weight:bold;">${hit.class} (ID #${hit.id})</div>
-                    <div>Range: <b>${hit.dist.toFixed(1)} m</b></div>
-                    <div>Pos: X=${hit.x.toFixed(1)}m, Y=${hit.y.toFixed(1)}m</div>
-                    <div>Doppler vr: <b style="color:${hit.vr >= 0 ? "var(--cyan-accent)" : "var(--danger-red)"}">${hit.vr >= 0 ? "+" : ""}${hit.vr.toFixed(2)} m/s</b></div>
-                    <div>RCS &sigma;: <b>${hit.rcs.toFixed(1)} dBsm</b></div>
-                `;
-            } else {
-                tooltip.style.display = 'none';
-            }
-        });
-
-        canvas.addEventListener('mouseleave', () => {
-            tooltip.style.display = 'none';
-        });
-
-        // Playback Controller
-        function togglePlay() {
-            isPlaying = !isPlaying;
-            const btn = document.getElementById('btn-play');
-            if (isPlaying) {
-                btn.innerText = "Pause";
-                btn.style.background = "var(--cyan-accent)";
-                startPlayback();
-            } else {
-                btn.innerText = "Play";
-                btn.style.background = "#238636";
-                clearInterval(playbackInterval);
-            }
-        }
-
+        // Playback Controls
         function startPlayback() {
-            clearInterval(playbackInterval);
-            const intervalMs = 1000 / (fps * speedMultiplier);
+            if (playbackInterval) clearInterval(playbackInterval);
             playbackInterval = setInterval(() => {
-                if (!isPlaying) return;
-                let nextIdx = (currentFrameIdx + 1) % totalFrames;
-                updateDashboard(nextIdx);
-            }, intervalMs);
+                let next = currentFrameIdx + 1;
+                if (next >= totalFrames) next = 0;
+                updateDashboard(next);
+            }, (1000 / fps) / speedMultiplier);
+            isPlaying = true;
+            document.getElementById('btn-play').innerText = "Pause";
+        }
+
+        function pausePlayback() {
+            if (playbackInterval) clearInterval(playbackInterval);
+            playbackInterval = null;
+            isPlaying = false;
+            document.getElementById('btn-play').innerText = "Play";
+        }
+
+        function togglePlayback() {
+            if (isPlaying) pausePlayback();
+            else startPlayback();
         }
 
         function stepFrame(delta) {
-            if (isPlaying) togglePlay();
-            let newIdx = currentFrameIdx + delta;
-            if (newIdx < 0) newIdx = totalFrames - 1;
-            if (newIdx >= totalFrames) newIdx = 0;
-            updateDashboard(newIdx);
+            pausePlayback();
+            updateDashboard(currentFrameIdx + delta);
         }
 
-        function onSliderInput(val) {
-            if (isPlaying) togglePlay();
+        function onScrub(val) {
+            pausePlayback();
             updateDashboard(parseInt(val, 10));
         }
 
-        function setSpeed(sp, el) {
-            speedMultiplier = sp;
-            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
+        function setSpeed(mult, btnEl) {
+            document.querySelectorAll('.speed-opt').forEach(b => b.classList.remove('active'));
+            btnEl.classList.add('active');
+            speedMultiplier = mult;
             if (isPlaying) startPlayback();
         }
 
-        // Keyboard Shortcuts: Spacebar = Play/Pause, Left/Right = Prev/Next
+        // Keyboard hotkeys
         window.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
                 e.preventDefault();
-                togglePlay();
+                togglePlayback();
             } else if (e.code === 'ArrowRight') {
-                e.preventDefault();
                 stepFrame(1);
             } else if (e.code === 'ArrowLeft') {
-                e.preventDefault();
                 stepFrame(-1);
             }
         });
-
-        // =========================================================================
-        // MULTI-SENSOR PIPELINE STUDIO INTERACTIVE CONTROLLER
-        // =========================================================================
-        let selectedPipelineFrame = 16; // Default benchmark sample
-        let customCamDataUrl = null;
-        let customLidarFileName = null;
-
-        function toggleStudioModal() {
-            const modal = document.getElementById('studio-modal');
-            modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'flex' : 'none';
-        }
-
-        function closeStudioModal() {
-            document.getElementById('studio-modal').style.display = 'none';
-        }
-
-        function handleCamUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const previewEl = document.getElementById('cam-upload-preview');
-            previewEl.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-            previewEl.style.color = 'var(--cam-green)';
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                customCamDataUrl = e.target.result;
-                logConsole(`📷 Loaded Custom Camera Image: ${file.name}`);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function handleLidarUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            customLidarFileName = file.name;
-            const previewEl = document.getElementById('lidar-upload-preview');
-            previewEl.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-            previewEl.style.color = 'var(--cam-green)';
-            logConsole(`📡 Loaded Custom LiDAR Point Cloud: ${file.name}`);
-        }
-
-        function loadSamplePair(drive, frameIdx, btn) {
-            selectedPipelineFrame = frameIdx;
-            customCamDataUrl = null;
-            customLidarFileName = null;
-
-            document.querySelectorAll('.sample-btn').forEach(b => b.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-
-            const camPreview = document.getElementById('cam-upload-preview');
-            const lidarPreview = document.getElementById('lidar-upload-preview');
-
-            camPreview.innerText = `${drive}_cam_${frameIdx.toString().padStart(7, '0')}.jpg (Loaded)`;
-            camPreview.style.color = 'var(--cyan-accent)';
-            lidarPreview.innerText = `${drive}_lidar_${frameIdx.toString().padStart(7, '0')}.npy (Loaded)`;
-            lidarPreview.style.color = 'var(--cyan-accent)';
-
-            logConsole(`ℹ️ Selected Benchmark Multimodal Pair: ${drive.toUpperCase()} Frame #${frameIdx}`);
-        }
-
-        function logConsole(msg) {
-            const el = document.getElementById('console-logs');
-            if (!el) return;
-            const timeStr = new Date().toLocaleTimeString();
-            el.innerHTML += `\n[${timeStr}] ${msg}`;
-            el.scrollTop = el.scrollHeight;
-        }
-
-        function executeFullPipeline() {
-            const btn = document.getElementById('btn-run-pipeline');
-            const consoleEl = document.getElementById('console-logs');
-            btn.disabled = true;
-            btn.innerText = "⏳ PROCESSING MULTI-SENSOR PIPELINE...";
-            consoleEl.innerHTML = `[${new Date().toLocaleTimeString()}] 🚀 STARTING END-TO-END PERCEPTION & MMWAVE RADAR SYNTHESIS...`;
-
-            const stages = [
-                { delay: 300, msg: "📷 [MODEL 1: YOLOv8] Running 2D Vision detection on front camera frame... Extracted vehicle & obstacle bounding boxes." },
-                { delay: 650, msg: "📡 [MODEL 2: PointPillars] Ingesting 16,384 LiDAR points... Clustered 3D metric bounding boxes & road corridor filters." },
-                { delay: 1000, msg: "🔗 [CALIBRATION FUSION] Performing Spatial Projection (Extrinsics [R|T] + Intrinsics K)... Ground plane aligned." },
-                { delay: 1350, msg: "⚡ [77 GHz MMWAVE FMCW RADAR] Synthesizing Radar Signal: Pr = (Pt*G^2*lambda^2*sigma)/((4pi)^3 * R^4)... Doppler vr & range calculated." },
-                { delay: 1700, msg: "🛣️ [FRENET PLANNER] Computing 3-Zone Quintic Polynomial (Seedha start s<=4.2m, dynamic evasion bend s>4.2m, horizon s_max=14.5m)." },
-                { delay: 2000, msg: "✅ [SUCCESS] Multi-Sensor Perception & mmWave Radar Synthesis Complete! Updating Cockpit Dashboard..." }
-            ];
-
-            stages.forEach(st => {
-                setTimeout(() => {
-                    logConsole(st.msg);
-                }, st.delay);
-            });
-
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.innerText = "⚡ RUN MULTI-SENSOR PERCEPTION & GENERATE MMWAVE RADAR";
-
-                // Update Cockpit Dashboard View with Processed Data
-                updateDashboard(selectedPipelineFrame);
-
-                // If user uploaded a custom camera image, display it in the camera frame
-                if (customCamDataUrl) {
-                    document.getElementById('cam-img').src = customCamDataUrl;
-                }
-
-                logConsole("🎉 Dashboard Telemetry & ADAS BEV Surround View are LIVE! You can now close this studio.");
-            }, 2200);
-        }
     </script>
 </body>
 </html>
