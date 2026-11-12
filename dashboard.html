@@ -516,6 +516,211 @@
         body.scale-compact .metric-card {
             padding: 4px 8px;
         }
+
+        /* Interactive Pipeline Studio Modal */
+        .studio-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(4, 7, 12, 0.85);
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .studio-content {
+            background: #101726;
+            border: 1px solid var(--cyan-accent);
+            box-shadow: 0 10px 40px rgba(0, 229, 255, 0.2);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 820px;
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .studio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--panel-border);
+            background: #0d121c;
+        }
+
+        .studio-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .studio-title h3 {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .btn-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .btn-close:hover {
+            color: var(--danger-red);
+        }
+
+        .studio-body {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .upload-box {
+            background: #141b2a;
+            border: 2px dashed rgba(0, 229, 255, 0.35);
+            border-radius: 8px;
+            padding: 18px 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .upload-box:hover {
+            border-color: var(--cyan-accent);
+            background: rgba(0, 229, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .upload-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .upload-box h4 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .upload-box p {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .file-preview-pill {
+            display: inline-block;
+            font-size: 10.5px;
+            font-family: monospace;
+            background: #0d121c;
+            border: 1px solid var(--panel-border);
+            color: var(--cyan-accent);
+            padding: 3px 8px;
+            border-radius: 4px;
+            max-width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .quick-samples {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #0d121c;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .sample-btn {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .sample-btn:hover {
+            background: #334155;
+            border-color: var(--cyan-accent);
+        }
+        .sample-btn.active {
+            background: rgba(0, 229, 255, 0.2);
+            border-color: var(--cyan-accent);
+            color: var(--cyan-accent);
+            font-weight: 700;
+        }
+
+        .btn-process-run {
+            background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+            border: 1px solid var(--cyan-accent);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 12px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.35);
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        .btn-process-run:hover {
+            background: linear-gradient(135deg, #00d4ff 0%, #0096c7 100%);
+            box-shadow: 0 6px 22px rgba(0, 229, 255, 0.5);
+            transform: translateY(-1px);
+        }
+        .btn-process-run:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pipeline-console {
+            background: #070a10;
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 11px;
+        }
+
+        .console-title {
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 4px;
+        }
+
+        .console-logs {
+            max-height: 140px;
+            overflow-y: auto;
+            color: #00ff66;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
 <body id="dash-body">
@@ -527,6 +732,9 @@
         </div>
 
         <div class="header-controls">
+            <!-- Upload & Process Studio Button -->
+            <button class="tab-btn" id="btn-studio-toggle" style="background:rgba(0,229,255,0.18); border:1px solid var(--cyan-accent); color:#ffffff; font-weight:700;" onclick="toggleStudioModal()">🧪 Upload & Process Flow</button>
+
             <!-- Drive Selector Tabs -->
             <div class="drive-tabs">
                 <button class="tab-btn active" id="tab-d0" onclick="switchDrive('d0')">Drive 0: Urban</button>
@@ -542,6 +750,61 @@
             </div>
         </div>
     </header>
+
+    <!-- Multi-Sensor Pipeline Studio Modal -->
+    <div id="studio-modal" class="studio-modal" style="display:none;">
+        <div class="studio-content">
+            <div class="studio-header">
+                <div class="studio-title">
+                    <span style="font-size:16px;">🧪</span>
+                    <h3>MULTI-SENSOR PIPELINE STUDIO (IMAGE + LIDAR &rarr; MMWAVE RADAR)</h3>
+                </div>
+                <button class="btn-close" onclick="closeStudioModal()">&times;</button>
+            </div>
+            
+            <div class="studio-body">
+                <!-- Upload Grid -->
+                <div class="upload-grid">
+                    <!-- Box 1: Camera Image -->
+                    <div class="upload-box" id="box-cam" onclick="document.getElementById('input-cam-file').click()">
+                        <div class="upload-icon">📷</div>
+                        <h4>1. Front Camera Image</h4>
+                        <p>Click to browse or drop .jpg / .png image</p>
+                        <input type="file" id="input-cam-file" accept="image/*" style="display:none;" onchange="handleCamUpload(event)">
+                        <div id="cam-upload-preview" class="file-preview-pill">d0_cam_0000016.jpg (Loaded)</div>
+                    </div>
+
+                    <!-- Box 2: LiDAR Point Cloud -->
+                    <div class="upload-box" id="box-lidar" onclick="document.getElementById('input-lidar-file').click()">
+                        <div class="upload-icon">📡</div>
+                        <h4>2. LiDAR Point Cloud (.npy)</h4>
+                        <p>Click to browse or drop .npy point cloud</p>
+                        <input type="file" id="input-lidar-file" accept=".npy" style="display:none;" onchange="handleLidarUpload(event)">
+                        <div id="lidar-upload-preview" class="file-preview-pill">d0_lidar_0000016.npy (Loaded)</div>
+                    </div>
+                </div>
+
+                <!-- Quick Benchmark Sample Selectors -->
+                <div class="quick-samples">
+                    <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Or Select Benchmark IDD Multimodal Pair:</span>
+                    <button class="sample-btn active" id="smp-d0" onclick="loadSamplePair('d0', 16, this)">Drive 0: Urban MG Road (#16)</button>
+                    <button class="sample-btn" id="smp-d1" onclick="loadSamplePair('d1', 70, this)">Drive 1: Arterial Corridor (#70)</button>
+                    <button class="sample-btn" id="smp-d2" onclick="loadSamplePair('d2', 120, this)">Drive 2: Highway Bypass (#120)</button>
+                </div>
+
+                <!-- Action Process Button -->
+                <button id="btn-run-pipeline" class="btn-process-run" onclick="executeFullPipeline()">
+                    ⚡ RUN MULTI-SENSOR PERCEPTION &amp; GENERATE MMWAVE RADAR
+                </button>
+
+                <!-- Animated Execution Console -->
+                <div id="pipeline-console" class="pipeline-console">
+                    <div class="console-title">PIPELINE EXECUTION LOGS &amp; TELEMETRY:</div>
+                    <div id="console-logs" class="console-logs">Ready. Upload custom files or choose a benchmark sample, then click 'Run Multi-Sensor Perception'.</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Top Telemetry Metrics Bar -->
     <div class="metrics-grid">
@@ -612,11 +875,12 @@
         <div class="radar-panel">
             <div class="panel-header">
                 <div class="panel-title">
-                    <span>77 GHz mmWave FMCW RADAR (BEV SURROUND SCOPE)</span>
+                    <span>77 GHz mmWave FMCW RADAR (ADAS BEV SURROUND VIEW)</span>
                 </div>
                 <div class="panel-pills">
-                    <span class="pill pill-magenta">RADAR TARGETS (POINTS &bull;)</span>
-                    <span class="pill" style="background:rgba(0,229,255,0.15); color:var(--cyan-accent); border:1px solid rgba(0,229,255,0.4)">EGO ORIGIN (&Delta;)</span>
+                    <span class="pill" style="background:rgba(0,229,255,0.18); color:var(--cyan-accent); border:1px solid var(--cyan-accent);">EGO VEHICLE</span>
+                    <span class="pill pill-magenta">SURROUND VEHICLES (BEV)</span>
+                    <span class="pill pill-green">77 GHz FMCW</span>
                 </div>
             </div>
 
@@ -812,10 +1076,9 @@
             });
         }
 
-        // Continuous Radar Canvas Renderer
+        // Continuous Automotive ADAS BEV View Renderer (Steady 60 FPS, No Military Rotating Line)
         function renderRadarLoop() {
             renderRadarScope();
-            scannerAngle += 0.045;
             requestAnimationFrame(renderRadarLoop);
         }
 
@@ -826,111 +1089,284 @@
 
             // Origin of Ego Vehicle
             const u0 = W / 2;       // 300 px
-            const v0 = H * 0.78;    // 468 px (allowing room for -10m behind)
-            const scale = 7.2;      // 7.2 pixels per meter (50m * 7.2 = 360 px)
+            const v0 = H * 0.78;    // 468 px (allowing room for rear vehicle tracking)
+            const scale = 7.2;      // 7.2 pixels per meter (50m ahead * 7.2 = 360 px)
 
-            // Polar Range Rings (10m, 20m, 30m, 40m, 50m)
-            ctx.strokeStyle = '#1e293b';
+            // 1. Dark Digital Asphalt Road Corridor
+            const roadHalfWidthM = 7.0; // 14m wide road corridor
+            const roadLeft = u0 - roadHalfWidthM * scale;
+            const roadRight = u0 + roadHalfWidthM * scale;
+
+            ctx.fillStyle = '#0a101d';
+            ctx.fillRect(roadLeft, 0, roadRight - roadLeft, H);
+
+            // Subtle Lateral Road Grid Lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
             ctx.lineWidth = 1;
-            ctx.fillStyle = '#64748b';
-            ctx.font = '10px monospace';
-
-            [10, 20, 30, 40, 50].forEach(r => {
-                const r_px = r * scale;
+            for (let xM = -6; xM <= 6; xM += 2) {
+                const u = u0 - xM * scale;
                 ctx.beginPath();
-                ctx.arc(u0, v0, r_px, 0, Math.PI * 2);
+                ctx.moveTo(u, 0);
+                ctx.lineTo(u, H);
                 ctx.stroke();
-                ctx.fillText(`${r}m`, u0 + 6, v0 - r_px + 12);
-            });
+            }
 
-            // Rear -10m dashed circle
-            ctx.setLineDash([3, 4]);
-            ctx.beginPath();
-            ctx.arc(u0, v0, 10 * scale, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.setLineDash([]);
-            ctx.fillText('-10m', u0 + 6, v0 + 10 * scale - 4);
-
-            // Radial Azimuth Rays (-45, -30, -15, 0, 15, 30, 45)
-            [-45, -30, -15, 0, 15, 30, 45].forEach(deg => {
-                const rad = deg * (Math.PI / 180);
-                const rayLen = 52 * scale;
-                const rx = u0 - rayLen * Math.sin(rad);
-                const ry = v0 - rayLen * Math.cos(rad);
-
-                ctx.strokeStyle = '#151d2c';
-                ctx.beginPath();
-                ctx.moveTo(u0, v0);
-                ctx.lineTo(rx, ry);
-                ctx.stroke();
-
-                if (deg !== 0) {
-                    ctx.fillStyle = '#475569';
-                    ctx.fillText(`${deg > 0 ? "+" : ""}${deg}°`, rx - 10, ry - 4);
-                }
-            });
-
-            // Sweeping Scanner Beam
-            const sweepAz = Math.sin(scannerAngle) * 0.78; // +/- 45 deg
-            const swX = u0 - (52 * scale) * Math.sin(sweepAz);
-            const swY = v0 - (52 * scale) * Math.cos(sweepAz);
-
-            const grad = ctx.createLinearGradient(u0, v0, swX, swY);
-            grad.addColorStop(0, 'rgba(0, 229, 255, 0.8)');
-            grad.addColorStop(1, 'rgba(0, 229, 255, 0.05)');
-
-            ctx.strokeStyle = grad;
+            // 2. Road Lane Markings
+            // Outer Curb Boundaries (Cyan Subtle Accent)
+            ctx.strokeStyle = 'rgba(0, 229, 255, 0.35)';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(u0, v0);
-            ctx.lineTo(swX, swY);
+            ctx.moveTo(roadLeft, 0); ctx.lineTo(roadLeft, H);
+            ctx.moveTo(roadRight, 0); ctx.lineTo(roadRight, H);
             ctx.stroke();
 
-            // Draw Ego Vehicle at Origin (u0, v0)
-            ctx.fillStyle = '#00e5ff';
-            ctx.strokeStyle = '#ffffff';
+            // Intermediate Lane Dividers (y = +/- 3.5m)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
             ctx.lineWidth = 1.5;
+            ctx.setLineDash([8, 10]);
+            [-3.5, 3.5].forEach(yLane => {
+                const uLane = u0 - yLane * scale;
+                ctx.beginPath();
+                ctx.moveTo(uLane, 0); ctx.lineTo(uLane, H);
+                ctx.stroke();
+            });
+
+            // Center Road Dashed Divider Line (y = 0)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([14, 14]);
             ctx.beginPath();
-            ctx.moveTo(u0, v0 - 14);       // Tip
-            ctx.lineTo(u0 - 9, v0 + 10);    // Bottom left
-            ctx.lineTo(u0 + 9, v0 + 10);    // Bottom right
-            ctx.closePath();
-            ctx.fill();
+            ctx.moveTo(u0, 0); ctx.lineTo(u0, H);
             ctx.stroke();
+            ctx.setLineDash([]);
 
-            ctx.fillStyle = '#00e5ff';
-            ctx.font = 'bold 10px sans-serif';
-            ctx.fillText('EGO', u0 - 11, v0 + 24);
+            // 3. Longitudinal Road Distance Ticks & Markers (10m, 20m, 30m, 40m, 50m ahead & -10m rear)
+            ctx.font = '10px monospace';
+            [10, 20, 30, 40, 50].forEach(dM => {
+                const vLine = v0 - dM * scale;
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(roadLeft, vLine);
+                ctx.lineTo(roadRight, vLine);
+                ctx.stroke();
 
-            // Draw Tracked Radar Obstacles (Ahead & Behind) - ONLY CLEAN RADAR POINTS
+                ctx.fillStyle = '#64748b';
+                ctx.fillText(`+${dM}m`, roadRight + 8, vLine + 3);
+            });
+
+            // Rear -10m Line
+            const vRear = v0 + 10 * scale;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+            ctx.setLineDash([3, 4]);
+            ctx.beginPath();
+            ctx.moveTo(roadLeft, vRear);
+            ctx.lineTo(roadRight, vRear);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#475569';
+            ctx.fillText(`-10m`, roadRight + 8, vRear + 3);
+
+            // 4. Draw Ego Vehicle (Realistic Top-Down Car at u0, v0)
+            drawEgoCar(ctx, u0, v0);
+
+            // 5. Draw Surrounding Vehicles (Cars, Trucks/Buses, Two-Wheelers, Pedestrians)
             const rec = DASHBOARD_DATA[currentFrameIdx];
             if (rec && rec.radar_targets) {
                 rec.radar_targets.forEach(tgt => {
                     const pu = u0 - tgt.y * scale;
                     const pv = v0 - tgt.x * scale;
-
                     if (pu >= 10 && pu < W - 10 && pv >= 10 && pv < H - 10) {
-                        // 1. Subtle Outer Glow Ring
-                        ctx.beginPath();
-                        ctx.arc(pu, pv, 7.5, 0, Math.PI * 2);
-                        ctx.strokeStyle = 'rgba(255, 0, 255, 0.45)';
-                        ctx.lineWidth = 1.5;
-                        ctx.stroke();
-
-                        // 2. Solid Radar Point (Blip)
-                        ctx.beginPath();
-                        ctx.arc(pu, pv, 4.5, 0, Math.PI * 2);
-                        ctx.fillStyle = '#ff00ff';
-                        ctx.fill();
-
-                        // 3. Center White Core
-                        ctx.beginPath();
-                        ctx.arc(pu, pv, 1.8, 0, Math.PI * 2);
-                        ctx.fillStyle = '#ffffff';
-                        ctx.fill();
+                        drawSurroundingVehicle(ctx, pu, pv, tgt);
                     }
                 });
             }
+        }
+
+        // Top-Down Ego Vehicle Model
+        function drawEgoCar(ctx, x, y) {
+            const carW = 24;
+            const carL = 46;
+
+            ctx.save();
+            ctx.translate(x, y);
+
+            // Headlight Glow Cones shining forward
+            const gradBeam = ctx.createLinearGradient(0, -carL / 2, 0, -carL / 2 - 50);
+            gradBeam.addColorStop(0, 'rgba(0, 229, 255, 0.35)');
+            gradBeam.addColorStop(1, 'rgba(0, 229, 255, 0.0)');
+            ctx.fillStyle = gradBeam;
+            ctx.beginPath();
+            ctx.moveTo(-10, -carL / 2);
+            ctx.lineTo(-28, -carL / 2 - 50);
+            ctx.lineTo(28, -carL / 2 - 50);
+            ctx.lineTo(10, -carL / 2);
+            ctx.closePath();
+            ctx.fill();
+
+            // Car Body Shadow & Glow
+            ctx.shadowColor = 'rgba(0, 229, 255, 0.8)';
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = '#081e2e';
+            ctx.strokeStyle = '#00e5ff';
+            ctx.lineWidth = 2;
+            drawRoundedRect(ctx, -carW / 2, -carL / 2, carW, carL, 5);
+            ctx.fill();
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            // Front Windshield
+            ctx.fillStyle = 'rgba(0, 229, 255, 0.7)';
+            ctx.beginPath();
+            ctx.moveTo(-carW / 2 + 3, -carL / 2 + 10);
+            ctx.lineTo(carW / 2 - 3, -carL / 2 + 10);
+            ctx.lineTo(carW / 2 - 5, -carL / 2 + 19);
+            ctx.lineTo(-carW / 2 + 5, -carL / 2 + 19);
+            ctx.closePath();
+            ctx.fill();
+
+            // Rear Glass
+            ctx.fillStyle = 'rgba(0, 229, 255, 0.4)';
+            ctx.beginPath();
+            ctx.moveTo(-carW / 2 + 4, carL / 2 - 14);
+            ctx.lineTo(carW / 2 - 4, carL / 2 - 14);
+            ctx.lineTo(carW / 2 - 3, carL / 2 - 7);
+            ctx.lineTo(-carW / 2 + 3, carL / 2 - 7);
+            ctx.closePath();
+            ctx.fill();
+
+            // Side Mirrors
+            ctx.fillStyle = '#00e5ff';
+            ctx.fillRect(-carW / 2 - 3, -carL / 2 + 12, 3, 5);
+            ctx.fillRect(carW / 2, -carL / 2 + 12, 3, 5);
+
+            // Front Headlights
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(-carW / 2 + 3, -carL / 2 + 1, 4, 2);
+            ctx.fillRect(carW / 2 - 7, -carL / 2 + 1, 4, 2);
+
+            // Ego Badge Label
+            ctx.fillStyle = '#00e5ff';
+            ctx.font = 'bold 9px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('EGO VEHICLE', 0, carL / 2 + 14);
+
+            ctx.restore();
+        }
+
+        // Top-Down Surrounding Vehicle Model (Cars, Trucks, Bikes, Pedestrians)
+        function drawSurroundingVehicle(ctx, x, y, tgt) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            const isReceding = tgt.vr >= 0;
+            const accentCol = isReceding ? '#ff00ff' : '#ff3366';
+            const bgCol = isReceding ? '#2b093d' : '#380a14';
+            const cls = (tgt.class || '').toLowerCase();
+
+            if (cls.includes('truck') || cls.includes('bus')) {
+                // Truck / Bus Top-Down Model
+                const w = 26, l = 60;
+                ctx.fillStyle = bgCol;
+                ctx.strokeStyle = '#ff9900';
+                ctx.lineWidth = 1.8;
+                drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 4);
+                ctx.fill();
+                ctx.stroke();
+
+                // Cab divider line
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+                ctx.beginPath();
+                ctx.moveTo(-w / 2, -l / 2 + 16);
+                ctx.lineTo(w / 2, -l / 2 + 16);
+                ctx.stroke();
+
+                // Windshield
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                ctx.fillRect(-w / 2 + 4, -l / 2 + 4, w - 8, 8);
+
+            } else if (cls.includes('two_wheeler') || cls.includes('bike') || cls.includes('motorcycle')) {
+                // Two-Wheeler (Motorcycle / Scooter)
+                const w = 10, l = 26;
+                ctx.fillStyle = bgCol;
+                ctx.strokeStyle = '#00ffcc';
+                ctx.lineWidth = 1.8;
+                drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 5);
+                ctx.fill();
+                ctx.stroke();
+
+                // Handlebars
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(-7, -l / 2 + 6);
+                ctx.lineTo(7, -l / 2 + 6);
+                ctx.stroke();
+
+                // Tires
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(-2, -l / 2, 4, 5);
+                ctx.fillRect(-2, l / 2 - 5, 4, 5);
+
+            } else if (cls.includes('person') || cls.includes('pedestrian')) {
+                // Pedestrian
+                ctx.fillStyle = '#00ff66';
+                ctx.beginPath();
+                ctx.arc(0, 0, 5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+            } else {
+                // Standard Car / Passenger Vehicle
+                const w = 22, l = 38;
+                ctx.fillStyle = bgCol;
+                ctx.strokeStyle = accentCol;
+                ctx.lineWidth = 1.8;
+                drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 4);
+                ctx.fill();
+                ctx.stroke();
+
+                // Front Windshield
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+                ctx.fillRect(-w / 2 + 3, -l / 2 + 8, w - 6, 7);
+                // Rear Glass
+                ctx.fillRect(-w / 2 + 4, l / 2 - 11, w - 8, 5);
+            }
+
+            // Velocity Doppler Vector Arrow
+            const vrLen = Math.max(-24, Math.min(24, tgt.vr * 2.2));
+            ctx.strokeStyle = isReceding ? '#00e5ff' : '#ff3366';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(0, -vrLen);
+            ctx.stroke();
+
+            // Vehicle Label (Class + Distance)
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 9px monospace';
+            ctx.textAlign = 'center';
+            const tagText = `${tgt.class.replace('_', ' ')} ${tgt.dist.toFixed(1)}m`;
+            ctx.fillText(tagText, 0, 24);
+
+            ctx.restore();
+        }
+
+        // Helper: Rounded Rectangle
+        function drawRoundedRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
         }
 
         // Interactive Canvas Hover Tooltip
@@ -1032,6 +1468,112 @@
                 stepFrame(-1);
             }
         });
+
+        // =========================================================================
+        // MULTI-SENSOR PIPELINE STUDIO INTERACTIVE CONTROLLER
+        // =========================================================================
+        let selectedPipelineFrame = 16; // Default benchmark sample
+        let customCamDataUrl = null;
+        let customLidarFileName = null;
+
+        function toggleStudioModal() {
+            const modal = document.getElementById('studio-modal');
+            modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'flex' : 'none';
+        }
+
+        function closeStudioModal() {
+            document.getElementById('studio-modal').style.display = 'none';
+        }
+
+        function handleCamUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const previewEl = document.getElementById('cam-upload-preview');
+            previewEl.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            previewEl.style.color = 'var(--cam-green)';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                customCamDataUrl = e.target.result;
+                logConsole(`📷 Loaded Custom Camera Image: ${file.name}`);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleLidarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            customLidarFileName = file.name;
+            const previewEl = document.getElementById('lidar-upload-preview');
+            previewEl.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            previewEl.style.color = 'var(--cam-green)';
+            logConsole(`📡 Loaded Custom LiDAR Point Cloud: ${file.name}`);
+        }
+
+        function loadSamplePair(drive, frameIdx, btn) {
+            selectedPipelineFrame = frameIdx;
+            customCamDataUrl = null;
+            customLidarFileName = null;
+
+            document.querySelectorAll('.sample-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            const camPreview = document.getElementById('cam-upload-preview');
+            const lidarPreview = document.getElementById('lidar-upload-preview');
+
+            camPreview.innerText = `${drive}_cam_${frameIdx.toString().padStart(7, '0')}.jpg (Loaded)`;
+            camPreview.style.color = 'var(--cyan-accent)';
+            lidarPreview.innerText = `${drive}_lidar_${frameIdx.toString().padStart(7, '0')}.npy (Loaded)`;
+            lidarPreview.style.color = 'var(--cyan-accent)';
+
+            logConsole(`ℹ️ Selected Benchmark Multimodal Pair: ${drive.toUpperCase()} Frame #${frameIdx}`);
+        }
+
+        function logConsole(msg) {
+            const el = document.getElementById('console-logs');
+            if (!el) return;
+            const timeStr = new Date().toLocaleTimeString();
+            el.innerHTML += `\n[${timeStr}] ${msg}`;
+            el.scrollTop = el.scrollHeight;
+        }
+
+        function executeFullPipeline() {
+            const btn = document.getElementById('btn-run-pipeline');
+            const consoleEl = document.getElementById('console-logs');
+            btn.disabled = true;
+            btn.innerText = "⏳ PROCESSING MULTI-SENSOR PIPELINE...";
+            consoleEl.innerHTML = `[${new Date().toLocaleTimeString()}] 🚀 STARTING END-TO-END PERCEPTION & MMWAVE RADAR SYNTHESIS...`;
+
+            const stages = [
+                { delay: 300, msg: "📷 [MODEL 1: YOLOv8] Running 2D Vision detection on front camera frame... Extracted vehicle & obstacle bounding boxes." },
+                { delay: 650, msg: "📡 [MODEL 2: PointPillars] Ingesting 16,384 LiDAR points... Clustered 3D metric bounding boxes & road corridor filters." },
+                { delay: 1000, msg: "🔗 [CALIBRATION FUSION] Performing Spatial Projection (Extrinsics [R|T] + Intrinsics K)... Ground plane aligned." },
+                { delay: 1350, msg: "⚡ [77 GHz MMWAVE FMCW RADAR] Synthesizing Radar Signal: Pr = (Pt*G^2*lambda^2*sigma)/((4pi)^3 * R^4)... Doppler vr & range calculated." },
+                { delay: 1700, msg: "🛣️ [FRENET PLANNER] Computing 3-Zone Quintic Polynomial (Seedha start s<=4.2m, dynamic evasion bend s>4.2m, horizon s_max=14.5m)." },
+                { delay: 2000, msg: "✅ [SUCCESS] Multi-Sensor Perception & mmWave Radar Synthesis Complete! Updating Cockpit Dashboard..." }
+            ];
+
+            stages.forEach(st => {
+                setTimeout(() => {
+                    logConsole(st.msg);
+                }, st.delay);
+            });
+
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerText = "⚡ RUN MULTI-SENSOR PERCEPTION & GENERATE MMWAVE RADAR";
+
+                // Update Cockpit Dashboard View with Processed Data
+                updateDashboard(selectedPipelineFrame);
+
+                // If user uploaded a custom camera image, display it in the camera frame
+                if (customCamDataUrl) {
+                    document.getElementById('cam-img').src = customCamDataUrl;
+                }
+
+                logConsole("🎉 Dashboard Telemetry & ADAS BEV Surround View are LIVE! You can now close this studio.");
+            }, 2200);
+        }
     </script>
 </body>
 </html>
