@@ -197,6 +197,19 @@ PPD-II/
 │   └── synchronized_index.csv                 # Master synchronization index (GPS-free)
 ├── simulated_radar_data/                      # Synthetic 77 GHz mmWave Radar Outputs
 ├── processed_images/                          # Exported sequential simulation frames
+├── Autonomous_Vehicle_Complete_Flow/          # Complete Standalone Flow Package
+│   ├── dashboard.html                          # Zero-server Cockpit Dashboard UI
+│   ├── dashboard_data.js                       # Real-time telemetry, 77 GHz radar targets
+│   ├── start_dashboard.bat                     # 1-Click launcher
+│   ├── models/                                 # YOLOv8, PointPillars, Model 3 MoE ONNX
+│   ├── generate_model2_bev_video.py            # 1-to-1 LiDAR BEV video generator
+│   ├── generate_mmwave_radar_video.py          # 77 GHz mmWave Radar BEV generator
+│   └── README_FLOW.md                          # Comprehensive Flow Documentation
+├── Final_Videos/                               # Centralized Multi-Modal Video Portfolio
+│   ├── model1_camera_vision_simulation.mp4     # Front Camera 1080p YOLOv8 Video
+│   ├── model2_lidar_bev_simulation.mp4         # 1-to-1 LiDAR BEV Perception Video
+│   ├── mmwave_radar_bev_simulation.mp4         # 77 GHz FMCW Radar BEV Scope Video
+│   └── model1_all_6168_complete.mp4            # Complete 6,168 Frames Full Run (10.28 min)
 ├── pipeline_perception_prediction_planning.py  # Master End-to-End Autonomous Driving Pipeline
 ├── generate_simulated_mmwave_radar.py         # Standalone 77 GHz Radar Physics Generator
 ├── validate_sample_image.py                   # Camera validation tester
