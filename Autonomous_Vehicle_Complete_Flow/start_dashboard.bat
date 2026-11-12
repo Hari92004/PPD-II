@@ -6,3 +6,4 @@ echo ======================================================================
 start "" "%~dp0dashboard.html"
 echo Dashboard opened in your default web browser.
 pause
+

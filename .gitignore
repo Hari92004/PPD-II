@@ -8,6 +8,10 @@ dataset_idd_synchronized/
 
 # Generated / Processed Frames Cache
 processed_images/
+model1_processed_images/
+model1_full_dataset_videos/
+model2_processed_bev_videos/
+*.png
 
 # Video & Large GIF Simulations (Kept locally on disk)
 *.mp4
