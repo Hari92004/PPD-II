@@ -287,18 +287,19 @@ def project_ego_point(x, y, z=-1.55, W=1920, H=1080):
 def render_dual_paths(frame, active_obstacles, ego_speed_kmh, drive_id='d0'):
     H, W = frame.shape[:2]
     overlay = frame.copy()
-    s_ranges = np.linspace(3.0, 36.0, 35)
+    max_s = 14.5 if drive_id == 'd0' else (18.0 if drive_id == 'd1' else 22.0)
+    s_ranges = np.linspace(3.2, max_s, 24)
     cx_lane = 825.0 if drive_id == 'd0' else 960.0
     cy_lane = 535.0
     fx, fy = 1250.0, 1250.0
-    half_w = 0.75  # 1.5m vehicle driving corridor width
+    half_w = 0.72  # 1.44m vehicle driving corridor width
 
-    # 1. Search for critical obstacles in the forward road corridor (x in [4.0, 24.0], |y| <= 2.2m)
+    # 1. Search for critical obstacles in the forward road corridor (x in [4.0, 20.0], |y| <= 2.2m)
     blocking_obs = None
     min_dist = 999.0
     for obs in active_obstacles:
         ox, oy, _ = obs['pos']
-        if 4.0 <= ox <= 24.0 and abs(oy) <= 2.2:
+        if 4.0 <= ox <= 20.0 and abs(oy) <= 2.2:
             if ox < min_dist:
                 min_dist = ox
                 blocking_obs = obs
@@ -306,7 +307,7 @@ def render_dual_paths(frame, active_obstacles, ego_speed_kmh, drive_id='d0'):
     # 2. Dynamic Frenet Quintic Evasion Setup
     is_evading = False
     d_evasion = 0.0
-    s_obs = 12.0
+    s_obs = 10.0
     if blocking_obs is not None:
         ox, oy, _ = blocking_obs['pos']
         s_obs = ox
@@ -328,13 +329,13 @@ def render_dual_paths(frame, active_obstacles, ego_speed_kmh, drive_id='d0'):
             if s <= 4.2:
                 d_lat = 0.0
             # Zone 2: Smooth Frenet Quintic Evasion Bend approaching the obstacle
-            elif s <= s_obs + 4.0:
-                tau = np.clip((s - 4.2) / max(3.5, s_obs - 1.0), 0.0, 1.0)
+            elif s <= s_obs + 2.5:
+                tau = np.clip((s - 4.2) / max(2.5, s_obs - 2.0), 0.0, 1.0)
                 poly = 10.0 * (tau**3) - 15.0 * (tau**4) + 6.0 * (tau**5)
                 d_lat = d_evasion * poly
             # Zone 3: Smooth return to lane center past the obstacle
             else:
-                tau_ret = np.clip((s - (s_obs + 4.0)) / 9.0, 0.0, 1.0)
+                tau_ret = np.clip((s - (s_obs + 2.5)) / 5.0, 0.0, 1.0)
                 poly_ret = 10.0 * (tau_ret**3) - 15.0 * (tau_ret**4) + 6.0 * (tau_ret**5)
                 d_lat = d_evasion * (1.0 - poly_ret)
 

@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous Vehicle Multi-Modal Cockpit Dashboard</title>
+    <style>
+        :root {
+            --bg-dark: #080b10;
+            --panel-bg: #101622;
+            --panel-border: #1e293b;
+            --cyan-accent: #00e5ff;
+            --radar-magenta: #ff00ff;
+            --lidar-blue: #00a6ff;
+            --cam-green: #00ff66;
+            --amber: #ffb703;
+            --danger-red: #ff3366;
+            --text-main: #f1f5f9;
+            --text-muted: #8b9bb4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100vh;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow: hidden; /* Zero unwanted scrollbars by default */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            padding: 8px 14px;
+        }
+
+        /* Top Header */
+        header {
+            width: 100%;
+            max-width: 1720px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--panel-border);
+            margin-bottom: 6px;
+            flex-shrink: 0;
+        }
+
+        .title-block {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .title-block h1 {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge-live {
+            background: rgba(0, 229, 255, 0.15);
+            border: 1px solid var(--cyan-accent);
+            color: var(--cyan-accent);
+            font-size: 10px;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Drive Selector Tabs */
+        .drive-tabs {
+            display: flex;
+            gap: 6px;
+            background: #0d121c;
+            padding: 3px;
+            border-radius: 6px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            background: var(--cyan-accent);
+            color: #080b10;
+        }
+
+        /* Zoom Scale Selector */
+        .scale-selector {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #0d121c;
+            padding: 3px;
+            border-radius: 6px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .scale-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .scale-btn.active {
+            background: #1e293b;
+            color: #ffffff;
+        }
+
+        /* Top Telemetry Metrics Cards */
+        .metrics-grid {
+            width: 100%;
+            max-width: 1720px;
+            margin: 0 auto 6px auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .metric-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--panel-border);
+        }
+
+        .metric-card.accent-cyan::before { background: var(--cyan-accent); }
+        .metric-card.accent-blue::before { background: var(--lidar-blue); }
+        .metric-card.accent-magenta::before { background: var(--radar-magenta); }
+        .metric-card.accent-amber::before { background: var(--amber); }
+        .metric-card.accent-green::before { background: var(--cam-green); }
+
+        .metric-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .metric-val-row {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+            margin-top: 2px;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            font-family: monospace;
+        }
+
+        .metric-unit {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Main Cockpit Split Workspace */
+        .workspace {
+            width: 100%;
+            max-width: 1720px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 10px;
+            flex: 1;
+            min-height: 0; /* Important for inner flex scrolling/auto-fitting */
+            margin-bottom: 6px;
+        }
+
+        /* Left Pane: Camera Vision & LiDAR AR View */
+        .camera-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .panel-pills {
+            display: flex;
+            gap: 4px;
+        }
+
+        .pill {
+            font-size: 9.5px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .pill-green { background: rgba(0, 255, 102, 0.15); color: var(--cam-green); border: 1px solid rgba(0, 255, 102, 0.4); }
+        .pill-blue { background: rgba(0, 166, 255, 0.15); color: var(--lidar-blue); border: 1px solid rgba(0, 166, 255, 0.4); }
+        .pill-magenta { background: rgba(255, 0, 255, 0.15); color: var(--radar-magenta); border: 1px solid rgba(255, 0, 255, 0.4); }
+
+        .cam-frame-box {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            background: #000;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cam-frame-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Clean letterboxed/fitted aspect ratio */
+            display: block;
+        }
+
+        .cam-footer {
+            margin-top: 6px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10.5px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        /* Right Pane: 77 GHz mmWave FMCW Radar BEV Scope */
+        .radar-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .radar-canvas-container {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            background: #080b12;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 229, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        canvas#radarCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: crosshair;
+        }
+
+        .radar-tooltip {
+            position: absolute;
+            background: rgba(16, 22, 34, 0.95);
+            border: 1px solid var(--radar-magenta);
+            border-radius: 6px;
+            padding: 5px 8px;
+            font-size: 10.5px;
+            color: #ffffff;
+            pointer-events: none;
+            display: none;
+            z-index: 20;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            line-height: 1.4;
+        }
+
+        /* Radar Targets Mini Table */
+        .radar-table-wrap {
+            margin-top: 6px;
+            height: 95px;
+            overflow-y: auto;
+            border: 1px solid var(--panel-border);
+            border-radius: 4px;
+            background: #0d121c;
+            flex-shrink: 0;
+        }
+
+        .radar-table-wrap::-webkit-scrollbar {
+            width: 4px;
+        }
+        .radar-table-wrap::-webkit-scrollbar-thumb {
+            background: var(--panel-border);
+            border-radius: 2px;
+        }
+
+        table.radar-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10.5px;
+            font-family: monospace;
+            text-align: left;
+        }
+
+        table.radar-table th {
+            background: #141b29;
+            color: var(--text-muted);
+            padding: 3px 6px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--panel-border);
+            position: sticky;
+            top: 0;
+            font-size: 10px;
+        }
+
+        table.radar-table td {
+            padding: 3px 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #e2e8f0;
+        }
+
+        /* Bottom Controls Bar */
+        .controls-bar {
+            width: 100%;
+            max-width: 1720px;
+            margin: 0 auto;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .playback-btns {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-ctrl {
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-ctrl:hover {
+            background: #334155;
+        }
+
+        .btn-play-pause {
+            background: var(--cyan-accent);
+            color: #080b10;
+            border: none;
+            padding: 6px 16px;
+        }
+
+        .btn-play-pause:hover {
+            background: #33ecff;
+        }
+
+        .scrubber-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 5px;
+            background: #1e293b;
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+            accent-color: var(--cyan-accent);
+        }
+
+        .frame-counter {
+            font-size: 12px;
+            font-family: monospace;
+            font-weight: 700;
+            color: var(--cyan-accent);
+            min-width: 115px;
+            text-align: right;
+        }
+
+        .speed-selector {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            background: #0d121c;
+            padding: 2px;
+            border-radius: 5px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .speed-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 3px 6px;
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .speed-btn.active {
+            background: #1e293b;
+            color: #ffffff;
+        }
+
+        /* Scale Modifier Modes */
+        body.scale-large {
+            overflow-y: auto;
+        }
+        body.scale-large .workspace {
+            min-height: 650px;
+        }
+        body.scale-compact .metrics-grid {
+            gap: 6px;
+        }
+        body.scale-compact .metric-card {
+            padding: 4px 8px;
+        }
+    </style>
+</head>
+<body id="dash-body">
+
+    <!-- Header -->
+    <header>
+        <div class="title-block">
+            <h1>AV MULTI-MODAL COCKPIT DASHBOARD</h1>
+        </div>
+
+        <div class="header-controls">
+            <!-- Drive Selector Tabs -->
+            <div class="drive-tabs">
+                <button class="tab-btn active" id="tab-d0" onclick="switchDrive('d0')">Drive 0: Urban</button>
+                <button class="tab-btn" id="tab-d1" onclick="switchDrive('d1')">Drive 1: Arterial</button>
+                <button class="tab-btn" id="tab-d2" onclick="switchDrive('d2')">Drive 2: Highway</button>
+            </div>
+
+            <!-- Dashboard Size Selector -->
+            <div class="scale-selector">
+                <button class="scale-btn active" id="scale-fit" onclick="setScaleMode('fit', this)">Fit Viewport</button>
+                <button class="scale-btn" id="scale-std" onclick="setScaleMode('standard', this)">Medium</button>
+                <button class="scale-btn" id="scale-large" onclick="setScaleMode('large', this)">Expanded</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Top Telemetry Metrics Bar -->
+    <div class="metrics-grid">
+        <div class="metric-card accent-cyan">
+            <span class="metric-label">Ego Velocity</span>
+            <div class="metric-val-row">
+                <span class="metric-value" id="val-speed">0.0</span>
+                <span class="metric-unit">km/h</span>
+                <span class="metric-unit" id="val-speed-ms" style="color:var(--cyan-accent); margin-left:auto;">(0.0 m/s)</span>
+            </div>
+        </div>
+
+        <div class="metric-card accent-amber">
+            <span class="metric-label">Closest Obstacle</span>
+            <div class="metric-val-row">
+                <span class="metric-value" id="val-closest">--</span>
+                <span class="metric-unit">meters</span>
+            </div>
+        </div>
+
+        <div class="metric-card accent-magenta">
+            <span class="metric-label">Radar Active Locks</span>
+            <div class="metric-val-row">
+                <span class="metric-value" id="val-locks">0</span>
+                <span class="metric-unit">targets</span>
+                <span class="metric-unit" style="color:var(--radar-magenta); margin-left:auto;">77GHz Doppler</span>
+            </div>
+        </div>
+
+        <div class="metric-card accent-blue">
+            <span class="metric-label">Min TTC</span>
+            <div class="metric-val-row">
+                <span class="metric-value" id="val-ttc">--</span>
+                <span class="metric-unit">seconds</span>
+            </div>
+        </div>
+
+        <div class="metric-card accent-green">
+            <span class="metric-label">Frenet Steering</span>
+            <div class="metric-val-row">
+                <span class="metric-value" id="val-steer" style="font-size:14px;">FOLLOW NOMINAL</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Cockpit Split Workspace -->
+    <div class="workspace">
+        
+        <!-- Left Side: Live Processed Camera & LiDAR AR View -->
+        <div class="camera-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span>CAMERA VISION + CALIBRATED LIDAR AR VIEW</span>
+                </div>
+                <div class="panel-pills">
+                    <span class="pill pill-green">CAM: YOLOv8 (GREEN)</span>
+                    <span class="pill pill-blue">LiDAR: FRONT &lt;25m (BLUE)</span>
+                    <span class="pill pill-green">FRENET DUAL-PATH</span>
+                </div>
+            </div>
+
+            <div class="cam-frame-box">
+                <img id="cam-img" src="" alt="Live Synchronized Autonomous Driving Camera Feed">
+            </div>
+        </div>
+
+        <!-- Right Side: 77 GHz mmWave FMCW Radar BEV Scope -->
+        <div class="radar-panel">
+            <div class="panel-header">
+                <div class="panel-title">
+                    <span>77 GHz mmWave FMCW RADAR (BEV SURROUND SCOPE)</span>
+                </div>
+                <div class="panel-pills">
+                    <span class="pill pill-magenta">RADAR TARGETS (POINTS &bull;)</span>
+                    <span class="pill" style="background:rgba(0,229,255,0.15); color:var(--cyan-accent); border:1px solid rgba(0,229,255,0.4)">EGO ORIGIN (&Delta;)</span>
+                </div>
+            </div>
+
+            <div class="radar-canvas-container" id="radar-container">
+                <canvas id="radarCanvas" width="600" height="600"></canvas>
+                <div class="radar-tooltip" id="radarTooltip"></div>
+            </div>
+
+            <!-- Real-Time Radar Tracked Targets Table -->
+            <div class="radar-table-wrap">
+                <table class="radar-table">
+                    <thead>
+                        <tr>
+                            <th>TGT</th>
+                            <th>CLASS</th>
+                            <th>RANGE (R)</th>
+                            <th>X (LONG)</th>
+                            <th>Y (LAT)</th>
+                            <th>vr (DOPPLER)</th>
+                            <th>RCS (&sigma;)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="radar-tbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Playback & Frame Scrubber Controls -->
+    <div class="controls-bar">
+        <div class="playback-btns">
+            <button class="btn-ctrl btn-play-pause" id="btn-play" onclick="togglePlay()">Pause</button>
+            <button class="btn-ctrl" onclick="stepFrame(-1)">&larr; Prev Frame</button>
+            <button class="btn-ctrl" onclick="stepFrame(1)">Next Frame &rarr;</button>
+        </div>
+
+        <div class="scrubber-wrap">
+            <input type="range" id="frame-slider" min="0" max="149" value="0" oninput="onSliderInput(this.value)">
+            <div class="frame-counter" id="frame-counter-txt">Frame: 001 / 150</div>
+        </div>
+
+        <div class="speed-selector">
+            <button class="speed-btn" onclick="setSpeed(0.5, this)">0.5x</button>
+            <button class="speed-btn active" onclick="setSpeed(1.0, this)">1.0x (7 FPS)</button>
+            <button class="speed-btn" onclick="setSpeed(2.0, this)">2.0x</button>
+            <button class="speed-btn" onclick="setSpeed(4.0, this)">4.0x</button>
+        </div>
+    </div>
+
+    <!-- Load Pre-Extracted Multi-Modal Dataset -->
+    <script src="dashboard_data.js"></script>
+
+    <script>
+        // State variables
+        let currentFrameIdx = 0;
+        let isPlaying = true;
+        let playbackInterval = null;
+        let fps = 7.0;
+        let speedMultiplier = 1.0;
+        let scannerAngle = 0;
+
+        const canvas = document.getElementById('radarCanvas');
+        const ctx = canvas.getContext('2d');
+        const tooltip = document.getElementById('radarTooltip');
+        const bodyEl = document.getElementById('dash-body');
+
+        const totalFrames = typeof DASHBOARD_DATA !== 'undefined' ? DASHBOARD_DATA.length : 0;
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            if (totalFrames === 0) {
+                alert("Error: dashboard_data.js could not be loaded or is empty!");
+                return;
+            }
+            document.getElementById('frame-slider').max = totalFrames - 1;
+            updateDashboard(0);
+            startPlayback();
+            requestAnimationFrame(renderRadarLoop);
+        });
+
+        // Set Scale Mode
+        function setScaleMode(mode, btnEl) {
+            document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
+            btnEl.classList.add('active');
+
+            bodyEl.classList.remove('scale-compact', 'scale-large');
+            if (mode === 'compact') {
+                bodyEl.classList.add('scale-compact');
+            } else if (mode === 'large') {
+                bodyEl.classList.add('scale-large');
+            }
+        }
+
+        // Drive Switcher
+        function switchDrive(driveId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${driveId}`).classList.add('active');
+
+            let targetIdx = 0;
+            if (driveId === 'd1') targetIdx = 50;
+            else if (driveId === 'd2') targetIdx = 100;
+
+            updateDashboard(targetIdx);
+        }
+
+        // Frame Update
+        function updateDashboard(idx) {
+            if (idx < 0) idx = 0;
+            if (idx >= totalFrames) idx = totalFrames - 1;
+            currentFrameIdx = idx;
+
+            const rec = DASHBOARD_DATA[currentFrameIdx];
+            if (!rec) return;
+
+            // 1. Update Camera View Image
+            const camImg = document.getElementById('cam-img');
+            camImg.src = rec.image_file;
+
+            // 2. Update Drive Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            const activeTab = document.getElementById(`tab-${rec.drive}`);
+            if (activeTab) activeTab.classList.add('active');
+
+            // 3. Update Metrics Cards
+            document.getElementById('val-speed').innerText = rec.ego_speed_kmh.toFixed(1);
+            document.getElementById('val-speed-ms').innerText = `(${(rec.ego_speed_kmh / 3.6).toFixed(1)} m/s)`;
+
+            const closestEl = document.getElementById('val-closest');
+            if (rec.closest_dist_m !== null) {
+                closestEl.innerText = rec.closest_dist_m.toFixed(1);
+                closestEl.style.color = rec.closest_dist_m < 15 ? "var(--danger-red)" : (rec.closest_dist_m < 25 ? "var(--amber)" : "#ffffff");
+            } else {
+                closestEl.innerText = "--";
+                closestEl.style.color = "#ffffff";
+            }
+
+            document.getElementById('val-locks').innerText = rec.active_locks;
+
+            const ttcEl = document.getElementById('val-ttc');
+            if (rec.min_ttc_s !== null) {
+                ttcEl.innerText = rec.min_ttc_s.toFixed(2);
+                ttcEl.style.color = rec.min_ttc_s < 2.5 ? "var(--danger-red)" : "var(--amber)";
+            } else {
+                ttcEl.innerText = "SAFE";
+                ttcEl.style.color = "var(--cam-green)";
+            }
+
+            const steerEl = document.getElementById('val-steer');
+            if (rec.decision.includes("SWERVE")) {
+                steerEl.innerText = `EVASION (${rec.steer_deg > 0 ? "+" : ""}${rec.steer_deg}°)`;
+                steerEl.style.color = "var(--danger-red)";
+            } else {
+                steerEl.innerText = "FOLLOW NOMINAL";
+                steerEl.style.color = "var(--cam-green)";
+            }
+
+            // 4. Update Scrubber
+            document.getElementById('frame-slider').value = idx;
+            document.getElementById('frame-counter-txt').innerText = `Frame: ${(idx + 1).toString().padStart(3, '0')} / ${totalFrames}`;
+
+            // 5. Update Radar Table
+            updateRadarTable(rec.radar_targets);
+        }
+
+        // Radar Table Populator
+        function updateRadarTable(targets) {
+            const tbody = document.getElementById('radar-tbody');
+            tbody.innerHTML = '';
+            if (!targets || targets.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:6px;">No radar reflections in FOV</td></tr>`;
+                return;
+            }
+
+            targets.forEach((tgt) => {
+                const tr = document.createElement('tr');
+                const isReceding = tgt.vr >= 0;
+                const vrColor = isReceding ? "var(--cyan-accent)" : "var(--danger-red)";
+                const vrSign = isReceding ? `+${tgt.vr.toFixed(1)}` : tgt.vr.toFixed(1);
+
+                tr.innerHTML = `
+                    <td style="color:var(--radar-magenta); font-weight:bold;">#${tgt.id}</td>
+                    <td>${tgt.class}</td>
+                    <td style="font-weight:bold;">${tgt.dist.toFixed(1)}m</td>
+                    <td>${tgt.x >= 0 ? "+" : ""}${tgt.x.toFixed(1)}m</td>
+                    <td>${tgt.y >= 0 ? "+" : ""}${tgt.y.toFixed(1)}m</td>
+                    <td style="color:${vrColor}; font-weight:bold;">${vrSign} m/s</td>
+                    <td style="color:var(--text-muted);">${tgt.rcs.toFixed(1)} dBsm</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Continuous Radar Canvas Renderer
+        function renderRadarLoop() {
+            renderRadarScope();
+            scannerAngle += 0.045;
+            requestAnimationFrame(renderRadarLoop);
+        }
+
+        function renderRadarScope() {
+            const W = canvas.width;
+            const H = canvas.height;
+            ctx.clearRect(0, 0, W, H);
+
+            // Origin of Ego Vehicle
+            const u0 = W / 2;       // 300 px
+            const v0 = H * 0.78;    // 468 px (allowing room for -10m behind)
+            const scale = 7.2;      // 7.2 pixels per meter (50m * 7.2 = 360 px)
+
+            // Polar Range Rings (10m, 20m, 30m, 40m, 50m)
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1;
+            ctx.fillStyle = '#64748b';
+            ctx.font = '10px monospace';
+
+            [10, 20, 30, 40, 50].forEach(r => {
+                const r_px = r * scale;
+                ctx.beginPath();
+                ctx.arc(u0, v0, r_px, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.fillText(`${r}m`, u0 + 6, v0 - r_px + 12);
+            });
+
+            // Rear -10m dashed circle
+            ctx.setLineDash([3, 4]);
+            ctx.beginPath();
+            ctx.arc(u0, v0, 10 * scale, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillText('-10m', u0 + 6, v0 + 10 * scale - 4);
+
+            // Radial Azimuth Rays (-45, -30, -15, 0, 15, 30, 45)
+            [-45, -30, -15, 0, 15, 30, 45].forEach(deg => {
+                const rad = deg * (Math.PI / 180);
+                const rayLen = 52 * scale;
+                const rx = u0 - rayLen * Math.sin(rad);
+                const ry = v0 - rayLen * Math.cos(rad);
+
+                ctx.strokeStyle = '#151d2c';
+                ctx.beginPath();
+                ctx.moveTo(u0, v0);
+                ctx.lineTo(rx, ry);
+                ctx.stroke();
+
+                if (deg !== 0) {
+                    ctx.fillStyle = '#475569';
+                    ctx.fillText(`${deg > 0 ? "+" : ""}${deg}°`, rx - 10, ry - 4);
+                }
+            });
+
+            // Sweeping Scanner Beam
+            const sweepAz = Math.sin(scannerAngle) * 0.78; // +/- 45 deg
+            const swX = u0 - (52 * scale) * Math.sin(sweepAz);
+            const swY = v0 - (52 * scale) * Math.cos(sweepAz);
+
+            const grad = ctx.createLinearGradient(u0, v0, swX, swY);
+            grad.addColorStop(0, 'rgba(0, 229, 255, 0.8)');
+            grad.addColorStop(1, 'rgba(0, 229, 255, 0.05)');
+
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(u0, v0);
+            ctx.lineTo(swX, swY);
+            ctx.stroke();
+
+            // Draw Ego Vehicle at Origin (u0, v0)
+            ctx.fillStyle = '#00e5ff';
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(u0, v0 - 14);       // Tip
+            ctx.lineTo(u0 - 9, v0 + 10);    // Bottom left
+            ctx.lineTo(u0 + 9, v0 + 10);    // Bottom right
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#00e5ff';
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillText('EGO', u0 - 11, v0 + 24);
+
+            // Draw Tracked Radar Obstacles (Ahead & Behind) - ONLY CLEAN RADAR POINTS
+            const rec = DASHBOARD_DATA[currentFrameIdx];
+            if (rec && rec.radar_targets) {
+                rec.radar_targets.forEach(tgt => {
+                    const pu = u0 - tgt.y * scale;
+                    const pv = v0 - tgt.x * scale;
+
+                    if (pu >= 10 && pu < W - 10 && pv >= 10 && pv < H - 10) {
+                        // 1. Subtle Outer Glow Ring
+                        ctx.beginPath();
+                        ctx.arc(pu, pv, 7.5, 0, Math.PI * 2);
+                        ctx.strokeStyle = 'rgba(255, 0, 255, 0.45)';
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+
+                        // 2. Solid Radar Point (Blip)
+                        ctx.beginPath();
+                        ctx.arc(pu, pv, 4.5, 0, Math.PI * 2);
+                        ctx.fillStyle = '#ff00ff';
+                        ctx.fill();
+
+                        // 3. Center White Core
+                        ctx.beginPath();
+                        ctx.arc(pu, pv, 1.8, 0, Math.PI * 2);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fill();
+                    }
+                });
+            }
+        }
+
+        // Interactive Canvas Hover Tooltip
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+            const u0 = canvas.width / 2;
+            const v0 = canvas.height * 0.78;
+            const scale = 7.2;
+
+            const rec = DASHBOARD_DATA[currentFrameIdx];
+            if (!rec || !rec.radar_targets) return;
+
+            let hit = null;
+            rec.radar_targets.forEach(tgt => {
+                const pu = u0 - tgt.y * scale;
+                const pv = v0 - tgt.x * scale;
+                const dist = Math.hypot(mouseX - pu, mouseY - pv);
+                if (dist < 12) hit = tgt;
+            });
+
+            if (hit) {
+                tooltip.style.display = 'block';
+                tooltip.style.left = `${e.clientX - rect.left + 15}px`;
+                tooltip.style.top = `${e.clientY - rect.top - 10}px`;
+                tooltip.innerHTML = `
+                    <div style="color:var(--radar-magenta); font-weight:bold;">${hit.class} (ID #${hit.id})</div>
+                    <div>Range: <b>${hit.dist.toFixed(1)} m</b></div>
+                    <div>Pos: X=${hit.x.toFixed(1)}m, Y=${hit.y.toFixed(1)}m</div>
+                    <div>Doppler vr: <b style="color:${hit.vr >= 0 ? "var(--cyan-accent)" : "var(--danger-red)"}">${hit.vr >= 0 ? "+" : ""}${hit.vr.toFixed(2)} m/s</b></div>
+                    <div>RCS &sigma;: <b>${hit.rcs.toFixed(1)} dBsm</b></div>
+                `;
+            } else {
+                tooltip.style.display = 'none';
+            }
+        });
+
+        canvas.addEventListener('mouseleave', () => {
+            tooltip.style.display = 'none';
+        });
+
+        // Playback Controller
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('btn-play');
+            if (isPlaying) {
+                btn.innerText = "Pause";
+                btn.style.background = "var(--cyan-accent)";
+                startPlayback();
+            } else {
+                btn.innerText = "Play";
+                btn.style.background = "#238636";
+                clearInterval(playbackInterval);
+            }
+        }
+
+        function startPlayback() {
+            clearInterval(playbackInterval);
+            const intervalMs = 1000 / (fps * speedMultiplier);
+            playbackInterval = setInterval(() => {
+                if (!isPlaying) return;
+                let nextIdx = (currentFrameIdx + 1) % totalFrames;
+                updateDashboard(nextIdx);
+            }, intervalMs);
+        }
+
+        function stepFrame(delta) {
+            if (isPlaying) togglePlay();
+            let newIdx = currentFrameIdx + delta;
+            if (newIdx < 0) newIdx = totalFrames - 1;
+            if (newIdx >= totalFrames) newIdx = 0;
+            updateDashboard(newIdx);
+        }
+
+        function onSliderInput(val) {
+            if (isPlaying) togglePlay();
+            updateDashboard(parseInt(val, 10));
+        }
+
+        function setSpeed(sp, el) {
+            speedMultiplier = sp;
+            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            if (isPlaying) startPlayback();
+        }
+
+        // Keyboard Shortcuts: Spacebar = Play/Pause, Left/Right = Prev/Next
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                togglePlay();
+            } else if (e.code === 'ArrowRight') {
+                e.preventDefault();
+                stepFrame(1);
+            } else if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                stepFrame(-1);
+            }
+        });
+    </script>
+</body>
+</html>
