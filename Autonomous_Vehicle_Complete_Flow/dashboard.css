@@ -1,0 +1,1259 @@
+/**
+ * ==============================================================================
+ * PPD-II AUTONOMOUS VEHICLE COCKPIT DASHBOARD — DESIGN SYSTEM & STYLESHEET
+ * ==============================================================================
+ * Architecture: Professional Automotive Intelligent Glass Cockpit
+ * Features:
+ *   - Day/Light Mode (Default, High-Contrast Crisp Automotive Spec)
+ *   - Night/Dark Mode (Luminescent Low-Glare ADAS Spec)
+ *   - Wide Landscape Automotive Display Optimization (1280x480, 1920x720, etc.)
+ *   - Full Multi-Device Responsiveness (Desktop, Laptop 768p, Tablet, Mobile)
+ *   - Touch & Keyboard Accessible (44px min tap targets, clear focus rings)
+ * ==============================================================================
+ */
+
+/* ------------------------------------------------------------------------------
+   1. COLOR PALETTE & DESIGN TOKENS
+   ------------------------------------------------------------------------------ */
+:root {
+  /* Day / Light Mode (Default) */
+  --bg-app: #f1f5f9;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f8fafc;
+  --bg-surface-subtle: #f1f5f9;
+  --border-light: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-focus: #0284c7;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-inverse: #ffffff;
+
+  /* Automotive Accent Accents */
+  --accent-primary: #0284c7;        /* Sky Blue */
+  --accent-primary-hover: #0369a1;
+  --accent-primary-subtle: #e0f2fe;
+
+  --accent-cam: #16a34a;            /* Camera Vision Emerald */
+  --accent-cam-subtle: #dcfce7;
+  --accent-cam-text: #15803d;
+
+  --accent-lidar: #2563eb;          /* LiDAR Tech Blue */
+  --accent-lidar-subtle: #dbeafe;
+  --accent-lidar-text: #1d4ed8;
+
+  --accent-radar: #7c3aed;          /* 77 GHz Radar Violet */
+  --accent-radar-subtle: #ede9fe;
+  --accent-radar-text: #6d28d9;
+
+  /* Safety & Risk State Accents */
+  --state-safe-bg: #dcfce7;
+  --state-safe-border: #86efac;
+  --state-safe-text: #15803d;
+
+  --state-caution-bg: #fef3c7;
+  --state-caution-border: #fcd34d;
+  --state-caution-text: #b45309;
+
+  --state-critical-bg: #fee2e2;
+  --state-critical-border: #fca5a5;
+  --state-critical-text: #b91c1c;
+
+  /* Canvas & Glassmorphic Scope Background */
+  --radar-canvas-bg: #f8fafc;
+  --radar-rings-stroke: rgba(100, 116, 139, 0.22);
+  --radar-radial-stroke: rgba(100, 116, 139, 0.16);
+  --radar-sweep-stroke: rgba(2, 132, 199, 0.65);
+  --radar-sweep-fill: rgba(2, 132, 199, 0.08);
+
+  /* Shadows & Elevation */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  /* Font & Typography Stack */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
+/* ------------------------------------------------------------------------------
+   2. NIGHT / DARK THEME OVERRIDES
+   ------------------------------------------------------------------------------ */
+[data-theme="dark"] {
+  --bg-app: #080c14;
+  --bg-surface: #0f172a;
+  --bg-surface-elevated: #1e293b;
+  --bg-surface-subtle: #172033;
+  --border-light: #1e293b;
+  --border-strong: #334155;
+  --border-focus: #38bdf8;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-inverse: #0f172a;
+
+  --accent-primary: #38bdf8;
+  --accent-primary-hover: #0ea5e9;
+  --accent-primary-subtle: rgba(56, 189, 248, 0.15);
+
+  --accent-cam: #22c55e;
+  --accent-cam-subtle: rgba(34, 197, 94, 0.15);
+  --accent-cam-text: #4ade80;
+
+  --accent-lidar: #38bdf8;
+  --accent-lidar-subtle: rgba(56, 189, 248, 0.15);
+  --accent-lidar-text: #60a5fa;
+
+  --accent-radar: #c084fc;
+  --accent-radar-subtle: rgba(192, 132, 252, 0.15);
+  --accent-radar-text: #d8b4fe;
+
+  --state-safe-bg: rgba(34, 197, 94, 0.15);
+  --state-safe-border: rgba(34, 197, 94, 0.4);
+  --state-safe-text: #4ade80;
+
+  --state-caution-bg: rgba(245, 158, 11, 0.15);
+  --state-caution-border: rgba(245, 158, 11, 0.4);
+  --state-caution-text: #fbbf24;
+
+  --state-critical-bg: rgba(239, 68, 68, 0.18);
+  --state-critical-border: rgba(239, 68, 68, 0.45);
+  --state-critical-text: #f87171;
+
+  --radar-canvas-bg: #090e1a;
+  --radar-rings-stroke: rgba(148, 163, 184, 0.22);
+  --radar-radial-stroke: rgba(148, 163, 184, 0.14);
+  --radar-sweep-stroke: rgba(56, 189, 248, 0.7);
+  --radar-sweep-fill: rgba(56, 189, 248, 0.08);
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+/* ------------------------------------------------------------------------------
+   3. RESET & GLOBAL APPLIANCE LAYOUT
+   ------------------------------------------------------------------------------ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden; /* Default viewport fit; overridden in responsive queries */
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+/* App Container */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+  padding: 10px 16px 8px 16px;
+  gap: 8px;
+}
+
+/* ------------------------------------------------------------------------------
+   4. HEADER & TOP NAVIGATION
+   ------------------------------------------------------------------------------ */
+.cockpit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: max-content;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--accent-primary-subtle);
+  border: 1px solid var(--accent-primary);
+  border-radius: var(--radius-sm);
+  color: var(--accent-primary);
+  font-size: 16px;
+}
+
+.brand-text h1 {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.brand-text .brand-tag {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  background: var(--state-safe-bg);
+  color: var(--state-safe-text);
+  border: 1px solid var(--state-safe-border);
+  border-radius: var(--radius-full);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.badge-status::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+/* Header Controls & Action Groups */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Segmented Button Groups */
+.segmented-group {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  gap: 2px;
+}
+
+.seg-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: calc(var(--radius-sm) - 2px);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.seg-btn:hover {
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .seg-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.seg-btn.active {
+  background: var(--bg-surface);
+  color: var(--accent-primary);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+}
+
+[data-theme="dark"] .seg-btn.active {
+  background: var(--bg-surface-elevated);
+  color: var(--accent-primary);
+  border-color: var(--border-strong);
+}
+
+/* Header Tool Buttons (Theme, Studio, Reset) */
+.btn-icon-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  background: var(--bg-surface-subtle);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: 32px;
+}
+
+.btn-icon-label:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-strong);
+  color: var(--accent-primary);
+}
+
+.btn-studio {
+  background: var(--accent-primary-subtle);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+}
+
+.btn-studio:hover {
+  background: var(--accent-primary);
+  color: var(--text-inverse);
+}
+
+/* ------------------------------------------------------------------------------
+   5. PRIMARY VEHICLE TELEMETRY RIBBON
+   ------------------------------------------------------------------------------ */
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.metric-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Modality Color Indicators */
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--border-strong);
+}
+
+.metric-card.card-speed::before { background: var(--accent-primary); }
+.metric-card.card-obstacle::before { background: #f59e0b; }
+.metric-card.card-radar::before { background: var(--accent-radar); }
+.metric-card.card-ttc::before { background: var(--accent-lidar); }
+.metric-card.card-decision::before { background: var(--accent-cam); }
+
+.metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 3px;
+}
+
+.metric-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-tertiary);
+}
+
+.metric-icon {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.metric-body {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.metric-value-primary {
+  font-family: var(--font-mono);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  letter-spacing: -0.3px;
+}
+
+.metric-unit {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.metric-subval {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--accent-primary);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+/* Decision Command Card Special Highlighting */
+.metric-card.card-decision {
+  background: var(--bg-surface);
+}
+
+.decision-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  background: var(--state-safe-bg);
+  color: var(--state-safe-text);
+  border: 1px solid var(--state-safe-border);
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.decision-badge.evasion {
+  background: var(--state-critical-bg);
+  color: var(--state-critical-text);
+  border-color: var(--state-critical-border);
+  animation: pulse-danger 2s infinite;
+}
+
+@keyframes pulse-danger {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+/* ------------------------------------------------------------------------------
+   6. MAIN WORKSPACE (CAMERA VISION & RADAR BEV)
+   ------------------------------------------------------------------------------ */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 10px;
+  flex: 1;
+  min-height: 0; /* Crucial for internal flexbox containment */
+}
+
+/* Panel Containers */
+.cockpit-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 8px 10px;
+  min-height: 0;
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 6px;
+  flex-shrink: 0;
+}
+
+.panel-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.panel-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.pills-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.chip-cam {
+  background: var(--accent-cam-subtle);
+  color: var(--accent-cam-text);
+  border: 1px solid rgba(22, 163, 74, 0.3);
+}
+
+.chip-lidar {
+  background: var(--accent-lidar-subtle);
+  color: var(--accent-lidar-text);
+  border: 1px solid rgba(37, 99, 235, 0.3);
+}
+
+.chip-radar {
+  background: var(--accent-radar-subtle);
+  color: var(--accent-radar-text);
+  border: 1px solid rgba(124, 58, 237, 0.3);
+}
+
+.chip-frenet {
+  background: var(--state-safe-bg);
+  color: var(--state-safe-text);
+  border: 1px solid var(--state-safe-border);
+}
+
+/* ------------------------------------------------------------------------------
+   7. CAMERA VIEWPORT
+   ------------------------------------------------------------------------------ */
+.camera-viewport-box {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: #000000;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-light);
+}
+
+.camera-img-el {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Prevents distortion/stretching of 960x720 frames */
+  display: block;
+  user-select: none;
+}
+
+.camera-hud-overlay {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.hud-pill {
+  background: rgba(15, 23, 42, 0.75);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: #f8fafc;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 10.5px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.hud-pill-warning {
+  background: rgba(185, 28, 28, 0.85);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.camera-legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 5px;
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------------------------
+   8. RADAR BEV WORKSPACE
+   ------------------------------------------------------------------------------ */
+.radar-canvas-container {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: var(--radar-canvas-bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+canvas#radarCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+}
+
+/* Radar Interactive Tooltip */
+.radar-tooltip {
+  position: absolute;
+  background: rgba(15, 23, 42, 0.94);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--accent-radar);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 11px;
+  color: #ffffff;
+  pointer-events: none;
+  display: none;
+  z-index: 30;
+  box-shadow: var(--shadow-lg);
+  line-height: 1.45;
+  white-space: nowrap;
+}
+
+/* Radar Tracked Targets Table */
+.radar-table-container {
+  margin-top: 6px;
+  height: 88px;
+  overflow-y: auto;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-elevated);
+  flex-shrink: 0;
+}
+
+.radar-table-container::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.radar-table-container::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+}
+
+table.radar-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  text-align: left;
+}
+
+table.radar-table th {
+  background: var(--bg-surface-subtle);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  font-size: 10px;
+  letter-spacing: 0.3px;
+  z-index: 2;
+}
+
+table.radar-table td {
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+table.radar-table tr:hover td {
+  background: rgba(2, 132, 199, 0.08);
+}
+
+/* ------------------------------------------------------------------------------
+   9. BOTTOM PLAYBACK CONTROLS BAR
+   ------------------------------------------------------------------------------ */
+.cockpit-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.transport-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-transport {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: 36px;
+  min-width: 36px;
+}
+
+.btn-transport:hover {
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-strong);
+  color: var(--accent-primary);
+}
+
+.btn-transport.btn-play-action {
+  background: var(--accent-primary);
+  color: var(--text-inverse);
+  border-color: var(--accent-primary);
+  padding: 6px 16px;
+}
+
+.btn-transport.btn-play-action:hover {
+  background: var(--accent-primary-hover);
+}
+
+/* Scrubber & Timeline */
+.scrubber-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 140px;
+}
+
+.slider-styled {
+  flex: 1;
+  height: 6px;
+  background: var(--border-strong);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  accent-color: var(--accent-primary);
+  transition: background var(--transition-fast);
+}
+
+.slider-styled:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.frame-badge {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-light);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  min-width: 125px;
+  text-align: center;
+}
+
+/* Speed Multiplier Pills */
+.speed-group {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  gap: 2px;
+}
+
+.speed-pill {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  padding: 4px 7px;
+  font-size: 10.5px;
+  font-weight: 700;
+  border-radius: calc(var(--radius-sm) - 2px);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.speed-pill:hover {
+  color: var(--text-primary);
+}
+
+.speed-pill.active {
+  background: var(--bg-surface);
+  color: var(--accent-primary);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+}
+
+/* ------------------------------------------------------------------------------
+   10. PIPELINE STUDIO MODAL DIALOG
+   ------------------------------------------------------------------------------ */
+.studio-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.65);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.studio-modal-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.studio-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 820px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.studio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background: var(--bg-surface-subtle);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.studio-header h2 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.btn-close-modal:hover {
+  color: var(--state-critical-text);
+  background: var(--state-critical-bg);
+}
+
+.studio-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.upload-pair-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.upload-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 12px;
+  background: var(--bg-surface-subtle);
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.upload-dropzone:hover {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary-subtle);
+}
+
+.upload-dropzone .drop-icon {
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.upload-dropzone h3 {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.upload-dropzone p {
+  font-size: 10.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+
+.preview-chip {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  color: var(--accent-primary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sample-benchmarks {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  background: var(--bg-surface-subtle);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+}
+
+.sample-benchmarks span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.btn-run-process {
+  background: var(--accent-primary);
+  color: var(--text-inverse);
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.btn-run-process:hover {
+  background: var(--accent-primary-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-run-process:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.console-terminal {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #38bdf8;
+}
+
+.console-header-txt {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  border-bottom: 1px solid #1e293b;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.console-output-box {
+  max-height: 120px;
+  overflow-y: auto;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  color: #4ade80;
+}
+
+/* ------------------------------------------------------------------------------
+   11. SCALE MODIFIERS & VIEWPORT OVERRIDES
+   ------------------------------------------------------------------------------ */
+body.scale-large {
+  overflow-y: auto;
+}
+
+body.scale-large .workspace-grid {
+  min-height: 600px;
+}
+
+body.scale-compact .telemetry-grid {
+  gap: 6px;
+}
+body.scale-compact .metric-card {
+  padding: 5px 8px;
+}
+body.scale-compact .metric-value-primary {
+  font-size: 16px;
+}
+
+/* ------------------------------------------------------------------------------
+   12. RESPONSIVE MEDIA QUERIES (AUTOMOTIVE, LAPTOPS, TABLETS, MOBILE)
+   ------------------------------------------------------------------------------ */
+
+/* Wide Automotive Landscape Displays (1920x720, 1280x480, 2560x1080) */
+@media (min-aspect-ratio: 2/1) {
+  .app-container {
+    padding: 6px 12px;
+    gap: 6px;
+  }
+  .cockpit-header {
+    padding: 4px 10px;
+  }
+  .telemetry-grid {
+    gap: 6px;
+  }
+  .metric-card {
+    padding: 4px 10px;
+  }
+  .metric-value-primary {
+    font-size: 17px;
+  }
+  .radar-table-container {
+    height: 72px;
+  }
+  .cockpit-controls {
+    padding: 4px 10px;
+  }
+}
+
+/* Standard Laptops (1366x768, 1440x900) - Eliminates vertical clipping */
+@media (max-height: 800px) {
+  .app-container {
+    padding: 6px 10px 4px 10px;
+    gap: 6px;
+  }
+  .cockpit-header {
+    padding: 4px 8px;
+  }
+  .brand-text h1 {
+    font-size: 13px;
+  }
+  .telemetry-grid {
+    gap: 6px;
+  }
+  .metric-card {
+    padding: 4px 8px;
+  }
+  .metric-value-primary {
+    font-size: 16px;
+  }
+  .radar-table-container {
+    height: 68px;
+  }
+  .cockpit-controls {
+    padding: 4px 10px;
+  }
+  .btn-transport {
+    min-height: 32px;
+    padding: 4px 10px;
+  }
+}
+
+/* Very Small Height Screens (<650px) - Graceful Scrollability */
+@media (max-height: 650px) {
+  html, body {
+    overflow-y: auto;
+    height: auto;
+  }
+  .workspace-grid {
+    min-height: 400px;
+  }
+}
+
+/* Tablets & Mid-size Landscape / Portrait (< 1100px) */
+@media (max-width: 1100px) {
+  .telemetry-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .metric-card:nth-child(4),
+  .metric-card:nth-child(5) {
+    grid-column: span 1;
+  }
+  .workspace-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Mobile & Narrow Tablets (< 768px) - Clean Single-Column Stack */
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: auto;
+    height: auto;
+  }
+
+  .app-container {
+    padding: 8px;
+    gap: 10px;
+    height: auto;
+  }
+
+  .cockpit-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .header-actions {
+    justify-content: space-between;
+  }
+
+  .telemetry-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .metric-card.card-decision {
+    grid-column: span 2;
+  }
+
+  .workspace-grid {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .camera-viewport-box {
+    min-height: 240px;
+    max-height: 320px;
+  }
+
+  .radar-canvas-container {
+    min-height: 300px;
+    max-height: 360px;
+  }
+
+  .cockpit-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .transport-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .btn-transport {
+    flex: 1;
+  }
+
+  .scrubber-group {
+    width: 100%;
+  }
+
+  .speed-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .upload-pair-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Accessibility: Focus visible indicators */
+button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Accessibility: Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

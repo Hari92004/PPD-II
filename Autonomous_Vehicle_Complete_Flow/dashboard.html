@@ -2,1578 +2,307 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autonomous Vehicle Multi-Modal Cockpit Dashboard</title>
-    <style>
-        :root {
-            --bg-dark: #080b10;
-            --panel-bg: #101622;
-            --panel-border: #1e293b;
-            --cyan-accent: #00e5ff;
-            --radar-magenta: #ff00ff;
-            --lidar-blue: #00a6ff;
-            --cam-green: #00ff66;
-            --amber: #ffb703;
-            --danger-red: #ff3366;
-            --text-main: #f1f5f9;
-            --text-muted: #8b9bb4;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100vh;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow: hidden; /* Zero unwanted scrollbars by default */
-        }
-
-        body {
-            display: flex;
-            flex-direction: column;
-            padding: 8px 14px;
-        }
-
-        /* Top Header */
-        header {
-            width: 100%;
-            max-width: 1720px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 6px;
-            border-bottom: 1px solid var(--panel-border);
-            margin-bottom: 6px;
-            flex-shrink: 0;
-        }
-
-        .title-block {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .title-block h1 {
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .badge-live {
-            background: rgba(0, 229, 255, 0.15);
-            border: 1px solid var(--cyan-accent);
-            color: var(--cyan-accent);
-            font-size: 10px;
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .subtitle {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Drive Selector Tabs */
-        .drive-tabs {
-            display: flex;
-            gap: 6px;
-            background: #0d121c;
-            padding: 3px;
-            border-radius: 6px;
-            border: 1px solid var(--panel-border);
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 4px 10px;
-            font-size: 11px;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .tab-btn.active {
-            background: var(--cyan-accent);
-            color: #080b10;
-        }
-
-        /* Zoom Scale Selector */
-        .scale-selector {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            background: #0d121c;
-            padding: 3px;
-            border-radius: 6px;
-            border: 1px solid var(--panel-border);
-        }
-
-        .scale-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 4px 8px;
-            font-size: 10px;
-            font-weight: 600;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .scale-btn.active {
-            background: #1e293b;
-            color: #ffffff;
-        }
-
-        /* Top Telemetry Metrics Cards */
-        .metrics-grid {
-            width: 100%;
-            max-width: 1720px;
-            margin: 0 auto 6px auto;
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
-        .metric-card {
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 6px;
-            padding: 6px 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 3px;
-            height: 100%;
-            background: var(--panel-border);
-        }
-
-        .metric-card.accent-cyan::before { background: var(--cyan-accent); }
-        .metric-card.accent-blue::before { background: var(--lidar-blue); }
-        .metric-card.accent-magenta::before { background: var(--radar-magenta); }
-        .metric-card.accent-amber::before { background: var(--amber); }
-        .metric-card.accent-green::before { background: var(--cam-green); }
-
-        .metric-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .metric-val-row {
-            display: flex;
-            align-items: baseline;
-            gap: 5px;
-            margin-top: 2px;
-        }
-
-        .metric-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffffff;
-            font-family: monospace;
-        }
-
-        .metric-unit {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        /* Main Cockpit Split Workspace */
-        .workspace {
-            width: 100%;
-            max-width: 1720px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 10px;
-            flex: 1;
-            min-height: 0; /* Important for inner flex scrolling/auto-fitting */
-            margin-bottom: 6px;
-        }
-
-        /* Left Pane: Camera Vision & LiDAR AR View */
-        .camera-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            padding: 8px 10px;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-            padding-bottom: 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            flex-shrink: 0;
-        }
-
-        .panel-title {
-            font-size: 11.5px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .panel-pills {
-            display: flex;
-            gap: 4px;
-        }
-
-        .pill {
-            font-size: 9.5px;
-            padding: 1px 5px;
-            border-radius: 3px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-
-        .pill-green { background: rgba(0, 255, 102, 0.15); color: var(--cam-green); border: 1px solid rgba(0, 255, 102, 0.4); }
-        .pill-blue { background: rgba(0, 166, 255, 0.15); color: var(--lidar-blue); border: 1px solid rgba(0, 166, 255, 0.4); }
-        .pill-magenta { background: rgba(255, 0, 255, 0.15); color: var(--radar-magenta); border: 1px solid rgba(255, 0, 255, 0.4); }
-
-        .cam-frame-box {
-            position: relative;
-            flex: 1;
-            min-height: 0;
-            background: #000;
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .cam-frame-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Clean letterboxed/fitted aspect ratio */
-            display: block;
-        }
-
-        .cam-footer {
-            margin-top: 6px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 10.5px;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-
-        /* Right Pane: 77 GHz mmWave FMCW Radar BEV Scope */
-        .radar-panel {
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            padding: 8px 10px;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        .radar-canvas-container {
-            position: relative;
-            flex: 1;
-            min-height: 0;
-            background: #080b12;
-            border-radius: 6px;
-            border: 1px solid rgba(0, 229, 255, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        canvas#radarCanvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-            cursor: crosshair;
-        }
-
-        .radar-tooltip {
-            position: absolute;
-            background: rgba(16, 22, 34, 0.95);
-            border: 1px solid var(--radar-magenta);
-            border-radius: 6px;
-            padding: 5px 8px;
-            font-size: 10.5px;
-            color: #ffffff;
-            pointer-events: none;
-            display: none;
-            z-index: 20;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-            line-height: 1.4;
-        }
-
-        /* Radar Targets Mini Table */
-        .radar-table-wrap {
-            margin-top: 6px;
-            height: 95px;
-            overflow-y: auto;
-            border: 1px solid var(--panel-border);
-            border-radius: 4px;
-            background: #0d121c;
-            flex-shrink: 0;
-        }
-
-        .radar-table-wrap::-webkit-scrollbar {
-            width: 4px;
-        }
-        .radar-table-wrap::-webkit-scrollbar-thumb {
-            background: var(--panel-border);
-            border-radius: 2px;
-        }
-
-        table.radar-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 10.5px;
-            font-family: monospace;
-            text-align: left;
-        }
-
-        table.radar-table th {
-            background: #141b29;
-            color: var(--text-muted);
-            padding: 3px 6px;
-            font-weight: 600;
-            border-bottom: 1px solid var(--panel-border);
-            position: sticky;
-            top: 0;
-            font-size: 10px;
-        }
-
-        table.radar-table td {
-            padding: 3px 6px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            color: #e2e8f0;
-        }
-
-        /* Bottom Controls Bar */
-        .controls-bar {
-            width: 100%;
-            max-width: 1720px;
-            margin: 0 auto;
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 8px;
-            padding: 8px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-
-        .playback-btns {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-ctrl {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            padding: 6px 12px;
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .btn-ctrl:hover {
-            background: #334155;
-        }
-
-        .btn-play-pause {
-            background: var(--cyan-accent);
-            color: #080b10;
-            border: none;
-            padding: 6px 16px;
-        }
-
-        .btn-play-pause:hover {
-            background: #33ecff;
-        }
-
-        .scrubber-wrap {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        input[type="range"] {
-            flex: 1;
-            height: 5px;
-            background: #1e293b;
-            border-radius: 3px;
-            outline: none;
-            cursor: pointer;
-            accent-color: var(--cyan-accent);
-        }
-
-        .frame-counter {
-            font-size: 12px;
-            font-family: monospace;
-            font-weight: 700;
-            color: var(--cyan-accent);
-            min-width: 115px;
-            text-align: right;
-        }
-
-        .speed-selector {
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            background: #0d121c;
-            padding: 2px;
-            border-radius: 5px;
-            border: 1px solid var(--panel-border);
-        }
-
-        .speed-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 3px 6px;
-            font-size: 10px;
-            font-weight: 600;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        .speed-btn.active {
-            background: #1e293b;
-            color: #ffffff;
-        }
-
-        /* Scale Modifier Modes */
-        body.scale-large {
-            overflow-y: auto;
-        }
-        body.scale-large .workspace {
-            min-height: 650px;
-        }
-        body.scale-compact .metrics-grid {
-            gap: 6px;
-        }
-        body.scale-compact .metric-card {
-            padding: 4px 8px;
-        }
-
-        /* Interactive Pipeline Studio Modal */
-        .studio-modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(4, 7, 12, 0.85);
-            -webkit-backdrop-filter: blur(8px);
-            backdrop-filter: blur(8px);
-            z-index: 999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-        }
-
-        .studio-content {
-            background: #101726;
-            border: 1px solid var(--cyan-accent);
-            box-shadow: 0 10px 40px rgba(0, 229, 255, 0.2);
-            border-radius: 10px;
-            width: 100%;
-            max-width: 820px;
-            max-height: 90vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .studio-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--panel-border);
-            background: #0d121c;
-        }
-
-        .studio-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .studio-title h3 {
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #ffffff;
-        }
-
-        .btn-close {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 22px;
-            cursor: pointer;
-            line-height: 1;
-        }
-        .btn-close:hover {
-            color: var(--danger-red);
-        }
-
-        .studio-body {
-            padding: 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .upload-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        .upload-box {
-            background: #141b2a;
-            border: 2px dashed rgba(0, 229, 255, 0.35);
-            border-radius: 8px;
-            padding: 18px 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .upload-box:hover {
-            border-color: var(--cyan-accent);
-            background: rgba(0, 229, 255, 0.05);
-            transform: translateY(-2px);
-        }
-
-        .upload-icon {
-            font-size: 30px;
-            margin-bottom: 8px;
-        }
-
-        .upload-box h4 {
-            font-size: 13px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-
-        .upload-box p {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .file-preview-pill {
-            display: inline-block;
-            font-size: 10.5px;
-            font-family: monospace;
-            background: #0d121c;
-            border: 1px solid var(--panel-border);
-            color: var(--cyan-accent);
-            padding: 3px 8px;
-            border-radius: 4px;
-            max-width: 90%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .quick-samples {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            background: #0d121c;
-            padding: 10px 14px;
-            border-radius: 6px;
-            border: 1px solid var(--panel-border);
-        }
-
-        .sample-btn {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .sample-btn:hover {
-            background: #334155;
-            border-color: var(--cyan-accent);
-        }
-        .sample-btn.active {
-            background: rgba(0, 229, 255, 0.2);
-            border-color: var(--cyan-accent);
-            color: var(--cyan-accent);
-            font-weight: 700;
-        }
-
-        .btn-process-run {
-            background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
-            border: 1px solid var(--cyan-accent);
-            color: #ffffff;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            padding: 12px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.35);
-            transition: all 0.2s ease;
-            text-align: center;
-        }
-        .btn-process-run:hover {
-            background: linear-gradient(135deg, #00d4ff 0%, #0096c7 100%);
-            box-shadow: 0 6px 22px rgba(0, 229, 255, 0.5);
-            transform: translateY(-1px);
-        }
-        .btn-process-run:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .pipeline-console {
-            background: #070a10;
-            border: 1px solid var(--panel-border);
-            border-radius: 6px;
-            padding: 12px;
-            font-family: monospace;
-            font-size: 11px;
-        }
-
-        .console-title {
-            color: var(--text-muted);
-            font-size: 10px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding-bottom: 4px;
-        }
-
-        .console-logs {
-            max-height: 140px;
-            overflow-y: auto;
-            color: #00ff66;
-            line-height: 1.5;
-            white-space: pre-wrap;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="PPD-II Autonomous Driving Intelligent Glass Cockpit: Multimodal Perception, Trajectory Prediction & Frenet Path Planning">
+    <title>PPD-II Autonomous Vehicle Intelligent Cockpit</title>
+    
+    <!-- Professional Automotive Cockpit Stylesheet -->
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 <body id="dash-body">
 
-    <!-- Header -->
-    <header>
-        <div class="title-block">
-            <h1>AV MULTI-MODAL COCKPIT DASHBOARD</h1>
-        </div>
+    <div class="app-container">
 
-        <div class="header-controls">
-            <!-- Upload & Process Studio Button -->
-            <button class="tab-btn" id="btn-studio-toggle" style="background:rgba(0,229,255,0.18); border:1px solid var(--cyan-accent); color:#ffffff; font-weight:700;" onclick="toggleStudioModal()">🧪 Upload & Process Flow</button>
-
-            <!-- Drive Selector Tabs -->
-            <div class="drive-tabs">
-                <button class="tab-btn active" id="tab-d0" onclick="switchDrive('d0')">Drive 0: Urban</button>
-                <button class="tab-btn" id="tab-d1" onclick="switchDrive('d1')">Drive 1: Arterial</button>
-                <button class="tab-btn" id="tab-d2" onclick="switchDrive('d2')">Drive 2: Highway</button>
-            </div>
-
-            <!-- Dashboard Size Selector -->
-            <div class="scale-selector">
-                <button class="scale-btn active" id="scale-fit" onclick="setScaleMode('fit', this)">Fit Viewport</button>
-                <button class="scale-btn" id="scale-std" onclick="setScaleMode('standard', this)">Medium</button>
-                <button class="scale-btn" id="scale-large" onclick="setScaleMode('large', this)">Expanded</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Multi-Sensor Pipeline Studio Modal -->
-    <div id="studio-modal" class="studio-modal" style="display:none;">
-        <div class="studio-content">
-            <div class="studio-header">
-                <div class="studio-title">
-                    <span style="font-size:16px;">🧪</span>
-                    <h3>MULTI-SENSOR PIPELINE STUDIO (IMAGE + LIDAR &rarr; MMWAVE RADAR)</h3>
+        <!-- ====================================================================
+             1. HEADER & TOP NAVIGATION BAR
+             ==================================================================== -->
+        <header class="cockpit-header" role="banner">
+            <div class="brand-section">
+                <div class="brand-logo" aria-hidden="true">⚡</div>
+                <div class="brand-text">
+                    <h1>PPD-II AUTONOMOUS COCKPIT</h1>
+                    <div class="brand-tag">Multimodal Perception, Prediction &amp; Planning</div>
                 </div>
-                <button class="btn-close" onclick="closeStudioModal()">&times;</button>
+                <span class="badge-status" title="Sensor Streams Synchronized and Active">ADAS Active</span>
             </div>
+
+            <div class="header-actions" role="toolbar" aria-label="Dashboard Controls">
+                <!-- Theme Toggle Button (Day / Night Mode) -->
+                <button id="btn-theme-toggle" class="btn-icon-label" onclick="toggleTheme()" aria-label="Toggle Theme Mode">
+                    🌙 <span>Night Mode</span>
+                </button>
+
+                <!-- Multi-Sensor Pipeline Studio Launcher -->
+                <button id="btn-studio-toggle" class="btn-icon-label btn-studio" onclick="toggleStudioModal()" aria-haspopup="dialog" aria-expanded="false">
+                    🧪 <span>Pipeline Studio</span>
+                </button>
+
+                <!-- Drive / Scenario Selector Segmented Tabs -->
+                <div class="segmented-group" role="tablist" aria-label="Driving Scenarios">
+                    <button class="seg-btn active" id="tab-d0" role="tab" aria-selected="true" onclick="switchDrive('d0')">
+                        Drive 0: Urban
+                    </button>
+                    <button class="seg-btn" id="tab-d1" role="tab" aria-selected="false" onclick="switchDrive('d1')">
+                        Drive 1: Arterial
+                    </button>
+                    <button class="seg-btn" id="tab-d2" role="tab" aria-selected="false" onclick="switchDrive('d2')">
+                        Drive 2: Highway
+                    </button>
+                </div>
+
+                <!-- Viewport Scaling Mode -->
+                <div class="segmented-group" role="radiogroup" aria-label="Viewport Scale Mode">
+                    <button class="seg-btn active" id="scale-fit" role="radio" aria-checked="true" onclick="setScaleMode('fit', this)">
+                        Fit
+                    </button>
+                    <button class="seg-btn" id="scale-std" role="radio" aria-checked="false" onclick="setScaleMode('standard', this)">
+                        Standard
+                    </button>
+                    <button class="seg-btn" id="scale-large" role="radio" aria-checked="false" onclick="setScaleMode('large', this)">
+                        Expanded
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ====================================================================
+             2. PRIMARY VEHICLE TELEMETRY RIBBON
+             ==================================================================== -->
+        <section class="telemetry-grid" aria-label="Vehicle Telemetry and Safety States">
             
+            <!-- Card 1: Ego Velocity -->
+            <article class="metric-card card-speed">
+                <div class="metric-header">
+                    <span class="metric-title">Ego Velocity</span>
+                    <span class="metric-icon" aria-hidden="true">🚗</span>
+                </div>
+                <div class="metric-body">
+                    <span class="metric-value-primary" id="val-speed">0.0</span>
+                    <span class="metric-unit">km/h</span>
+                    <span class="metric-subval" id="val-speed-ms">(0.0 m/s)</span>
+                </div>
+            </article>
+
+            <!-- Card 2: Closest Obstacle Distance -->
+            <article class="metric-card card-obstacle">
+                <div class="metric-header">
+                    <span class="metric-title">Closest Obstacle</span>
+                    <span class="metric-icon" aria-hidden="true">📍</span>
+                </div>
+                <div class="metric-body">
+                    <span class="metric-value-primary" id="val-closest">--</span>
+                    <span class="metric-unit">meters</span>
+                </div>
+            </article>
+
+            <!-- Card 3: Radar Active Locks -->
+            <article class="metric-card card-radar">
+                <div class="metric-header">
+                    <span class="metric-title">Radar Track Locks</span>
+                    <span class="metric-icon" aria-hidden="true">📡</span>
+                </div>
+                <div class="metric-body">
+                    <span class="metric-value-primary" id="val-locks">0</span>
+                    <span class="metric-unit">targets</span>
+                    <span class="metric-subval" style="color:var(--accent-radar);">77 GHz FMCW</span>
+                </div>
+            </article>
+
+            <!-- Card 4: Minimum Time-to-Collision (TTC) -->
+            <article class="metric-card card-ttc">
+                <div class="metric-header">
+                    <span class="metric-title">Min Time-to-Collision</span>
+                    <span class="metric-icon" aria-hidden="true">⏱️</span>
+                </div>
+                <div class="metric-body">
+                    <span class="metric-value-primary" id="val-ttc">SAFE</span>
+                    <span class="metric-unit">horizon</span>
+                </div>
+            </article>
+
+            <!-- Card 5: Frenet Path Planning & Tactical Decision -->
+            <article class="metric-card card-decision">
+                <div class="metric-header">
+                    <span class="metric-title">Frenet Tactical Decision</span>
+                    <span class="metric-icon" aria-hidden="true">🛣️</span>
+                </div>
+                <div class="metric-body" style="width:100%;">
+                    <div id="val-steer" style="width:100%;">
+                        <span class="decision-badge">✓ NOMINAL CRUISE</span>
+                    </div>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- ====================================================================
+             3. MAIN WORKSPACE (CAMERA VISION & RADAR BEV SCOPE)
+             ==================================================================== -->
+        <main class="workspace-grid" role="main">
+
+            <!-- Left Panel: Forward Camera Vision & LiDAR AR View -->
+            <section class="cockpit-panel" aria-label="Forward Camera Vision and Sensor Projection Viewport">
+                <div class="panel-heading">
+                    <div class="panel-title-wrap">
+                        <span class="panel-title">Camera Vision &amp; Calibrated LiDAR AR</span>
+                    </div>
+                    <div class="pills-group">
+                        <span class="chip chip-cam">CAM: YOLOv8 2D</span>
+                        <span class="chip chip-lidar">LiDAR: Front &lt;25m</span>
+                        <span class="chip chip-frenet">Frenet Path</span>
+                    </div>
+                </div>
+
+                <div class="camera-viewport-box">
+                    <img id="cam-img" class="camera-img-el" src="" alt="Calibrated Autonomous Driving Camera Feed with LiDAR Depth and Frenet Path Overlays">
+                    
+                    <div class="camera-hud-overlay">
+                        <div class="hud-pill">FRONT CAM (1080p RGB)</div>
+                        <div class="hud-pill">LATENCY: 12.8ms</div>
+                    </div>
+                </div>
+
+                <div class="camera-legend">
+                    <span>Green Box: 2D Vision Obstacle | Blue Box: Front LiDAR &lt;25m</span>
+                    <span>Green Carpet: 3-Zone Frenet Optimal Evasion Path</span>
+                </div>
+            </section>
+
+            <!-- Right Panel: 77 GHz mmWave FMCW Radar BEV Scope -->
+            <section class="cockpit-panel" aria-label="77 GHz mmWave FMCW Radar Bird's-Eye-View Scope">
+                <div class="panel-heading">
+                    <div class="panel-title-wrap">
+                        <span class="panel-title">77 GHz mmWave Radar (BEV Surround Scope)</span>
+                    </div>
+                    <div class="pills-group">
+                        <span class="chip chip-radar">RCS &amp; Doppler vr</span>
+                        <span class="chip chip-lidar">50m Range</span>
+                    </div>
+                </div>
+
+                <div class="radar-canvas-container" id="radar-container">
+                    <canvas id="radarCanvas" role="img" aria-label="Top-down circular radar scope displaying detected vehicles and velocity vectors"></canvas>
+                    <div class="radar-tooltip" id="radarTooltip" role="tooltip"></div>
+                </div>
+
+                <!-- Radar Tracked Targets Table -->
+                <div class="radar-table-container">
+                    <table class="radar-table" aria-label="Detected Radar Obstacles List">
+                        <thead>
+                            <tr>
+                                <th>TGT</th>
+                                <th>CLASS</th>
+                                <th>RANGE</th>
+                                <th>X (LONG)</th>
+                                <th>Y (LAT)</th>
+                                <th>v<sub>r</sub> (DOPPLER)</th>
+                                <th>RCS (&sigma;)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="radar-tbody">
+                            <!-- Populated dynamically by dashboard.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ====================================================================
+             4. BOTTOM PLAYBACK CONTROLS & TIMELINE SCRUBBER
+             ==================================================================== -->
+        <footer class="cockpit-controls" role="region" aria-label="Simulation Playback Controls">
+            
+            <div class="transport-group">
+                <button class="btn-transport btn-play-action" id="btn-play" onclick="togglePlay()" aria-label="Play or Pause Simulation">
+                    Pause
+                </button>
+                <button class="btn-transport" onclick="stepFrame(-1)" aria-label="Step Previous Frame">
+                    &larr; Prev
+                </button>
+                <button class="btn-transport" onclick="stepFrame(1)" aria-label="Step Next Frame">
+                    Next &rarr;
+                </button>
+            </div>
+
+            <div class="scrubber-group">
+                <label for="frame-slider" class="sr-only" style="display:none;">Timeline Scrubber</label>
+                <input type="range" id="frame-slider" class="slider-styled" min="0" max="149" value="0" 
+                       oninput="onSliderInput(this.value)" aria-label="Simulation Frame Timeline Scrubber">
+                <div class="frame-badge" id="frame-counter-txt">Frame: 001 / 150</div>
+            </div>
+
+            <div class="speed-group" role="radiogroup" aria-label="Simulation Playback Speed">
+                <button class="speed-pill" role="radio" aria-checked="false" onclick="setSpeed(0.5, this)">0.5x</button>
+                <button class="speed-pill active" role="radio" aria-checked="true" onclick="setSpeed(1.0, this)">1.0x (7 FPS)</button>
+                <button class="speed-pill" role="radio" aria-checked="false" onclick="setSpeed(2.0, this)">2.0x</button>
+                <button class="speed-pill" role="radio" aria-checked="false" onclick="setSpeed(4.0, this)">4.0x</button>
+            </div>
+
+        </footer>
+
+    </div>
+
+    <!-- ====================================================================
+         5. MULTI-SENSOR PIPELINE STUDIO MODAL
+         ==================================================================== -->
+    <div id="studio-modal" class="studio-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="studio-dialog-title">
+        <div class="studio-card">
+            
+            <div class="studio-header">
+                <h2 id="studio-dialog-title">🧪 Multi-Sensor Pipeline Studio (Camera + LiDAR &rarr; 77GHz Radar)</h2>
+                <button class="btn-close-modal" onclick="closeStudioModal()" aria-label="Close Studio Modal">&times;</button>
+            </div>
+
             <div class="studio-body">
-                <!-- Upload Grid -->
-                <div class="upload-grid">
-                    <!-- Box 1: Camera Image -->
-                    <div class="upload-box" id="box-cam" onclick="document.getElementById('input-cam-file').click()">
-                        <div class="upload-icon">📷</div>
-                        <h4>1. Front Camera Image</h4>
+                
+                <!-- Upload Dropzones -->
+                <div class="upload-pair-grid">
+                    <div class="upload-dropzone" id="box-cam" onclick="document.getElementById('input-cam-file').click()" role="button" tabindex="0">
+                        <div class="drop-icon">📷</div>
+                        <h3>1. Front Camera Image</h3>
                         <p>Click to browse or drop .jpg / .png image</p>
                         <input type="file" id="input-cam-file" accept="image/*" style="display:none;" onchange="handleCamUpload(event)">
-                        <div id="cam-upload-preview" class="file-preview-pill">d0_cam_0000016.jpg (Loaded)</div>
+                        <div id="cam-upload-preview" class="preview-chip">d0_cam_0000016.jpg (Loaded)</div>
                     </div>
 
-                    <!-- Box 2: LiDAR Point Cloud -->
-                    <div class="upload-box" id="box-lidar" onclick="document.getElementById('input-lidar-file').click()">
-                        <div class="upload-icon">📡</div>
-                        <h4>2. LiDAR Point Cloud (.npy)</h4>
+                    <div class="upload-dropzone" id="box-lidar" onclick="document.getElementById('input-lidar-file').click()" role="button" tabindex="0">
+                        <div class="drop-icon">📡</div>
+                        <h3>2. LiDAR Point Cloud (.npy)</h3>
                         <p>Click to browse or drop .npy point cloud</p>
                         <input type="file" id="input-lidar-file" accept=".npy" style="display:none;" onchange="handleLidarUpload(event)">
-                        <div id="lidar-upload-preview" class="file-preview-pill">d0_lidar_0000016.npy (Loaded)</div>
+                        <div id="lidar-upload-preview" class="preview-chip">d0_lidar_0000016.npy (Loaded)</div>
                     </div>
                 </div>
 
-                <!-- Quick Benchmark Sample Selectors -->
-                <div class="quick-samples">
-                    <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Or Select Benchmark IDD Multimodal Pair:</span>
-                    <button class="sample-btn active" id="smp-d0" onclick="loadSamplePair('d0', 16, this)">Drive 0: Urban MG Road (#16)</button>
-                    <button class="sample-btn" id="smp-d1" onclick="loadSamplePair('d1', 70, this)">Drive 1: Arterial Corridor (#70)</button>
-                    <button class="sample-btn" id="smp-d2" onclick="loadSamplePair('d2', 120, this)">Drive 2: Highway Bypass (#120)</button>
+                <!-- Benchmark IDD Sample Selectors -->
+                <div class="sample-benchmarks">
+                    <span>Benchmark Multimodal Pairs:</span>
+                    <button class="seg-btn active" id="smp-d0" onclick="loadSamplePair('d0', 16, this)">Drive 0: Urban MG Road (#16)</button>
+                    <button class="seg-btn" id="smp-d1" onclick="loadSamplePair('d1', 70, this)">Drive 1: Arterial (#70)</button>
+                    <button class="seg-btn" id="smp-d2" onclick="loadSamplePair('d2', 120, this)">Drive 2: Highway (#120)</button>
                 </div>
 
-                <!-- Action Process Button -->
-                <button id="btn-run-pipeline" class="btn-process-run" onclick="executeFullPipeline()">
+                <!-- Execute Button -->
+                <button id="btn-run-pipeline" class="btn-run-process" onclick="executeFullPipeline()">
                     ⚡ RUN MULTI-SENSOR PERCEPTION &amp; GENERATE MMWAVE RADAR
                 </button>
 
-                <!-- Animated Execution Console -->
-                <div id="pipeline-console" class="pipeline-console">
-                    <div class="console-title">PIPELINE EXECUTION LOGS &amp; TELEMETRY:</div>
-                    <div id="console-logs" class="console-logs">Ready. Upload custom files or choose a benchmark sample, then click 'Run Multi-Sensor Perception'.</div>
+                <!-- Console Output -->
+                <div class="console-terminal" id="pipeline-console">
+                    <div class="console-header-txt">PIPELINE EXECUTION TELEMETRY LOG:</div>
+                    <div id="console-logs" class="console-output-box">Ready. Upload custom sensory files or select a benchmark multimodal pair, then click 'Run Multi-Sensor Perception'.</div>
                 </div>
+
             </div>
         </div>
     </div>
 
-    <!-- Top Telemetry Metrics Bar -->
-    <div class="metrics-grid">
-        <div class="metric-card accent-cyan">
-            <span class="metric-label">Ego Velocity</span>
-            <div class="metric-val-row">
-                <span class="metric-value" id="val-speed">0.0</span>
-                <span class="metric-unit">km/h</span>
-                <span class="metric-unit" id="val-speed-ms" style="color:var(--cyan-accent); margin-left:auto;">(0.0 m/s)</span>
-            </div>
-        </div>
-
-        <div class="metric-card accent-amber">
-            <span class="metric-label">Closest Obstacle</span>
-            <div class="metric-val-row">
-                <span class="metric-value" id="val-closest">--</span>
-                <span class="metric-unit">meters</span>
-            </div>
-        </div>
-
-        <div class="metric-card accent-magenta">
-            <span class="metric-label">Radar Active Locks</span>
-            <div class="metric-val-row">
-                <span class="metric-value" id="val-locks">0</span>
-                <span class="metric-unit">targets</span>
-                <span class="metric-unit" style="color:var(--radar-magenta); margin-left:auto;">77GHz Doppler</span>
-            </div>
-        </div>
-
-        <div class="metric-card accent-blue">
-            <span class="metric-label">Min TTC</span>
-            <div class="metric-val-row">
-                <span class="metric-value" id="val-ttc">--</span>
-                <span class="metric-unit">seconds</span>
-            </div>
-        </div>
-
-        <div class="metric-card accent-green">
-            <span class="metric-label">Frenet Steering</span>
-            <div class="metric-val-row">
-                <span class="metric-value" id="val-steer" style="font-size:14px;">FOLLOW NOMINAL</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Cockpit Split Workspace -->
-    <div class="workspace">
-        
-        <!-- Left Side: Live Processed Camera & LiDAR AR View -->
-        <div class="camera-panel">
-            <div class="panel-header">
-                <div class="panel-title">
-                    <span>CAMERA VISION + CALIBRATED LIDAR AR VIEW</span>
-                </div>
-                <div class="panel-pills">
-                    <span class="pill pill-green">CAM: YOLOv8 (GREEN)</span>
-                    <span class="pill pill-blue">LiDAR: FRONT &lt;25m (BLUE)</span>
-                    <span class="pill pill-green">FRENET DUAL-PATH</span>
-                </div>
-            </div>
-
-            <div class="cam-frame-box">
-                <img id="cam-img" src="" alt="Live Synchronized Autonomous Driving Camera Feed">
-            </div>
-        </div>
-
-        <!-- Right Side: 77 GHz mmWave FMCW Radar BEV Scope -->
-        <div class="radar-panel">
-            <div class="panel-header">
-                <div class="panel-title">
-                    <span>77 GHz mmWave FMCW RADAR (ADAS BEV SURROUND VIEW)</span>
-                </div>
-                <div class="panel-pills">
-                    <span class="pill" style="background:rgba(0,229,255,0.18); color:var(--cyan-accent); border:1px solid var(--cyan-accent);">EGO VEHICLE</span>
-                    <span class="pill pill-magenta">SURROUND VEHICLES (BEV)</span>
-                    <span class="pill pill-green">77 GHz FMCW</span>
-                </div>
-            </div>
-
-            <div class="radar-canvas-container" id="radar-container">
-                <canvas id="radarCanvas" width="600" height="600"></canvas>
-                <div class="radar-tooltip" id="radarTooltip"></div>
-            </div>
-
-            <!-- Real-Time Radar Tracked Targets Table -->
-            <div class="radar-table-wrap">
-                <table class="radar-table">
-                    <thead>
-                        <tr>
-                            <th>TGT</th>
-                            <th>CLASS</th>
-                            <th>RANGE (R)</th>
-                            <th>X (LONG)</th>
-                            <th>Y (LAT)</th>
-                            <th>vr (DOPPLER)</th>
-                            <th>RCS (&sigma;)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="radar-tbody">
-                        <!-- Populated by JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Bottom Playback & Frame Scrubber Controls -->
-    <div class="controls-bar">
-        <div class="playback-btns">
-            <button class="btn-ctrl btn-play-pause" id="btn-play" onclick="togglePlay()">Pause</button>
-            <button class="btn-ctrl" onclick="stepFrame(-1)">&larr; Prev Frame</button>
-            <button class="btn-ctrl" onclick="stepFrame(1)">Next Frame &rarr;</button>
-        </div>
-
-        <div class="scrubber-wrap">
-            <input type="range" id="frame-slider" min="0" max="149" value="0" oninput="onSliderInput(this.value)">
-            <div class="frame-counter" id="frame-counter-txt">Frame: 001 / 150</div>
-        </div>
-
-        <div class="speed-selector">
-            <button class="speed-btn" onclick="setSpeed(0.5, this)">0.5x</button>
-            <button class="speed-btn active" onclick="setSpeed(1.0, this)">1.0x (7 FPS)</button>
-            <button class="speed-btn" onclick="setSpeed(2.0, this)">2.0x</button>
-            <button class="speed-btn" onclick="setSpeed(4.0, this)">4.0x</button>
-        </div>
-    </div>
-
-    <!-- Load Pre-Extracted Multi-Modal Dataset -->
+    <!-- ====================================================================
+         6. DATA & SCRIPT IMPORTS (ZERO BUILD / LOCAL EXECUTION)
+         ==================================================================== -->
     <script src="dashboard_data.js"></script>
+    <script src="dashboard.js"></script>
 
-    <script>
-        // State variables
-        let currentFrameIdx = 0;
-        let isPlaying = true;
-        let playbackInterval = null;
-        let fps = 7.0;
-        let speedMultiplier = 1.0;
-        let scannerAngle = 0;
-
-        const canvas = document.getElementById('radarCanvas');
-        const ctx = canvas.getContext('2d');
-        const tooltip = document.getElementById('radarTooltip');
-        const bodyEl = document.getElementById('dash-body');
-
-        const totalFrames = typeof DASHBOARD_DATA !== 'undefined' ? DASHBOARD_DATA.length : 0;
-
-        // Initialize
-        window.addEventListener('DOMContentLoaded', () => {
-            if (totalFrames === 0) {
-                alert("Error: dashboard_data.js could not be loaded or is empty!");
-                return;
-            }
-            document.getElementById('frame-slider').max = totalFrames - 1;
-            updateDashboard(0);
-            startPlayback();
-            requestAnimationFrame(renderRadarLoop);
-        });
-
-        // Set Scale Mode
-        function setScaleMode(mode, btnEl) {
-            document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('active'));
-            btnEl.classList.add('active');
-
-            bodyEl.classList.remove('scale-compact', 'scale-large');
-            if (mode === 'compact') {
-                bodyEl.classList.add('scale-compact');
-            } else if (mode === 'large') {
-                bodyEl.classList.add('scale-large');
-            }
-        }
-
-        // Drive Switcher
-        function switchDrive(driveId) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`tab-${driveId}`).classList.add('active');
-
-            let targetIdx = 0;
-            if (driveId === 'd1') targetIdx = 50;
-            else if (driveId === 'd2') targetIdx = 100;
-
-            updateDashboard(targetIdx);
-        }
-
-        // Frame Update
-        function updateDashboard(idx) {
-            if (idx < 0) idx = 0;
-            if (idx >= totalFrames) idx = totalFrames - 1;
-            currentFrameIdx = idx;
-
-            const rec = DASHBOARD_DATA[currentFrameIdx];
-            if (!rec) return;
-
-            // 1. Update Camera View Image
-            const camImg = document.getElementById('cam-img');
-            camImg.src = rec.image_file;
-
-            // 2. Update Drive Tabs
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            const activeTab = document.getElementById(`tab-${rec.drive}`);
-            if (activeTab) activeTab.classList.add('active');
-
-            // 3. Update Metrics Cards
-            document.getElementById('val-speed').innerText = rec.ego_speed_kmh.toFixed(1);
-            document.getElementById('val-speed-ms').innerText = `(${(rec.ego_speed_kmh / 3.6).toFixed(1)} m/s)`;
-
-            const closestEl = document.getElementById('val-closest');
-            if (rec.closest_dist_m !== null) {
-                closestEl.innerText = rec.closest_dist_m.toFixed(1);
-                closestEl.style.color = rec.closest_dist_m < 15 ? "var(--danger-red)" : (rec.closest_dist_m < 25 ? "var(--amber)" : "#ffffff");
-            } else {
-                closestEl.innerText = "--";
-                closestEl.style.color = "#ffffff";
-            }
-
-            document.getElementById('val-locks').innerText = rec.active_locks;
-
-            const ttcEl = document.getElementById('val-ttc');
-            if (rec.min_ttc_s !== null) {
-                ttcEl.innerText = rec.min_ttc_s.toFixed(2);
-                ttcEl.style.color = rec.min_ttc_s < 2.5 ? "var(--danger-red)" : "var(--amber)";
-            } else {
-                ttcEl.innerText = "SAFE";
-                ttcEl.style.color = "var(--cam-green)";
-            }
-
-            const steerEl = document.getElementById('val-steer');
-            if (rec.decision.includes("SWERVE")) {
-                steerEl.innerText = `EVASION (${rec.steer_deg > 0 ? "+" : ""}${rec.steer_deg}°)`;
-                steerEl.style.color = "var(--danger-red)";
-            } else {
-                steerEl.innerText = "FOLLOW NOMINAL";
-                steerEl.style.color = "var(--cam-green)";
-            }
-
-            // 4. Update Scrubber
-            document.getElementById('frame-slider').value = idx;
-            document.getElementById('frame-counter-txt').innerText = `Frame: ${(idx + 1).toString().padStart(3, '0')} / ${totalFrames}`;
-
-            // 5. Update Radar Table
-            updateRadarTable(rec.radar_targets);
-        }
-
-        // Radar Table Populator
-        function updateRadarTable(targets) {
-            const tbody = document.getElementById('radar-tbody');
-            tbody.innerHTML = '';
-            if (!targets || targets.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:6px;">No radar reflections in FOV</td></tr>`;
-                return;
-            }
-
-            targets.forEach((tgt) => {
-                const tr = document.createElement('tr');
-                const isReceding = tgt.vr >= 0;
-                const vrColor = isReceding ? "var(--cyan-accent)" : "var(--danger-red)";
-                const vrSign = isReceding ? `+${tgt.vr.toFixed(1)}` : tgt.vr.toFixed(1);
-
-                tr.innerHTML = `
-                    <td style="color:var(--radar-magenta); font-weight:bold;">#${tgt.id}</td>
-                    <td>${tgt.class}</td>
-                    <td style="font-weight:bold;">${tgt.dist.toFixed(1)}m</td>
-                    <td>${tgt.x >= 0 ? "+" : ""}${tgt.x.toFixed(1)}m</td>
-                    <td>${tgt.y >= 0 ? "+" : ""}${tgt.y.toFixed(1)}m</td>
-                    <td style="color:${vrColor}; font-weight:bold;">${vrSign} m/s</td>
-                    <td style="color:var(--text-muted);">${tgt.rcs.toFixed(1)} dBsm</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Continuous Automotive ADAS BEV View Renderer (Steady 60 FPS, No Military Rotating Line)
-        function renderRadarLoop() {
-            renderRadarScope();
-            requestAnimationFrame(renderRadarLoop);
-        }
-
-        function renderRadarScope() {
-            const W = canvas.width;
-            const H = canvas.height;
-            ctx.clearRect(0, 0, W, H);
-
-            // Origin of Ego Vehicle
-            const u0 = W / 2;       // 300 px
-            const v0 = H * 0.78;    // 468 px (allowing room for rear vehicle tracking)
-            const scale = 7.2;      // 7.2 pixels per meter (50m ahead * 7.2 = 360 px)
-
-            // 1. Dark Digital Asphalt Road Corridor
-            const roadHalfWidthM = 7.0; // 14m wide road corridor
-            const roadLeft = u0 - roadHalfWidthM * scale;
-            const roadRight = u0 + roadHalfWidthM * scale;
-
-            ctx.fillStyle = '#0a101d';
-            ctx.fillRect(roadLeft, 0, roadRight - roadLeft, H);
-
-            // Subtle Lateral Road Grid Lines
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
-            ctx.lineWidth = 1;
-            for (let xM = -6; xM <= 6; xM += 2) {
-                const u = u0 - xM * scale;
-                ctx.beginPath();
-                ctx.moveTo(u, 0);
-                ctx.lineTo(u, H);
-                ctx.stroke();
-            }
-
-            // 2. Road Lane Markings
-            // Outer Curb Boundaries (Cyan Subtle Accent)
-            ctx.strokeStyle = 'rgba(0, 229, 255, 0.35)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(roadLeft, 0); ctx.lineTo(roadLeft, H);
-            ctx.moveTo(roadRight, 0); ctx.lineTo(roadRight, H);
-            ctx.stroke();
-
-            // Intermediate Lane Dividers (y = +/- 3.5m)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-            ctx.lineWidth = 1.5;
-            ctx.setLineDash([8, 10]);
-            [-3.5, 3.5].forEach(yLane => {
-                const uLane = u0 - yLane * scale;
-                ctx.beginPath();
-                ctx.moveTo(uLane, 0); ctx.lineTo(uLane, H);
-                ctx.stroke();
-            });
-
-            // Center Road Dashed Divider Line (y = 0)
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([14, 14]);
-            ctx.beginPath();
-            ctx.moveTo(u0, 0); ctx.lineTo(u0, H);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // 3. Longitudinal Road Distance Ticks & Markers (10m, 20m, 30m, 40m, 50m ahead & -10m rear)
-            ctx.font = '10px monospace';
-            [10, 20, 30, 40, 50].forEach(dM => {
-                const vLine = v0 - dM * scale;
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(roadLeft, vLine);
-                ctx.lineTo(roadRight, vLine);
-                ctx.stroke();
-
-                ctx.fillStyle = '#64748b';
-                ctx.fillText(`+${dM}m`, roadRight + 8, vLine + 3);
-            });
-
-            // Rear -10m Line
-            const vRear = v0 + 10 * scale;
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
-            ctx.setLineDash([3, 4]);
-            ctx.beginPath();
-            ctx.moveTo(roadLeft, vRear);
-            ctx.lineTo(roadRight, vRear);
-            ctx.stroke();
-            ctx.setLineDash([]);
-            ctx.fillStyle = '#475569';
-            ctx.fillText(`-10m`, roadRight + 8, vRear + 3);
-
-            // 4. Draw Ego Vehicle (Realistic Top-Down Car at u0, v0)
-            drawEgoCar(ctx, u0, v0);
-
-            // 5. Draw Surrounding Vehicles (Cars, Trucks/Buses, Two-Wheelers, Pedestrians)
-            const rec = DASHBOARD_DATA[currentFrameIdx];
-            if (rec && rec.radar_targets) {
-                rec.radar_targets.forEach(tgt => {
-                    const pu = u0 - tgt.y * scale;
-                    const pv = v0 - tgt.x * scale;
-                    if (pu >= 10 && pu < W - 10 && pv >= 10 && pv < H - 10) {
-                        drawSurroundingVehicle(ctx, pu, pv, tgt);
-                    }
-                });
-            }
-        }
-
-        // Top-Down Ego Vehicle Model
-        function drawEgoCar(ctx, x, y) {
-            const carW = 24;
-            const carL = 46;
-
-            ctx.save();
-            ctx.translate(x, y);
-
-            // Headlight Glow Cones shining forward
-            const gradBeam = ctx.createLinearGradient(0, -carL / 2, 0, -carL / 2 - 50);
-            gradBeam.addColorStop(0, 'rgba(0, 229, 255, 0.35)');
-            gradBeam.addColorStop(1, 'rgba(0, 229, 255, 0.0)');
-            ctx.fillStyle = gradBeam;
-            ctx.beginPath();
-            ctx.moveTo(-10, -carL / 2);
-            ctx.lineTo(-28, -carL / 2 - 50);
-            ctx.lineTo(28, -carL / 2 - 50);
-            ctx.lineTo(10, -carL / 2);
-            ctx.closePath();
-            ctx.fill();
-
-            // Car Body Shadow & Glow
-            ctx.shadowColor = 'rgba(0, 229, 255, 0.8)';
-            ctx.shadowBlur = 10;
-            ctx.fillStyle = '#081e2e';
-            ctx.strokeStyle = '#00e5ff';
-            ctx.lineWidth = 2;
-            drawRoundedRect(ctx, -carW / 2, -carL / 2, carW, carL, 5);
-            ctx.fill();
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-
-            // Front Windshield
-            ctx.fillStyle = 'rgba(0, 229, 255, 0.7)';
-            ctx.beginPath();
-            ctx.moveTo(-carW / 2 + 3, -carL / 2 + 10);
-            ctx.lineTo(carW / 2 - 3, -carL / 2 + 10);
-            ctx.lineTo(carW / 2 - 5, -carL / 2 + 19);
-            ctx.lineTo(-carW / 2 + 5, -carL / 2 + 19);
-            ctx.closePath();
-            ctx.fill();
-
-            // Rear Glass
-            ctx.fillStyle = 'rgba(0, 229, 255, 0.4)';
-            ctx.beginPath();
-            ctx.moveTo(-carW / 2 + 4, carL / 2 - 14);
-            ctx.lineTo(carW / 2 - 4, carL / 2 - 14);
-            ctx.lineTo(carW / 2 - 3, carL / 2 - 7);
-            ctx.lineTo(-carW / 2 + 3, carL / 2 - 7);
-            ctx.closePath();
-            ctx.fill();
-
-            // Side Mirrors
-            ctx.fillStyle = '#00e5ff';
-            ctx.fillRect(-carW / 2 - 3, -carL / 2 + 12, 3, 5);
-            ctx.fillRect(carW / 2, -carL / 2 + 12, 3, 5);
-
-            // Front Headlights
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(-carW / 2 + 3, -carL / 2 + 1, 4, 2);
-            ctx.fillRect(carW / 2 - 7, -carL / 2 + 1, 4, 2);
-
-            // Ego Badge Label
-            ctx.fillStyle = '#00e5ff';
-            ctx.font = 'bold 9px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('EGO VEHICLE', 0, carL / 2 + 14);
-
-            ctx.restore();
-        }
-
-        // Top-Down Surrounding Vehicle Model (Cars, Trucks, Bikes, Pedestrians)
-        function drawSurroundingVehicle(ctx, x, y, tgt) {
-            ctx.save();
-            ctx.translate(x, y);
-
-            const isReceding = tgt.vr >= 0;
-            const accentCol = isReceding ? '#ff00ff' : '#ff3366';
-            const bgCol = isReceding ? '#2b093d' : '#380a14';
-            const cls = (tgt.class || '').toLowerCase();
-
-            if (cls.includes('truck') || cls.includes('bus')) {
-                // Truck / Bus Top-Down Model
-                const w = 26, l = 60;
-                ctx.fillStyle = bgCol;
-                ctx.strokeStyle = '#ff9900';
-                ctx.lineWidth = 1.8;
-                drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 4);
-                ctx.fill();
-                ctx.stroke();
-
-                // Cab divider line
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-                ctx.beginPath();
-                ctx.moveTo(-w / 2, -l / 2 + 16);
-                ctx.lineTo(w / 2, -l / 2 + 16);
-                ctx.stroke();
-
-                // Windshield
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-                ctx.fillRect(-w / 2 + 4, -l / 2 + 4, w - 8, 8);
-
-            } else if (cls.includes('two_wheeler') || cls.includes('bike') || cls.includes('motorcycle')) {
-                // Two-Wheeler (Motorcycle / Scooter)
-                const w = 10, l = 26;
-                ctx.fillStyle = bgCol;
-                ctx.strokeStyle = '#00ffcc';
-                ctx.lineWidth = 1.8;
-                drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 5);
-                ctx.fill();
-                ctx.stroke();
-
-                // Handlebars
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(-7, -l / 2 + 6);
-                ctx.lineTo(7, -l / 2 + 6);
-                ctx.stroke();
-
-                // Tires
-                ctx.fillStyle = '#000000';
-                ctx.fillRect(-2, -l / 2, 4, 5);
-                ctx.fillRect(-2, l / 2 - 5, 4, 5);
-
-            } else if (cls.includes('person') || cls.includes('pedestrian')) {
-                // Pedestrian
-                ctx.fillStyle = '#00ff66';
-                ctx.beginPath();
-                ctx.arc(0, 0, 5, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 1;
-                ctx.stroke();
-
-            } else {
-                // Standard Car / Passenger Vehicle
-                const w = 22, l = 38;
-                ctx.fillStyle = bgCol;
-                ctx.strokeStyle = accentCol;
-                ctx.lineWidth = 1.8;
-                drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 4);
-                ctx.fill();
-                ctx.stroke();
-
-                // Front Windshield
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
-                ctx.fillRect(-w / 2 + 3, -l / 2 + 8, w - 6, 7);
-                // Rear Glass
-                ctx.fillRect(-w / 2 + 4, l / 2 - 11, w - 8, 5);
-            }
-
-            // Velocity Doppler Vector Arrow
-            const vrLen = Math.max(-24, Math.min(24, tgt.vr * 2.2));
-            ctx.strokeStyle = isReceding ? '#00e5ff' : '#ff3366';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.lineTo(0, -vrLen);
-            ctx.stroke();
-
-            // Vehicle Label (Class + Distance)
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 9px monospace';
-            ctx.textAlign = 'center';
-            const tagText = `${tgt.class.replace('_', ' ')} ${tgt.dist.toFixed(1)}m`;
-            ctx.fillText(tagText, 0, 24);
-
-            ctx.restore();
-        }
-
-        // Helper: Rounded Rectangle
-        function drawRoundedRect(ctx, x, y, width, height, radius) {
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + width - radius, y);
-            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-            ctx.lineTo(x + width, y + height - radius);
-            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-            ctx.lineTo(x + radius, y + height);
-            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
-        }
-
-        // Interactive Canvas Hover Tooltip
-        canvas.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
-            const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
-
-            const u0 = canvas.width / 2;
-            const v0 = canvas.height * 0.78;
-            const scale = 7.2;
-
-            const rec = DASHBOARD_DATA[currentFrameIdx];
-            if (!rec || !rec.radar_targets) return;
-
-            let hit = null;
-            rec.radar_targets.forEach(tgt => {
-                const pu = u0 - tgt.y * scale;
-                const pv = v0 - tgt.x * scale;
-                const dist = Math.hypot(mouseX - pu, mouseY - pv);
-                if (dist < 12) hit = tgt;
-            });
-
-            if (hit) {
-                tooltip.style.display = 'block';
-                tooltip.style.left = `${e.clientX - rect.left + 15}px`;
-                tooltip.style.top = `${e.clientY - rect.top - 10}px`;
-                tooltip.innerHTML = `
-                    <div style="color:var(--radar-magenta); font-weight:bold;">${hit.class} (ID #${hit.id})</div>
-                    <div>Range: <b>${hit.dist.toFixed(1)} m</b></div>
-                    <div>Pos: X=${hit.x.toFixed(1)}m, Y=${hit.y.toFixed(1)}m</div>
-                    <div>Doppler vr: <b style="color:${hit.vr >= 0 ? "var(--cyan-accent)" : "var(--danger-red)"}">${hit.vr >= 0 ? "+" : ""}${hit.vr.toFixed(2)} m/s</b></div>
-                    <div>RCS &sigma;: <b>${hit.rcs.toFixed(1)} dBsm</b></div>
-                `;
-            } else {
-                tooltip.style.display = 'none';
-            }
-        });
-
-        canvas.addEventListener('mouseleave', () => {
-            tooltip.style.display = 'none';
-        });
-
-        // Playback Controller
-        function togglePlay() {
-            isPlaying = !isPlaying;
-            const btn = document.getElementById('btn-play');
-            if (isPlaying) {
-                btn.innerText = "Pause";
-                btn.style.background = "var(--cyan-accent)";
-                startPlayback();
-            } else {
-                btn.innerText = "Play";
-                btn.style.background = "#238636";
-                clearInterval(playbackInterval);
-            }
-        }
-
-        function startPlayback() {
-            clearInterval(playbackInterval);
-            const intervalMs = 1000 / (fps * speedMultiplier);
-            playbackInterval = setInterval(() => {
-                if (!isPlaying) return;
-                let nextIdx = (currentFrameIdx + 1) % totalFrames;
-                updateDashboard(nextIdx);
-            }, intervalMs);
-        }
-
-        function stepFrame(delta) {
-            if (isPlaying) togglePlay();
-            let newIdx = currentFrameIdx + delta;
-            if (newIdx < 0) newIdx = totalFrames - 1;
-            if (newIdx >= totalFrames) newIdx = 0;
-            updateDashboard(newIdx);
-        }
-
-        function onSliderInput(val) {
-            if (isPlaying) togglePlay();
-            updateDashboard(parseInt(val, 10));
-        }
-
-        function setSpeed(sp, el) {
-            speedMultiplier = sp;
-            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            if (isPlaying) startPlayback();
-        }
-
-        // Keyboard Shortcuts: Spacebar = Play/Pause, Left/Right = Prev/Next
-        window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                togglePlay();
-            } else if (e.code === 'ArrowRight') {
-                e.preventDefault();
-                stepFrame(1);
-            } else if (e.code === 'ArrowLeft') {
-                e.preventDefault();
-                stepFrame(-1);
-            }
-        });
-
-        // =========================================================================
-        // MULTI-SENSOR PIPELINE STUDIO INTERACTIVE CONTROLLER
-        // =========================================================================
-        let selectedPipelineFrame = 16; // Default benchmark sample
-        let customCamDataUrl = null;
-        let customLidarFileName = null;
-
-        function toggleStudioModal() {
-            const modal = document.getElementById('studio-modal');
-            modal.style.display = (modal.style.display === 'none' || modal.style.display === '') ? 'flex' : 'none';
-        }
-
-        function closeStudioModal() {
-            document.getElementById('studio-modal').style.display = 'none';
-        }
-
-        function handleCamUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const previewEl = document.getElementById('cam-upload-preview');
-            previewEl.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-            previewEl.style.color = 'var(--cam-green)';
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                customCamDataUrl = e.target.result;
-                logConsole(`📷 Loaded Custom Camera Image: ${file.name}`);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function handleLidarUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            customLidarFileName = file.name;
-            const previewEl = document.getElementById('lidar-upload-preview');
-            previewEl.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
-            previewEl.style.color = 'var(--cam-green)';
-            logConsole(`📡 Loaded Custom LiDAR Point Cloud: ${file.name}`);
-        }
-
-        function loadSamplePair(drive, frameIdx, btn) {
-            selectedPipelineFrame = frameIdx;
-            customCamDataUrl = null;
-            customLidarFileName = null;
-
-            document.querySelectorAll('.sample-btn').forEach(b => b.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-
-            const camPreview = document.getElementById('cam-upload-preview');
-            const lidarPreview = document.getElementById('lidar-upload-preview');
-
-            camPreview.innerText = `${drive}_cam_${frameIdx.toString().padStart(7, '0')}.jpg (Loaded)`;
-            camPreview.style.color = 'var(--cyan-accent)';
-            lidarPreview.innerText = `${drive}_lidar_${frameIdx.toString().padStart(7, '0')}.npy (Loaded)`;
-            lidarPreview.style.color = 'var(--cyan-accent)';
-
-            logConsole(`ℹ️ Selected Benchmark Multimodal Pair: ${drive.toUpperCase()} Frame #${frameIdx}`);
-        }
-
-        function logConsole(msg) {
-            const el = document.getElementById('console-logs');
-            if (!el) return;
-            const timeStr = new Date().toLocaleTimeString();
-            el.innerHTML += `\n[${timeStr}] ${msg}`;
-            el.scrollTop = el.scrollHeight;
-        }
-
-        function executeFullPipeline() {
-            const btn = document.getElementById('btn-run-pipeline');
-            const consoleEl = document.getElementById('console-logs');
-            btn.disabled = true;
-            btn.innerText = "⏳ PROCESSING MULTI-SENSOR PIPELINE...";
-            consoleEl.innerHTML = `[${new Date().toLocaleTimeString()}] 🚀 STARTING END-TO-END PERCEPTION & MMWAVE RADAR SYNTHESIS...`;
-
-            const stages = [
-                { delay: 300, msg: "📷 [MODEL 1: YOLOv8] Running 2D Vision detection on front camera frame... Extracted vehicle & obstacle bounding boxes." },
-                { delay: 650, msg: "📡 [MODEL 2: PointPillars] Ingesting 16,384 LiDAR points... Clustered 3D metric bounding boxes & road corridor filters." },
-                { delay: 1000, msg: "🔗 [CALIBRATION FUSION] Performing Spatial Projection (Extrinsics [R|T] + Intrinsics K)... Ground plane aligned." },
-                { delay: 1350, msg: "⚡ [77 GHz MMWAVE FMCW RADAR] Synthesizing Radar Signal: Pr = (Pt*G^2*lambda^2*sigma)/((4pi)^3 * R^4)... Doppler vr & range calculated." },
-                { delay: 1700, msg: "🛣️ [FRENET PLANNER] Computing 3-Zone Quintic Polynomial (Seedha start s<=4.2m, dynamic evasion bend s>4.2m, horizon s_max=14.5m)." },
-                { delay: 2000, msg: "✅ [SUCCESS] Multi-Sensor Perception & mmWave Radar Synthesis Complete! Updating Cockpit Dashboard..." }
-            ];
-
-            stages.forEach(st => {
-                setTimeout(() => {
-                    logConsole(st.msg);
-                }, st.delay);
-            });
-
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.innerText = "⚡ RUN MULTI-SENSOR PERCEPTION & GENERATE MMWAVE RADAR";
-
-                // Update Cockpit Dashboard View with Processed Data
-                updateDashboard(selectedPipelineFrame);
-
-                // If user uploaded a custom camera image, display it in the camera frame
-                if (customCamDataUrl) {
-                    document.getElementById('cam-img').src = customCamDataUrl;
-                }
-
-                logConsole("🎉 Dashboard Telemetry & ADAS BEV Surround View are LIVE! You can now close this studio.");
-            }, 2200);
-        }
-    </script>
 </body>
 </html>
