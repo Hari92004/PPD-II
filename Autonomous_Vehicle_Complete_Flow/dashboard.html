@@ -20,10 +20,9 @@
             <div class="brand-section">
                 <div class="brand-logo" aria-hidden="true">⚡</div>
                 <div class="brand-text">
-                    <h1>PPD-II AUTONOMOUS COCKPIT</h1>
+                    <h1>AUTOSENSE AI</h1>
                     <div class="brand-tag">Multimodal Perception, Prediction &amp; Planning</div>
                 </div>
-                <span class="badge-status" title="Sensor Streams Synchronized and Active">ADAS Active</span>
             </div>
 
             <div class="header-actions" role="toolbar" aria-label="Dashboard Controls">
@@ -34,7 +33,7 @@
 
                 <!-- Multi-Sensor Pipeline Studio Launcher -->
                 <button id="btn-studio-toggle" class="btn-icon-label btn-studio" onclick="toggleStudioModal()" aria-haspopup="dialog" aria-expanded="false">
-                    🧪 <span>Pipeline Studio</span>
+                    🧪 <span>Data Upload & Processing</span>
                 </button>
 
                 <!-- Drive / Scenario Selector Segmented Tabs -->
@@ -50,18 +49,6 @@
                     </button>
                 </div>
 
-                <!-- Viewport Scaling Mode -->
-                <div class="segmented-group" role="radiogroup" aria-label="Viewport Scale Mode">
-                    <button class="seg-btn active" id="scale-fit" role="radio" aria-checked="true" onclick="setScaleMode('fit', this)">
-                        Fit
-                    </button>
-                    <button class="seg-btn" id="scale-std" role="radio" aria-checked="false" onclick="setScaleMode('standard', this)">
-                        Standard
-                    </button>
-                    <button class="seg-btn" id="scale-large" role="radio" aria-checked="false" onclick="setScaleMode('large', this)">
-                        Expanded
-                    </button>
-                </div>
             </div>
         </header>
 
