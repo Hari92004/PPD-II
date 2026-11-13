@@ -13,54 +13,55 @@
  */
 
 /* ------------------------------------------------------------------------------
-   1. COLOR PALETTE & DESIGN TOKENS (BLACK & CRISP WHITE THEME)
+   1. COLOR PALETTE & DESIGN TOKENS (CYBER CYAN & ELECTRIC BLUE ADAS THEME)
    ------------------------------------------------------------------------------ */
 :root {
-  /* Ultra-Dark Stealth Cockpit Palette */
-  --bg-app: #08080a;
-  --bg-surface: #101014;
-  --bg-surface-elevated: #16161c;
-  --bg-surface-subtle: #0d0d10;
-  --border-light: #26262e;
-  --border-strong: #3f3f4a;
-  --border-focus: #ffffff;
+  /* Pitch Black & Deep Navy Obsidian Surface */
+  --bg-app: #07090e;
+  --bg-surface: #0e131f;
+  --bg-surface-elevated: #141b2d;
+  --bg-surface-subtle: #0a0e17;
+  --border-light: #1f293d;
+  --border-strong: #334155;
+  --border-focus: #38bdf8;
 
-  --text-primary: #ffffff;
-  --text-secondary: #d4d4d8;
-  --text-tertiary: #a1a1aa;
-  --text-inverse: #08080a;
+  --text-primary: #f0f6fc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-inverse: #07090e;
 
-  /* Automotive Accent Accents - Crisp Pure White */
-  --accent-primary: #ffffff;        /* Pure White */
-  --accent-primary-hover: #e4e4e7;  /* High Silver */
-  --accent-primary-subtle: rgba(255, 255, 255, 0.14);
+  /* Primary Automotive Cyan & Blue Accents */
+  --accent-primary: #38bdf8;        /* Cyber Sky Blue */
+  --accent-primary-hover: #0ea5e9;  /* Vivid Blue */
+  --accent-primary-subtle: rgba(56, 189, 248, 0.16);
 
-  --accent-cam: #ffffff;            /* White Cam */
-  --accent-cam-subtle: rgba(255, 255, 255, 0.14);
-  --accent-cam-text: #ffffff;
+  /* Sensor Badges Color Distinction */
+  --accent-cam: #22c55e;            /* Camera Vision Emerald Green */
+  --accent-cam-subtle: rgba(34, 197, 94, 0.18);
+  --accent-cam-text: #4ade80;
 
-  --accent-lidar: #ffffff;          /* White LiDAR */
-  --accent-lidar-subtle: rgba(255, 255, 255, 0.14);
-  --accent-lidar-text: #ffffff;
+  --accent-lidar: #38bdf8;          /* LiDAR Tech Cyan Blue */
+  --accent-lidar-subtle: rgba(56, 189, 248, 0.18);
+  --accent-lidar-text: #67e8f9;
 
-  --accent-radar: #38bdf8;          /* 77 GHz Radar White */
-  --accent-radar-subtle: rgba(56, 189, 248, 0.16);
-  --accent-radar-text: #7dd3fc;
+  --accent-radar: #818cf8;          /* 77 GHz Radar Electric Indigo */
+  --accent-radar-subtle: rgba(129, 140, 248, 0.18);
+  --accent-radar-text: #a5b4fc;
 
-  /* Safety & Risk State Accents - Pure Monochrome */
-  --state-safe-bg: rgba(255, 255, 255, 0.12);
-  --state-safe-border: rgba(255, 255, 255, 0.40);
-  --state-safe-text: #ffffff;
+  /* Safety & Risk State Accents */
+  --state-safe-bg: rgba(34, 197, 94, 0.18);
+  --state-safe-border: rgba(34, 197, 94, 0.45);
+  --state-safe-text: #4ade80;
 
-  --state-caution-bg: rgba(255, 255, 255, 0.16);
-  --state-caution-border: rgba(255, 255, 255, 0.50);
-  --state-caution-text: #ffffff;
+  --state-caution-bg: rgba(245, 158, 11, 0.18);
+  --state-caution-border: rgba(245, 158, 11, 0.45);
+  --state-caution-text: #fbbf24;
 
-  --state-critical-bg: rgba(255, 255, 255, 0.22);
-  --state-critical-border: #ffffff;
-  --state-critical-text: #ffffff;
+  --state-critical-bg: rgba(239, 68, 68, 0.22);
+  --state-critical-border: #ef4444;
+  --state-critical-text: #f87171;
 
-  /* Canvas & Glassmorphic Scope Background */
+  /* Canvas & Radar Scope Palette */
   --radar-canvas-bg: #070b12;
   --radar-rings-stroke: rgba(56, 189, 248, 0.22);
   --radar-radial-stroke: rgba(56, 189, 248, 0.14);
@@ -88,49 +89,49 @@
 }
 
 /* ------------------------------------------------------------------------------
-   2. NIGHT / DARK THEME OVERRIDES (BLACK & CRISP WHITE)
+   2. NIGHT / DARK THEME OVERRIDES (CYBER CYAN & ELECTRIC BLUE)
    ------------------------------------------------------------------------------ */
 [data-theme="dark"] {
-  --bg-app: #08080a;
-  --bg-surface: #101014;
-  --bg-surface-elevated: #16161c;
-  --bg-surface-subtle: #0d0d10;
-  --border-light: #26262e;
-  --border-strong: #3f3f4a;
-  --border-focus: #ffffff;
+  --bg-app: #07090e;
+  --bg-surface: #0e131f;
+  --bg-surface-elevated: #141b2d;
+  --bg-surface-subtle: #0a0e17;
+  --border-light: #1f293d;
+  --border-strong: #334155;
+  --border-focus: #38bdf8;
 
-  --text-primary: #ffffff;
-  --text-secondary: #d4d4d8;
-  --text-tertiary: #a1a1aa;
-  --text-inverse: #08080a;
+  --text-primary: #f0f6fc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-inverse: #07090e;
 
-  --accent-primary: #ffffff;
-  --accent-primary-hover: #e4e4e7;
-  --accent-primary-subtle: rgba(255, 255, 255, 0.14);
+  --accent-primary: #38bdf8;
+  --accent-primary-hover: #0ea5e9;
+  --accent-primary-subtle: rgba(56, 189, 248, 0.16);
 
-  --accent-cam: #ffffff;
-  --accent-cam-subtle: rgba(255, 255, 255, 0.14);
-  --accent-cam-text: #ffffff;
+  --accent-cam: #22c55e;
+  --accent-cam-subtle: rgba(34, 197, 94, 0.18);
+  --accent-cam-text: #4ade80;
 
-  --accent-lidar: #ffffff;
-  --accent-lidar-subtle: rgba(255, 255, 255, 0.14);
-  --accent-lidar-text: #ffffff;
+  --accent-lidar: #38bdf8;
+  --accent-lidar-subtle: rgba(56, 189, 248, 0.18);
+  --accent-lidar-text: #67e8f9;
 
-  --accent-radar: #38bdf8;
-  --accent-radar-subtle: rgba(56, 189, 248, 0.16);
-  --accent-radar-text: #7dd3fc;
+  --accent-radar: #818cf8;
+  --accent-radar-subtle: rgba(129, 140, 248, 0.18);
+  --accent-radar-text: #a5b4fc;
 
-  --state-safe-bg: rgba(255, 255, 255, 0.12);
-  --state-safe-border: rgba(255, 255, 255, 0.40);
-  --state-safe-text: #ffffff;
+  --state-safe-bg: rgba(34, 197, 94, 0.18);
+  --state-safe-border: rgba(34, 197, 94, 0.45);
+  --state-safe-text: #4ade80;
 
-  --state-caution-bg: rgba(255, 255, 255, 0.16);
-  --state-caution-border: rgba(255, 255, 255, 0.50);
-  --state-caution-text: #ffffff;
+  --state-caution-bg: rgba(245, 158, 11, 0.18);
+  --state-caution-border: rgba(245, 158, 11, 0.45);
+  --state-caution-text: #fbbf24;
 
-  --state-critical-bg: rgba(255, 255, 255, 0.22);
-  --state-critical-border: #ffffff;
-  --state-critical-text: #ffffff;
+  --state-critical-bg: rgba(239, 68, 68, 0.22);
+  --state-critical-border: #ef4444;
+  --state-critical-text: #f87171;
 
   --radar-canvas-bg: #070b12;
   --radar-rings-stroke: rgba(56, 189, 248, 0.22);
@@ -208,11 +209,12 @@ html, body {
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: var(--accent-primary-subtle);
-  border: 1px solid var(--accent-primary);
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid #38bdf8;
   border-radius: var(--radius-sm);
-  color: var(--accent-primary);
-  font-size: 16px;
+  color: #38bdf8;
+  font-weight: 800;
+  font-size: 14px;
 }
 
 .brand-text h1 {
@@ -526,11 +528,11 @@ html, body {
 }
 
 .panel-title {
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
-  letter-spacing: 0.3px;
-  color: var(--text-primary);
+  letter-spacing: 0.4px;
   text-transform: uppercase;
+  color: #e2e8f0;
 }
 
 .pills-group {
