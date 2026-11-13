@@ -161,7 +161,7 @@
         <div class="studio-card">
             
             <div class="studio-header">
-                <h2 id="studio-dialog-title">Data Upload &amp; Multi-Sensor Perception Studio</h2>
+                <h2 id="studio-dialog-title">Data Studio</h2>
                 <button class="btn-close-modal" onclick="closeStudioModal()" aria-label="Close Studio Modal">&times;</button>
             </div>
 
@@ -171,38 +171,38 @@
                 <div class="upload-pair-grid">
                     <div class="upload-dropzone" id="box-cam" onclick="document.getElementById('input-cam-file').click()" role="button" tabindex="0">
                         <div class="drop-icon">[IMAGE]</div>
-                        <h3>1. Front Camera Image</h3>
-                        <p>Click to browse or drop .jpg / .png image</p>
+                        <h3>Camera Feed</h3>
+                        
                         <input type="file" id="input-cam-file" accept="image/*" style="display:none;" onchange="handleCamUpload(event)">
-                        <div id="cam-upload-preview" class="preview-chip">d0_cam_0000016.jpg (Loaded)</div>
+                        <div id="cam-upload-preview" class="preview-chip">d0_cam_0000016.jpg</div>
                     </div>
 
                     <div class="upload-dropzone" id="box-lidar" onclick="document.getElementById('input-lidar-file').click()" role="button" tabindex="0">
                         <div class="drop-icon">[LIDAR]</div>
-                        <h3>2. LiDAR Point Cloud (.npy)</h3>
-                        <p>Click to browse or drop .npy point cloud</p>
+                        <h3>LiDAR Cloud</h3>
+                        
                         <input type="file" id="input-lidar-file" accept=".npy" style="display:none;" onchange="handleLidarUpload(event)">
-                        <div id="lidar-upload-preview" class="preview-chip">d0_lidar_0000016.npy (Loaded)</div>
+                        <div id="lidar-upload-preview" class="preview-chip">d0_lidar_0000016.npy</div>
                     </div>
                 </div>
 
                 <!-- Benchmark IDD Sample Selectors -->
                 <div class="sample-benchmarks">
-                    <span>Benchmark Multimodal Pairs:</span>
-                    <button class="seg-btn active" id="smp-d0" onclick="loadSamplePair('d0', 16, this)">Drive 0: Urban MG Road (#16)</button>
-                    <button class="seg-btn" id="smp-d1" onclick="loadSamplePair('d1', 70, this)">Drive 1: Arterial (#70)</button>
-                    <button class="seg-btn" id="smp-d2" onclick="loadSamplePair('d2', 120, this)">Drive 2: Highway (#120)</button>
+                    
+                    <button class="seg-btn active" id="smp-d0" onclick="loadSamplePair('d0', 16, this)">Urban (#16)</button>
+                    <button class="seg-btn" id="smp-d1" onclick="loadSamplePair('d1', 70, this)">Arterial (#70)</button>
+                    <button class="seg-btn" id="smp-d2" onclick="loadSamplePair('d2', 120, this)">Highway (#120)</button>
                 </div>
 
                 <!-- Execute Button -->
                 <button id="btn-run-pipeline" class="btn-run-process" onclick="executeFullPipeline()">
-                    RUN MULTI-SENSOR PERCEPTION &amp; GENERATE MMWAVE RADAR
+                    RUN PIPELINE
                 </button>
 
                 <!-- Console Output -->
                 <div class="console-terminal" id="pipeline-console">
-                    <div class="console-header-txt">PIPELINE EXECUTION TELEMETRY LOG:</div>
-                    <div id="console-logs" class="console-output-box">Ready. Upload custom sensory files or select a benchmark multimodal pair, then click 'Run Multi-Sensor Perception'.</div>
+                    <div class="console-header-txt">LOGS</div>
+                    <div id="console-logs" class="console-output-box">Ready.</div>
                 </div>
 
             </div>

@@ -880,11 +880,11 @@
     if (btn) btn.classList.add('active');
 
     if (DOM.camUploadPreview) {
-      DOM.camUploadPreview.innerText = `${drive}_cam_${frameIdx.toString().padStart(7, '0')}.jpg (Loaded)`;
+      DOM.camUploadPreview.innerText = `${drive}_cam_${frameIdx.toString().padStart(7, '0')}.jpg`;
       DOM.camUploadPreview.style.color = 'var(--accent-primary)';
     }
     if (DOM.lidarUploadPreview) {
-      DOM.lidarUploadPreview.innerText = `${drive}_lidar_${frameIdx.toString().padStart(7, '0')}.npy (Loaded)`;
+      DOM.lidarUploadPreview.innerText = `${drive}_lidar_${frameIdx.toString().padStart(7, '0')}.npy`;
       DOM.lidarUploadPreview.style.color = 'var(--accent-primary)';
     }
     logConsole(`[INFO] Selected Benchmark IDD Pair: ${drive.toUpperCase()} Frame #${frameIdx}`);
@@ -901,7 +901,7 @@
     if (!DOM.btnRunPipeline || !DOM.consoleLogs) return;
 
     DOM.btnRunPipeline.disabled = true;
-    DOM.btnRunPipeline.innerText = 'PROCESSING MULTI-SENSOR PERCEPTION...';
+    DOM.btnRunPipeline.innerText = 'PROCESSING...';
     DOM.consoleLogs.innerHTML = `[${new Date().toLocaleTimeString()}] INITIALIZING SENSOR FUSION & RADAR SYNTHESIS...`;
 
     const stages = [
@@ -919,7 +919,7 @@
 
     setTimeout(() => {
       DOM.btnRunPipeline.disabled = false;
-      DOM.btnRunPipeline.innerText = 'RUN MULTI-SENSOR PERCEPTION & GENERATE MMWAVE RADAR';
+      DOM.btnRunPipeline.innerText = 'RUN PIPELINE';
 
       updateDashboard(State.selectedStudioFrame);
 
