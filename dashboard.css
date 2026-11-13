@@ -43,9 +43,9 @@
   --accent-lidar-subtle: rgba(255, 255, 255, 0.14);
   --accent-lidar-text: #ffffff;
 
-  --accent-radar: #ffffff;          /* 77 GHz Radar White */
-  --accent-radar-subtle: rgba(255, 255, 255, 0.14);
-  --accent-radar-text: #ffffff;
+  --accent-radar: #38bdf8;          /* 77 GHz Radar White */
+  --accent-radar-subtle: rgba(56, 189, 248, 0.16);
+  --accent-radar-text: #7dd3fc;
 
   /* Safety & Risk State Accents - Pure Monochrome */
   --state-safe-bg: rgba(255, 255, 255, 0.12);
@@ -61,11 +61,11 @@
   --state-critical-text: #ffffff;
 
   /* Canvas & Glassmorphic Scope Background */
-  --radar-canvas-bg: #09090c;
-  --radar-rings-stroke: rgba(255, 255, 255, 0.22);
-  --radar-radial-stroke: rgba(255, 255, 255, 0.14);
-  --radar-sweep-stroke: rgba(255, 255, 255, 0.85);
-  --radar-sweep-fill: rgba(255, 255, 255, 0.10);
+  --radar-canvas-bg: #070b12;
+  --radar-rings-stroke: rgba(56, 189, 248, 0.22);
+  --radar-radial-stroke: rgba(56, 189, 248, 0.14);
+  --radar-sweep-stroke: rgba(56, 189, 248, 0.85);
+  --radar-sweep-fill: rgba(56, 189, 248, 0.10);
 
   /* Shadows & Elevation */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.6);
@@ -116,9 +116,9 @@
   --accent-lidar-subtle: rgba(255, 255, 255, 0.14);
   --accent-lidar-text: #ffffff;
 
-  --accent-radar: #ffffff;
-  --accent-radar-subtle: rgba(255, 255, 255, 0.14);
-  --accent-radar-text: #ffffff;
+  --accent-radar: #38bdf8;
+  --accent-radar-subtle: rgba(56, 189, 248, 0.16);
+  --accent-radar-text: #7dd3fc;
 
   --state-safe-bg: rgba(255, 255, 255, 0.12);
   --state-safe-border: rgba(255, 255, 255, 0.40);
@@ -132,11 +132,11 @@
   --state-critical-border: #ffffff;
   --state-critical-text: #ffffff;
 
-  --radar-canvas-bg: #09090c;
-  --radar-rings-stroke: rgba(255, 255, 255, 0.22);
-  --radar-radial-stroke: rgba(255, 255, 255, 0.14);
-  --radar-sweep-stroke: rgba(255, 255, 255, 0.85);
-  --radar-sweep-fill: rgba(255, 255, 255, 0.10);
+  --radar-canvas-bg: #070b12;
+  --radar-rings-stroke: rgba(56, 189, 248, 0.22);
+  --radar-radial-stroke: rgba(56, 189, 248, 0.14);
+  --radar-sweep-stroke: rgba(56, 189, 248, 0.85);
+  --radar-sweep-fill: rgba(56, 189, 248, 0.10);
 
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.6);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.7);

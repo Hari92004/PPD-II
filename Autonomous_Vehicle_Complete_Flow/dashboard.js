@@ -287,7 +287,7 @@
     let rowsHtml = '';
     targets.forEach(tgt => {
       const isReceding = tgt.vr >= 0;
-      const vrColor = isReceding ? 'var(--accent-primary)' : 'var(--state-critical-text)';
+      const vrColor = isReceding ? '#38bdf8' : '#f87171';
       const vrSign = isReceding ? '+' : '';
       const prettyClass = formatTargetClass(tgt.class);
 
@@ -366,7 +366,7 @@
 
     // 2. Draw Forward Sensor Field of View (FOV +/- 45 deg)
     ctx.save();
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.08)';
     ctx.beginPath();
     ctx.moveTo(u0, v0);
     ctx.arc(u0, v0, maxRadius, -Math.PI * 0.75, -Math.PI * 0.25);
@@ -374,7 +374,7 @@
     ctx.fill();
 
     // FOV Boundary radial guidelines
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
     ctx.lineWidth = 1;
     ctx.setLineDash([4, 4]);
 
@@ -395,13 +395,13 @@
 
     ranges.forEach((r, idx) => {
       const radiusPx = r * scale;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)';
       ctx.beginPath();
       ctx.arc(u0, v0, radiusPx, 0, Math.PI * 2);
       ctx.stroke();
 
       // Range labels
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#38bdf8';
       ctx.font = '600 9.5px monospace';
       ctx.textAlign = 'left';
       ctx.fillText(`${r}m`, u0 + 6, v0 - radiusPx + 11);
@@ -414,8 +414,8 @@
     const sweepAngle = State.scannerAngle;
 
     const gradSweep = ctx.createRadialGradient(u0, v0, 0, u0, v0, sweepRadius);
-    gradSweep.addColorStop(0, 'rgba(255, 255, 255, 0.30)');
-    gradSweep.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+    gradSweep.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+    gradSweep.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
 
     ctx.fillStyle = gradSweep;
     ctx.beginPath();
@@ -425,7 +425,7 @@
     ctx.fill();
 
     // Active sweep leading edge
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.85)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(u0, v0);
@@ -464,8 +464,8 @@
 
     // Headlight Beam
     const gradBeam = ctx.createLinearGradient(0, -carL / 2, 0, -carL / 2 - 45);
-    gradBeam.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
-    gradBeam.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
+    gradBeam.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+    gradBeam.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
     ctx.fillStyle = gradBeam;
     ctx.beginPath();
     ctx.moveTo(-8, -carL / 2);
@@ -476,15 +476,15 @@
     ctx.fill();
 
     // Car Body
-    ctx.fillStyle = '#18181c';
-    ctx.strokeStyle = '#ffffff';
+    ctx.fillStyle = '#101622';
+    ctx.strokeStyle = '#38bdf8';
     ctx.lineWidth = 1.8;
     drawRoundedRect(ctx, -carW / 2, -carL / 2, carW, carL, 4);
     ctx.fill();
     ctx.stroke();
 
     // Front Windshield
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.6)';
     ctx.beginPath();
     ctx.moveTo(-carW / 2 + 2, -carL / 2 + 8);
     ctx.lineTo(carW / 2 - 2, -carL / 2 + 8);
@@ -494,11 +494,11 @@
     ctx.fill();
 
     // Rear Window
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
     ctx.fillRect(-carW / 2 + 3, carL / 2 - 12, carW - 6, 4);
 
     // Label
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#38bdf8';
     ctx.font = '700 8px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('EGO', 0, carL / 2 + 11);
@@ -512,9 +512,9 @@
     ctx.translate(x, y);
 
     // Uniform Box Color & Text Color across all surrounding targets
-    const boxStroke = '#ffffff';
-    const boxFill = 'rgba(255, 255, 255, 0.16)';
-    const textColor = '#ffffff';
+    const boxStroke = '#38bdf8';
+    const boxFill = 'rgba(56, 189, 248, 0.16)';
+    const textColor = '#7dd3fc';
 
     const cls = (tgt.class || '').toLowerCase();
     let w = 18, l = 34;
