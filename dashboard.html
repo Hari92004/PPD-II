@@ -53,77 +53,7 @@
         </header>
 
         <!-- ====================================================================
-             2. PRIMARY VEHICLE TELEMETRY RIBBON
-             ==================================================================== -->
-        <section class="telemetry-grid" aria-label="Vehicle Telemetry and Safety States">
-            
-            <!-- Card 1: Ego Velocity -->
-            <article class="metric-card card-speed">
-                <div class="metric-header">
-                    <span class="metric-title">Ego Velocity</span>
-                    
-                </div>
-                <div class="metric-body">
-                    <span class="metric-value-primary" id="val-speed">0.0</span>
-                    <span class="metric-unit">km/h</span>
-                    <span class="metric-subval" id="val-speed-ms">(0.0 m/s)</span>
-                </div>
-            </article>
-
-            <!-- Card 2: Closest Obstacle Distance -->
-            <article class="metric-card card-obstacle">
-                <div class="metric-header">
-                    <span class="metric-title">Closest Obstacle</span>
-                    
-                </div>
-                <div class="metric-body">
-                    <span class="metric-value-primary" id="val-closest">--</span>
-                    <span class="metric-unit">meters</span>
-                </div>
-            </article>
-
-            <!-- Card 3: Radar Active Locks -->
-            <article class="metric-card card-radar">
-                <div class="metric-header">
-                    <span class="metric-title">Radar Track Locks</span>
-                    
-                </div>
-                <div class="metric-body">
-                    <span class="metric-value-primary" id="val-locks">0</span>
-                    <span class="metric-unit">targets</span>
-                    <span class="metric-subval" style="color:var(--accent-radar);">77 GHz FMCW</span>
-                </div>
-            </article>
-
-            <!-- Card 4: Minimum Time-to-Collision (TTC) -->
-            <article class="metric-card card-ttc">
-                <div class="metric-header">
-                    <span class="metric-title">Min Time-to-Collision</span>
-                    
-                </div>
-                <div class="metric-body">
-                    <span class="metric-value-primary" id="val-ttc">SAFE</span>
-                    <span class="metric-unit">horizon</span>
-                </div>
-            </article>
-
-            <!-- Card 5: Frenet Path Planning & Tactical Decision -->
-            <article class="metric-card card-decision">
-                <div class="metric-header">
-                    <span class="metric-title">Frenet Tactical Decision</span>
-                    
-                </div>
-                <div class="metric-body" style="width:100%;">
-                    <div id="val-steer" style="width:100%;">
-                        <span class="decision-badge">NOMINAL CRUISE</span>
-                    </div>
-                </div>
-            </article>
-
-        </section>
-
-        <!-- ====================================================================
-             3. MAIN WORKSPACE (CAMERA VISION & RADAR BEV SCOPE)
+             2. MAIN WORKSPACE (CAMERA VISION & RADAR BEV SCOPE)
              ==================================================================== -->
         <main class="workspace-grid" role="main">
 
