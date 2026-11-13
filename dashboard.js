@@ -366,7 +366,7 @@
 
     // 2. Draw Forward Sensor Field of View (FOV +/- 45 deg)
     ctx.save();
-    ctx.fillStyle = isDark ? 'rgba(56, 189, 248, 0.05)' : 'rgba(2, 132, 199, 0.04)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
     ctx.beginPath();
     ctx.moveTo(u0, v0);
     ctx.arc(u0, v0, maxRadius, -Math.PI * 0.75, -Math.PI * 0.25);
@@ -374,7 +374,7 @@
     ctx.fill();
 
     // FOV Boundary radial guidelines
-    ctx.strokeStyle = isDark ? 'rgba(148, 163, 184, 0.22)' : 'rgba(100, 116, 139, 0.20)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
     ctx.lineWidth = 1;
     ctx.setLineDash([4, 4]);
 
@@ -395,13 +395,13 @@
 
     ranges.forEach((r, idx) => {
       const radiusPx = r * scale;
-      ctx.strokeStyle = isDark ? 'rgba(148, 163, 184, 0.20)' : 'rgba(100, 116, 139, 0.22)';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
       ctx.beginPath();
       ctx.arc(u0, v0, radiusPx, 0, Math.PI * 2);
       ctx.stroke();
 
       // Range labels
-      ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+      ctx.fillStyle = '#ffffff';
       ctx.font = '600 9.5px monospace';
       ctx.textAlign = 'left';
       ctx.fillText(`${r}m`, u0 + 6, v0 - radiusPx + 11);
@@ -414,8 +414,8 @@
     const sweepAngle = State.scannerAngle;
 
     const gradSweep = ctx.createRadialGradient(u0, v0, 0, u0, v0, sweepRadius);
-    gradSweep.addColorStop(0, isDark ? 'rgba(56, 189, 248, 0.25)' : 'rgba(2, 132, 199, 0.20)');
-    gradSweep.addColorStop(1, 'rgba(2, 132, 199, 0.0)');
+    gradSweep.addColorStop(0, 'rgba(255, 255, 255, 0.30)');
+    gradSweep.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
 
     ctx.fillStyle = gradSweep;
     ctx.beginPath();
@@ -425,7 +425,7 @@
     ctx.fill();
 
     // Active sweep leading edge
-    ctx.strokeStyle = isDark ? 'rgba(56, 189, 248, 0.65)' : 'rgba(2, 132, 199, 0.60)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(u0, v0);
@@ -464,8 +464,8 @@
 
     // Headlight Beam
     const gradBeam = ctx.createLinearGradient(0, -carL / 2, 0, -carL / 2 - 45);
-    gradBeam.addColorStop(0, isDark ? 'rgba(56, 189, 248, 0.35)' : 'rgba(2, 132, 199, 0.25)');
-    gradBeam.addColorStop(1, 'rgba(2, 132, 199, 0.0)');
+    gradBeam.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
+    gradBeam.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
     ctx.fillStyle = gradBeam;
     ctx.beginPath();
     ctx.moveTo(-8, -carL / 2);
@@ -476,15 +476,15 @@
     ctx.fill();
 
     // Car Body
-    ctx.fillStyle = isDark ? '#1e293b' : '#ffffff';
-    ctx.strokeStyle = isDark ? '#38bdf8' : '#0284c7';
+    ctx.fillStyle = '#18181c';
+    ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 1.8;
     drawRoundedRect(ctx, -carW / 2, -carL / 2, carW, carL, 4);
     ctx.fill();
     ctx.stroke();
 
     // Front Windshield
-    ctx.fillStyle = isDark ? 'rgba(56, 189, 248, 0.5)' : 'rgba(2, 132, 199, 0.4)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
     ctx.beginPath();
     ctx.moveTo(-carW / 2 + 2, -carL / 2 + 8);
     ctx.lineTo(carW / 2 - 2, -carL / 2 + 8);
@@ -494,11 +494,11 @@
     ctx.fill();
 
     // Rear Window
-    ctx.fillStyle = isDark ? 'rgba(56, 189, 248, 0.3)' : 'rgba(2, 132, 199, 0.25)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
     ctx.fillRect(-carW / 2 + 3, carL / 2 - 12, carW - 6, 4);
 
     // Label
-    ctx.fillStyle = isDark ? '#38bdf8' : '#0284c7';
+    ctx.fillStyle = '#ffffff';
     ctx.font = '700 8px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('EGO', 0, carL / 2 + 11);
@@ -512,9 +512,9 @@
     ctx.translate(x, y);
 
     // Uniform Box Color & Text Color across all surrounding targets
-    const boxStroke = isDark ? '#ef4444' : '#dc2626';
-    const boxFill = isDark ? 'rgba(239, 68, 68, 0.22)' : 'rgba(220, 38, 38, 0.12)';
-    const textColor = isDark ? '#fca5a5' : '#b91c1c';
+    const boxStroke = '#ffffff';
+    const boxFill = 'rgba(255, 255, 255, 0.16)';
+    const textColor = '#ffffff';
 
     const cls = (tgt.class || '').toLowerCase();
     let w = 18, l = 34;

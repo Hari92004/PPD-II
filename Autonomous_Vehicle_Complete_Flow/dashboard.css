@@ -13,64 +13,64 @@
  */
 
 /* ------------------------------------------------------------------------------
-   1. COLOR PALETTE & DESIGN TOKENS
+   1. COLOR PALETTE & DESIGN TOKENS (BLACK & CRISP WHITE THEME)
    ------------------------------------------------------------------------------ */
 :root {
-  /* Day / Light Mode (Default) */
-  --bg-app: #f1f5f9;
-  --bg-surface: #ffffff;
-  --bg-surface-elevated: #f8fafc;
-  --bg-surface-subtle: #f1f5f9;
-  --border-light: #e2e8f0;
-  --border-strong: #cbd5e1;
-  --border-focus: #0284c7;
+  /* Ultra-Dark Stealth Cockpit Palette */
+  --bg-app: #08080a;
+  --bg-surface: #101014;
+  --bg-surface-elevated: #16161c;
+  --bg-surface-subtle: #0d0d10;
+  --border-light: #26262e;
+  --border-strong: #3f3f4a;
+  --border-focus: #ffffff;
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-tertiary: #64748b;
-  --text-inverse: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: #d4d4d8;
+  --text-tertiary: #a1a1aa;
+  --text-inverse: #08080a;
 
-  /* Automotive Accent Accents */
-  --accent-primary: #0284c7;        /* Sky Blue */
-  --accent-primary-hover: #0369a1;
-  --accent-primary-subtle: #e0f2fe;
+  /* Automotive Accent Accents - Crisp Pure White */
+  --accent-primary: #ffffff;        /* Pure White */
+  --accent-primary-hover: #e4e4e7;  /* High Silver */
+  --accent-primary-subtle: rgba(255, 255, 255, 0.14);
 
-  --accent-cam: #16a34a;            /* Camera Vision Emerald */
-  --accent-cam-subtle: #dcfce7;
-  --accent-cam-text: #15803d;
+  --accent-cam: #ffffff;            /* White Cam */
+  --accent-cam-subtle: rgba(255, 255, 255, 0.14);
+  --accent-cam-text: #ffffff;
 
-  --accent-lidar: #2563eb;          /* LiDAR Tech Blue */
-  --accent-lidar-subtle: #dbeafe;
-  --accent-lidar-text: #1d4ed8;
+  --accent-lidar: #ffffff;          /* White LiDAR */
+  --accent-lidar-subtle: rgba(255, 255, 255, 0.14);
+  --accent-lidar-text: #ffffff;
 
-  --accent-radar: #7c3aed;          /* 77 GHz Radar Violet */
-  --accent-radar-subtle: #ede9fe;
-  --accent-radar-text: #6d28d9;
+  --accent-radar: #ffffff;          /* 77 GHz Radar White */
+  --accent-radar-subtle: rgba(255, 255, 255, 0.14);
+  --accent-radar-text: #ffffff;
 
-  /* Safety & Risk State Accents */
-  --state-safe-bg: #dcfce7;
-  --state-safe-border: #86efac;
-  --state-safe-text: #15803d;
+  /* Safety & Risk State Accents - Pure Monochrome */
+  --state-safe-bg: rgba(255, 255, 255, 0.12);
+  --state-safe-border: rgba(255, 255, 255, 0.40);
+  --state-safe-text: #ffffff;
 
-  --state-caution-bg: #fef3c7;
-  --state-caution-border: #fcd34d;
-  --state-caution-text: #b45309;
+  --state-caution-bg: rgba(255, 255, 255, 0.16);
+  --state-caution-border: rgba(255, 255, 255, 0.50);
+  --state-caution-text: #ffffff;
 
-  --state-critical-bg: #fee2e2;
-  --state-critical-border: #fca5a5;
-  --state-critical-text: #b91c1c;
+  --state-critical-bg: rgba(255, 255, 255, 0.22);
+  --state-critical-border: #ffffff;
+  --state-critical-text: #ffffff;
 
   /* Canvas & Glassmorphic Scope Background */
-  --radar-canvas-bg: #f8fafc;
-  --radar-rings-stroke: rgba(100, 116, 139, 0.22);
-  --radar-radial-stroke: rgba(100, 116, 139, 0.16);
-  --radar-sweep-stroke: rgba(2, 132, 199, 0.65);
-  --radar-sweep-fill: rgba(2, 132, 199, 0.08);
+  --radar-canvas-bg: #09090c;
+  --radar-rings-stroke: rgba(255, 255, 255, 0.22);
+  --radar-radial-stroke: rgba(255, 255, 255, 0.14);
+  --radar-sweep-stroke: rgba(255, 255, 255, 0.85);
+  --radar-sweep-fill: rgba(255, 255, 255, 0.10);
 
   /* Shadows & Elevation */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.7), 0 2px 4px -2px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.8), 0 4px 6px -4px rgba(0, 0, 0, 0.6);
 
   /* Radii */
   --radius-sm: 6px;
@@ -88,59 +88,59 @@
 }
 
 /* ------------------------------------------------------------------------------
-   2. NIGHT / DARK THEME OVERRIDES
+   2. NIGHT / DARK THEME OVERRIDES (BLACK & CRISP WHITE)
    ------------------------------------------------------------------------------ */
 [data-theme="dark"] {
-  --bg-app: #080c14;
-  --bg-surface: #0f172a;
-  --bg-surface-elevated: #1e293b;
-  --bg-surface-subtle: #172033;
-  --border-light: #1e293b;
-  --border-strong: #334155;
-  --border-focus: #38bdf8;
+  --bg-app: #08080a;
+  --bg-surface: #101014;
+  --bg-surface-elevated: #16161c;
+  --bg-surface-subtle: #0d0d10;
+  --border-light: #26262e;
+  --border-strong: #3f3f4a;
+  --border-focus: #ffffff;
 
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-tertiary: #64748b;
-  --text-inverse: #0f172a;
+  --text-primary: #ffffff;
+  --text-secondary: #d4d4d8;
+  --text-tertiary: #a1a1aa;
+  --text-inverse: #08080a;
 
-  --accent-primary: #38bdf8;
-  --accent-primary-hover: #0ea5e9;
-  --accent-primary-subtle: rgba(56, 189, 248, 0.15);
+  --accent-primary: #ffffff;
+  --accent-primary-hover: #e4e4e7;
+  --accent-primary-subtle: rgba(255, 255, 255, 0.14);
 
-  --accent-cam: #22c55e;
-  --accent-cam-subtle: rgba(34, 197, 94, 0.15);
-  --accent-cam-text: #4ade80;
+  --accent-cam: #ffffff;
+  --accent-cam-subtle: rgba(255, 255, 255, 0.14);
+  --accent-cam-text: #ffffff;
 
-  --accent-lidar: #38bdf8;
-  --accent-lidar-subtle: rgba(56, 189, 248, 0.15);
-  --accent-lidar-text: #60a5fa;
+  --accent-lidar: #ffffff;
+  --accent-lidar-subtle: rgba(255, 255, 255, 0.14);
+  --accent-lidar-text: #ffffff;
 
-  --accent-radar: #c084fc;
-  --accent-radar-subtle: rgba(192, 132, 252, 0.15);
-  --accent-radar-text: #d8b4fe;
+  --accent-radar: #ffffff;
+  --accent-radar-subtle: rgba(255, 255, 255, 0.14);
+  --accent-radar-text: #ffffff;
 
-  --state-safe-bg: rgba(34, 197, 94, 0.15);
-  --state-safe-border: rgba(34, 197, 94, 0.4);
-  --state-safe-text: #4ade80;
+  --state-safe-bg: rgba(255, 255, 255, 0.12);
+  --state-safe-border: rgba(255, 255, 255, 0.40);
+  --state-safe-text: #ffffff;
 
-  --state-caution-bg: rgba(245, 158, 11, 0.15);
-  --state-caution-border: rgba(245, 158, 11, 0.4);
-  --state-caution-text: #fbbf24;
+  --state-caution-bg: rgba(255, 255, 255, 0.16);
+  --state-caution-border: rgba(255, 255, 255, 0.50);
+  --state-caution-text: #ffffff;
 
-  --state-critical-bg: rgba(239, 68, 68, 0.18);
-  --state-critical-border: rgba(239, 68, 68, 0.45);
-  --state-critical-text: #f87171;
+  --state-critical-bg: rgba(255, 255, 255, 0.22);
+  --state-critical-border: #ffffff;
+  --state-critical-text: #ffffff;
 
-  --radar-canvas-bg: #090e1a;
-  --radar-rings-stroke: rgba(148, 163, 184, 0.22);
-  --radar-radial-stroke: rgba(148, 163, 184, 0.14);
-  --radar-sweep-stroke: rgba(56, 189, 248, 0.7);
-  --radar-sweep-fill: rgba(56, 189, 248, 0.08);
+  --radar-canvas-bg: #09090c;
+  --radar-rings-stroke: rgba(255, 255, 255, 0.22);
+  --radar-radial-stroke: rgba(255, 255, 255, 0.14);
+  --radar-sweep-stroke: rgba(255, 255, 255, 0.85);
+  --radar-sweep-fill: rgba(255, 255, 255, 0.10);
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.7);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.8);
 }
 
 /* ------------------------------------------------------------------------------
@@ -1034,20 +1034,20 @@ table.radar-table tr:hover td {
 }
 
 .console-terminal {
-  background: #0f172a;
+  background: #0d0d10;
   border: 1px solid #1e293b;
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   font-family: var(--font-mono);
   font-size: 11px;
-  color: #38bdf8;
+  color: #ffffff;
 }
 
 .console-header-txt {
   font-size: 10px;
   font-weight: 700;
   color: #94a3b8;
-  border-bottom: 1px solid #1e293b;
+  border-bottom: 1px solid #27272a;
   padding-bottom: 4px;
   margin-bottom: 6px;
 }
