@@ -120,13 +120,13 @@
     if (theme === 'dark') {
       DOM.html.setAttribute('data-theme', 'dark');
       if (DOM.themeToggleBtn) {
-        DOM.themeToggleBtn.innerHTML = '☀️ <span>Day Mode</span>';
+        DOM.themeToggleBtn.innerHTML = '<span>Day Mode</span>';
         DOM.themeToggleBtn.setAttribute('title', 'Switch to High-Contrast Day Mode');
       }
     } else {
       DOM.html.removeAttribute('data-theme');
       if (DOM.themeToggleBtn) {
-        DOM.themeToggleBtn.innerHTML = '🌙 <span>Night Mode</span>';
+        DOM.themeToggleBtn.innerHTML = '<span>Night Mode</span>';
         DOM.themeToggleBtn.setAttribute('title', 'Switch to ADAS Low-Glare Night Mode');
       }
     }
@@ -241,9 +241,9 @@
       const isEvasion = rec.decision && rec.decision.includes('SWERVE');
       if (isEvasion) {
         const sign = rec.steer_deg > 0 ? '+' : '';
-        DOM.valSteer.innerHTML = `<span class="decision-badge evasion">⚠️ EVASION (${sign}${rec.steer_deg.toFixed(1)}°)</span>`;
+        DOM.valSteer.innerHTML = `<span class="decision-badge evasion">EVASION (${sign}${rec.steer_deg.toFixed(1)}°)</span>`;
       } else {
-        DOM.valSteer.innerHTML = `<span class="decision-badge">✓ NOMINAL CRUISE</span>`;
+        DOM.valSteer.innerHTML = `<span class="decision-badge">NOMINAL CRUISE</span>`;
       }
     }
 
@@ -821,7 +821,7 @@
     const reader = new FileReader();
     reader.onload = function (e) {
       State.customCamUrl = e.target.result;
-      logConsole(`📷 Custom Camera Image Loaded: ${file.name}`);
+      logConsole(`[CAMERA] Custom Camera Image Loaded: ${file.name}`);
     };
     reader.readAsDataURL(file);
   }
@@ -834,7 +834,7 @@
       DOM.lidarUploadPreview.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
       DOM.lidarUploadPreview.style.color = 'var(--accent-lidar)';
     }
-    logConsole(`📡 Custom LiDAR Point Cloud Loaded: ${file.name}`);
+    logConsole(`[LIDAR] Custom LiDAR Point Cloud Loaded: ${file.name}`);
   }
 
   function loadSamplePair(drive, frameIdx, btn) {
@@ -853,7 +853,7 @@
       DOM.lidarUploadPreview.innerText = `${drive}_lidar_${frameIdx.toString().padStart(7, '0')}.npy (Loaded)`;
       DOM.lidarUploadPreview.style.color = 'var(--accent-primary)';
     }
-    logConsole(`ℹ️ Selected Benchmark IDD Pair: ${drive.toUpperCase()} Frame #${frameIdx}`);
+    logConsole(`[INFO] Selected Benchmark IDD Pair: ${drive.toUpperCase()} Frame #${frameIdx}`);
   }
 
   function logConsole(msg) {
@@ -867,16 +867,16 @@
     if (!DOM.btnRunPipeline || !DOM.consoleLogs) return;
 
     DOM.btnRunPipeline.disabled = true;
-    DOM.btnRunPipeline.innerText = '⏳ PROCESSING MULTI-SENSOR PERCEPTION...';
-    DOM.consoleLogs.innerHTML = `[${new Date().toLocaleTimeString()}] 🚀 INITIALIZING SENSOR FUSION & RADAR SYNTHESIS...`;
+    DOM.btnRunPipeline.innerText = 'PROCESSING MULTI-SENSOR PERCEPTION...';
+    DOM.consoleLogs.innerHTML = `[${new Date().toLocaleTimeString()}] INITIALIZING SENSOR FUSION & RADAR SYNTHESIS...`;
 
     const stages = [
-      { delay: 300, msg: '📷 [MODEL 1: 2D VISION YOLO] Inferencing 640x640 front RGB frame... Extracted bounding boxes.' },
-      { delay: 650, msg: '📡 [MODEL 2: 3D LIDAR] Ingesting 16,384 spatial points... Clustered 3D bounding boxes.' },
-      { delay: 1000, msg: '🔗 [CALIBRATION FUSION] Applying Extrinsic [R|T] & Camera Pinhole Matrix K... Ground plane aligned.' },
-      { delay: 1350, msg: '⚡ [77 GHz MMWAVE FMCW RADAR] Synthesizing physical signal: Pr = (Pt*G^2*lambda^2*sigma)/((4pi)^3 * R^4)... Doppler vr calculated.' },
-      { delay: 1700, msg: '🛣️ [FRENET PLANNER] Computing 3-Zone Quintic Polynomial (Seedha start s<=4.2m, dynamic evasion bend s>4.2m).' },
-      { delay: 2000, msg: '✅ [SUCCESS] Multi-Sensor Pipeline Complete! Updating Cockpit Telemetry...' }
+      { delay: 300, msg: '[MODEL 1: 2D VISION YOLO] Inferencing 640x640 front RGB frame... Extracted bounding boxes.' },
+      { delay: 650, msg: '[MODEL 2: 3D LIDAR] Ingesting 16,384 spatial points... Clustered 3D bounding boxes.' },
+      { delay: 1000, msg: '[CALIBRATION FUSION] Applying Extrinsic [R|T] & Camera Pinhole Matrix K... Ground plane aligned.' },
+      { delay: 1350, msg: '[77 GHz MMWAVE FMCW RADAR] Synthesizing physical signal: Pr = (Pt*G^2*lambda^2*sigma)/((4pi)^3 * R^4)... Doppler vr calculated.' },
+      { delay: 1700, msg: '[FRENET PLANNER] Computing 3-Zone Quintic Polynomial (Seedha start s<=4.2m, dynamic evasion bend s>4.2m).' },
+      { delay: 2000, msg: '[SUCCESS] Multi-Sensor Pipeline Complete! Updating Cockpit Telemetry...' }
     ];
 
     stages.forEach(st => {
@@ -885,14 +885,14 @@
 
     setTimeout(() => {
       DOM.btnRunPipeline.disabled = false;
-      DOM.btnRunPipeline.innerText = '⚡ RUN MULTI-SENSOR PERCEPTION & GENERATE MMWAVE RADAR';
+      DOM.btnRunPipeline.innerText = 'RUN MULTI-SENSOR PERCEPTION & GENERATE MMWAVE RADAR';
 
       updateDashboard(State.selectedStudioFrame);
 
       if (State.customCamUrl && DOM.camImg) {
         DOM.camImg.src = State.customCamUrl;
       }
-      logConsole('🎉 Telemetry & Radar Scope are LIVE in Cockpit! You may close the Studio modal.');
+      logConsole('Telemetry & Radar Scope are LIVE in Cockpit! You may close the Studio modal.');
     }, 2200);
   }
 

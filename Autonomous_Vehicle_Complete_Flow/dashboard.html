@@ -18,7 +18,7 @@
              ==================================================================== -->
         <header class="cockpit-header" role="banner">
             <div class="brand-section">
-                <div class="brand-logo" aria-hidden="true">⚡</div>
+                <div class="brand-logo" aria-hidden="true">AV</div>
                 <div class="brand-text">
                     <h1>AUTOSENSE AI</h1>
                     <div class="brand-tag">Intelligent Vehicle Perception System</div>
@@ -29,12 +29,12 @@
             <div class="header-actions" role="toolbar" aria-label="Dashboard Controls">
                 <!-- Theme Toggle Button (Day / Night Mode) -->
                 <button id="btn-theme-toggle" class="btn-icon-label" onclick="toggleTheme()" aria-label="Toggle Theme Mode">
-                    🌙 <span>Night Mode</span>
+                    <span>Night Mode</span>
                 </button>
 
                 <!-- Multi-Sensor Pipeline Studio Launcher -->
                 <button id="btn-studio-toggle" class="btn-icon-label btn-studio" onclick="toggleStudioModal()" aria-haspopup="dialog" aria-expanded="false">
-                    🧪 <span>Data Upload &amp; Processing</span>
+                    <span>Data Upload &amp; Processing</span>
                 </button>
 
                 <!-- Drive / Scenario Selector Segmented Tabs -->
@@ -61,7 +61,7 @@
             <article class="metric-card card-speed">
                 <div class="metric-header">
                     <span class="metric-title">Ego Velocity</span>
-                    <span class="metric-icon" aria-hidden="true">🚗</span>
+                    
                 </div>
                 <div class="metric-body">
                     <span class="metric-value-primary" id="val-speed">0.0</span>
@@ -74,7 +74,7 @@
             <article class="metric-card card-obstacle">
                 <div class="metric-header">
                     <span class="metric-title">Closest Obstacle</span>
-                    <span class="metric-icon" aria-hidden="true">📍</span>
+                    
                 </div>
                 <div class="metric-body">
                     <span class="metric-value-primary" id="val-closest">--</span>
@@ -86,7 +86,7 @@
             <article class="metric-card card-radar">
                 <div class="metric-header">
                     <span class="metric-title">Radar Track Locks</span>
-                    <span class="metric-icon" aria-hidden="true">📡</span>
+                    
                 </div>
                 <div class="metric-body">
                     <span class="metric-value-primary" id="val-locks">0</span>
@@ -99,7 +99,7 @@
             <article class="metric-card card-ttc">
                 <div class="metric-header">
                     <span class="metric-title">Min Time-to-Collision</span>
-                    <span class="metric-icon" aria-hidden="true">⏱️</span>
+                    
                 </div>
                 <div class="metric-body">
                     <span class="metric-value-primary" id="val-ttc">SAFE</span>
@@ -111,11 +111,11 @@
             <article class="metric-card card-decision">
                 <div class="metric-header">
                     <span class="metric-title">Frenet Tactical Decision</span>
-                    <span class="metric-icon" aria-hidden="true">🛣️</span>
+                    
                 </div>
                 <div class="metric-body" style="width:100%;">
                     <div id="val-steer" style="width:100%;">
-                        <span class="decision-badge">✓ NOMINAL CRUISE</span>
+                        <span class="decision-badge">NOMINAL CRUISE</span>
                     </div>
                 </div>
             </article>
@@ -237,7 +237,7 @@
         <div class="studio-card">
             
             <div class="studio-header">
-                <h2 id="studio-dialog-title">🧪 Data Upload &amp; Multi-Sensor Perception Studio</h2>
+                <h2 id="studio-dialog-title">Data Upload &amp; Multi-Sensor Perception Studio</h2>
                 <button class="btn-close-modal" onclick="closeStudioModal()" aria-label="Close Studio Modal">&times;</button>
             </div>
 
@@ -246,7 +246,7 @@
                 <!-- Upload Dropzones -->
                 <div class="upload-pair-grid">
                     <div class="upload-dropzone" id="box-cam" onclick="document.getElementById('input-cam-file').click()" role="button" tabindex="0">
-                        <div class="drop-icon">📷</div>
+                        <div class="drop-icon">[IMAGE]</div>
                         <h3>1. Front Camera Image</h3>
                         <p>Click to browse or drop .jpg / .png image</p>
                         <input type="file" id="input-cam-file" accept="image/*" style="display:none;" onchange="handleCamUpload(event)">
@@ -254,7 +254,7 @@
                     </div>
 
                     <div class="upload-dropzone" id="box-lidar" onclick="document.getElementById('input-lidar-file').click()" role="button" tabindex="0">
-                        <div class="drop-icon">📡</div>
+                        <div class="drop-icon">[LIDAR]</div>
                         <h3>2. LiDAR Point Cloud (.npy)</h3>
                         <p>Click to browse or drop .npy point cloud</p>
                         <input type="file" id="input-lidar-file" accept=".npy" style="display:none;" onchange="handleLidarUpload(event)">
@@ -272,7 +272,7 @@
 
                 <!-- Execute Button -->
                 <button id="btn-run-pipeline" class="btn-run-process" onclick="executeFullPipeline()">
-                    ⚡ RUN MULTI-SENSOR PERCEPTION &amp; GENERATE MMWAVE RADAR
+                    RUN MULTI-SENSOR PERCEPTION &amp; GENERATE MMWAVE RADAR
                 </button>
 
                 <!-- Console Output -->
