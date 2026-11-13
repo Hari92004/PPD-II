@@ -265,13 +265,68 @@
   // ----------------------------------------------------------------------------
   // TARGET CLASS FORMATTER & LABELS
   // ----------------------------------------------------------------------------
-  function formatTargetClass(rawClass) {
+    // Target Class Distinct Color Palette (Research Grade Autonomous Visualization)
+  function getTargetClassTheme(rawClass) {
     const c = (rawClass || '').toLowerCase();
-    if (c.includes('truck') || c.includes('bus')) return 'Truck/Bus';
-    if (c.includes('two') || c.includes('bike') || c.includes('motor')) return 'Two-Wheeler';
-    if (c.includes('pedestrian') || c.includes('person') || c.includes('human')) return 'Human';
-    if (c.includes('auto')) return 'Auto';
-    return 'Car';
+    if (c.includes('pedestrian') || c.includes('person') || c.includes('human')) {
+      return {
+        label: 'Human',
+        stroke: '#4ade80',              // Bright Emerald Green
+        fill: 'rgba(74, 222, 128, 0.20)',
+        text: '#86efac',
+        badgeBg: 'rgba(74, 222, 128, 0.15)',
+        badgeBorder: 'rgba(74, 222, 128, 0.40)'
+      };
+    } else if (c.includes('truck')) {
+      return {
+        label: 'Truck',
+        stroke: '#f97316',              // High-Vis Amber Orange
+        fill: 'rgba(249, 115, 22, 0.20)',
+        text: '#fdba74',
+        badgeBg: 'rgba(249, 115, 22, 0.15)',
+        badgeBorder: 'rgba(249, 115, 22, 0.40)'
+      };
+    } else if (c.includes('bus')) {
+      return {
+        label: 'Bus',
+        stroke: '#fbbf24',              // Amber Yellow
+        fill: 'rgba(251, 191, 36, 0.20)',
+        text: '#fde68a',
+        badgeBg: 'rgba(251, 191, 36, 0.15)',
+        badgeBorder: 'rgba(251, 191, 36, 0.40)'
+      };
+    } else if (c.includes('two') || c.includes('bike') || c.includes('motor')) {
+      return {
+        label: 'Two-Wheeler',
+        stroke: '#a855f7',              // Neon Purple / Violet
+        fill: 'rgba(168, 85, 247, 0.20)',
+        text: '#d8b4fe',
+        badgeBg: 'rgba(168, 85, 247, 0.15)',
+        badgeBorder: 'rgba(168, 85, 247, 0.40)'
+      };
+    } else if (c.includes('auto')) {
+      return {
+        label: 'Auto',
+        stroke: '#06b6d4',              // Cyan / Teal
+        fill: 'rgba(6, 182, 212, 0.20)',
+        text: '#67e8f9',
+        badgeBg: 'rgba(6, 182, 212, 0.15)',
+        badgeBorder: 'rgba(6, 182, 212, 0.40)'
+      };
+    }
+    // Default Car
+    return {
+      label: 'Car',
+      stroke: '#38bdf8',                // Cyber Sky Blue
+      fill: 'rgba(56, 189, 248, 0.20)',
+      text: '#7dd3fc',
+      badgeBg: 'rgba(56, 189, 248, 0.15)',
+      badgeBorder: 'rgba(56, 189, 248, 0.40)'
+    };
+  }
+
+  function formatTargetClass(rawClass) {
+    return getTargetClassTheme(rawClass).label;
   }
 
   // ----------------------------------------------------------------------------
@@ -289,12 +344,13 @@
       const isReceding = tgt.vr >= 0;
       const vrColor = isReceding ? '#38bdf8' : '#f87171';
       const vrSign = isReceding ? '+' : '';
-      const prettyClass = formatTargetClass(tgt.class);
+      const theme = getTargetClassTheme(tgt.class);
+      const prettyClass = theme.label;
 
       rowsHtml += `
         <tr>
           <td><b style="color:var(--accent-radar);">#${tgt.id}</b></td>
-          <td><b>${prettyClass}</b></td>
+          <td><span style="display:inline-block; padding:1px 6px; border-radius:3px; background:${theme.badgeBg}; border:1px solid ${theme.badgeBorder}; color:${theme.stroke}; font-weight:700;">${prettyClass}</span></td>
           <td>${tgt.dist.toFixed(1)}m</td>
           <td>${tgt.x >= 0 ? '+' : ''}${tgt.x.toFixed(1)}m</td>
           <td>${tgt.y >= 0 ? '+' : ''}${tgt.y.toFixed(1)}m</td>
@@ -511,10 +567,11 @@
     ctx.save();
     ctx.translate(x, y);
 
-    // Uniform Box Color & Text Color across all surrounding targets
-    const boxStroke = '#38bdf8';
-    const boxFill = 'rgba(56, 189, 248, 0.16)';
-    const textColor = '#7dd3fc';
+    // Distinct Class Color for Box & Text
+    const theme = getTargetClassTheme(tgt.class);
+    const boxStroke = theme.stroke;
+    const boxFill = theme.fill;
+    const textColor = theme.text;
 
     const cls = (tgt.class || '').toLowerCase();
     let w = 18, l = 34;
