@@ -511,75 +511,52 @@
     ctx.save();
     ctx.translate(x, y);
 
-    const isReceding = tgt.vr >= 0;
-    const accentCol = isReceding ? (isDark ? '#c084fc' : '#7c3aed') : (isDark ? '#f87171' : '#dc2626');
-    const bgCol = isReceding
-      ? (isDark ? '#2e1065' : '#ede9fe')
-      : (isDark ? '#450a0a' : '#fee2e2');
+    // Uniform Box Color & Text Color across all surrounding targets
+    const boxStroke = isDark ? '#ef4444' : '#dc2626';
+    const boxFill = isDark ? 'rgba(239, 68, 68, 0.22)' : 'rgba(220, 38, 38, 0.12)';
+    const textColor = isDark ? '#fca5a5' : '#b91c1c';
 
     const cls = (tgt.class || '').toLowerCase();
+    let w = 18, l = 34;
 
     if (cls.includes('truck') || cls.includes('bus')) {
-      const w = 24, l = 54;
-      ctx.fillStyle = bgCol;
-      ctx.strokeStyle = '#d97706';
-      ctx.lineWidth = 1.6;
-      drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 3);
-      ctx.fill();
-      ctx.stroke();
-
-      // Divider
-      ctx.strokeStyle = 'rgba(100, 116, 139, 0.4)';
-      ctx.beginPath();
-      ctx.moveTo(-w / 2, -l / 2 + 14);
-      ctx.lineTo(w / 2, -l / 2 + 14);
-      ctx.stroke();
+      w = 24;
+      l = 52;
     } else if (cls.includes('two_wheeler') || cls.includes('bike') || cls.includes('motorcycle')) {
-      const w = 9, l = 22;
-      ctx.fillStyle = bgCol;
-      ctx.strokeStyle = isDark ? '#2dd4bf' : '#0d9488';
-      ctx.lineWidth = 1.6;
-      drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 3);
-      ctx.fill();
-      ctx.stroke();
-    } else if (cls.includes('person') || cls.includes('pedestrian')) {
-      ctx.fillStyle = isDark ? '#4ade80' : '#16a34a';
-      ctx.beginPath();
-      ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    } else {
-      // Standard Passenger Vehicle
-      const w = 18, l = 34;
-      ctx.fillStyle = bgCol;
-      ctx.strokeStyle = accentCol;
-      ctx.lineWidth = 1.6;
-      drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 3);
-      ctx.fill();
-      ctx.stroke();
-
-      // Windshield line
-      ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.15)';
-      ctx.fillRect(-w / 2 + 3, -l / 2 + 7, w - 6, 5);
+      w = 12;
+      l = 22;
+    } else if (cls.includes('person') || cls.includes('pedestrian') || cls.includes('human')) {
+      w = 12;
+      l = 12;
+    } else if (cls.includes('auto')) {
+      w = 16;
+      l = 26;
     }
 
+    // Draw Unified Bounding Box (Same Box Color)
+    ctx.fillStyle = boxFill;
+    ctx.strokeStyle = boxStroke;
+    ctx.lineWidth = 1.6;
+    drawRoundedRect(ctx, -w / 2, -l / 2, w, l, 3);
+    ctx.fill();
+    ctx.stroke();
+
     // Velocity Doppler Vector Arrow
+    const isReceding = tgt.vr >= 0;
     const vrLen = Math.max(-20, Math.min(20, tgt.vr * 2.2));
-    ctx.strokeStyle = isReceding ? '#0284c7' : '#dc2626';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = isReceding ? (isDark ? '#38bdf8' : '#0284c7') : boxStroke;
+    ctx.lineWidth = 1.8;
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(0, -vrLen);
     ctx.stroke();
 
-    // Target Text Tag (Class + Range e.g. "Car · 14.5m" or "Human · 7.2m")
+    // Target Text Tag (Same Text Color for all targets)
     const prettyClass = formatTargetClass(tgt.class);
-    ctx.fillStyle = isDark ? '#f8fafc' : '#0f172a';
-    ctx.font = '600 9px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+    ctx.fillStyle = textColor;
+    ctx.font = '600 10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(`${prettyClass} · ${tgt.dist.toFixed(1)}m`, 0, 19);
+    ctx.fillText(`${prettyClass} · ${tgt.dist.toFixed(1)}m`, 0, -l / 2 - 5);
 
     ctx.restore();
   }

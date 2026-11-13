@@ -380,22 +380,24 @@ html, body {
   box-shadow: var(--shadow-md);
 }
 
-/* Modality Color Indicators */
+/* Unified Box Color & Border Indicators */
 .metric-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  width: 4px;
+  width: 3px;
   height: 100%;
-  background: var(--border-strong);
+  background: var(--accent-primary);
 }
 
-.metric-card.card-speed::before { background: var(--accent-primary); }
-.metric-card.card-obstacle::before { background: #f59e0b; }
-.metric-card.card-radar::before { background: var(--accent-radar); }
-.metric-card.card-ttc::before { background: var(--accent-lidar); }
-.metric-card.card-decision::before { background: var(--accent-cam); }
+.metric-card.card-speed::before,
+.metric-card.card-obstacle::before,
+.metric-card.card-radar::before,
+.metric-card.card-ttc::before,
+.metric-card.card-decision::before {
+  background: var(--accent-primary);
+}
 
 .metric-header {
   display: flex;
