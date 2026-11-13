@@ -7,6 +7,7 @@
     <title>AUTOSENSE AI — Intelligent Vehicle Perception System</title>
     
     <!-- Professional Automotive Cockpit Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body id="dash-body">
@@ -125,14 +126,14 @@
         <footer class="cockpit-controls" role="region" aria-label="Simulation Playback Controls">
             
             <div class="transport-group">
-                <button class="btn-transport btn-play-action" id="btn-play" onclick="togglePlay()" aria-label="Play or Pause Simulation">
-                    Pause
+                <button class="btn-transport btn-play-action" id="btn-play" onclick="togglePlay()" aria-label="Play or Pause Simulation" title="Play / Pause">
+                    <i class="fa-solid fa-pause"></i>
                 </button>
-                <button class="btn-transport" onclick="stepFrame(-1)" aria-label="Step Previous Frame">
-                    &larr; Prev
+                <button class="btn-transport" onclick="stepFrame(-1)" aria-label="Step Previous Frame" title="Previous Frame">
+                    <i class="fa-solid fa-backward-step"></i>
                 </button>
-                <button class="btn-transport" onclick="stepFrame(1)" aria-label="Step Next Frame">
-                    Next &rarr;
+                <button class="btn-transport" onclick="stepFrame(1)" aria-label="Step Next Frame" title="Next Frame">
+                    <i class="fa-solid fa-forward-step"></i>
                 </button>
             </div>
 

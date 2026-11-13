@@ -725,11 +725,11 @@
     State.isPlaying = !State.isPlaying;
     if (DOM.btnPlay) {
       if (State.isPlaying) {
-        DOM.btnPlay.innerText = 'Pause';
+        DOM.btnPlay.innerHTML = '<i class="fa-solid fa-pause"></i>';
         DOM.btnPlay.classList.add('btn-play-action');
         startPlayback();
       } else {
-        DOM.btnPlay.innerText = 'Play';
+        DOM.btnPlay.innerHTML = '<i class="fa-solid fa-play"></i>';
         DOM.btnPlay.classList.remove('btn-play-action');
         clearInterval(State.playbackInterval);
       }
