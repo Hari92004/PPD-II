@@ -1,10 +1,9 @@
 """
-Autonomous Mobility System - Standard Portrait A4 Research Document Generator
-Generates a clean, professional, publication-ready Portrait A4 PDF document:
-- Document Title: Autonomous Mobility System: Perception, Prediction & Path Planning for Unstructured Indian Road Conditions
-- Format: Standard Portrait A4 (595 x 842 pt)
-- Numbered Canvas: Running Header, Running Footer ("Page X of Y")
-- Includes: Full Narrative, Formulas, Comparison Tables, Solid-State LiDAR BOM, Feasibility, and References
+Autonomous Mobility System - Strict Monochrome (Black & White) Portrait A4 Document Generator
+- Strict Minimalist Black & White / Grayscale Theme
+- Clean White Background (#ffffff), Crisp Black Typography (#000000 / #0f172a)
+- Slate/Gray Accents (#334155 / #475569), Clean Dark Table Headers (#0f172a)
+- Zero Orange / Zero Color
 """
 
 import os
@@ -13,16 +12,16 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, HRFlowable, KeepTogether
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, HRFlowable
 )
 from reportlab.pdfgen import canvas
 
 # ==============================================================================
-# NUMBERED CANVAS (PORTRAIT A4)
+# NUMBERED CANVAS (CLEAN MONOCHROME B&W)
 # ==============================================================================
-class PortraitNumberedCanvas(canvas.Canvas):
+class MonochromeNumberedCanvas(canvas.Canvas):
     def __init__(self, *args, **kwargs):
-        super(PortraitNumberedCanvas, self).__init__(*args, **kwargs)
+        super(MonochromeNumberedCanvas, self).__init__(*args, **kwargs)
         self._saved_page_states = []
 
     def showPage(self):
@@ -34,29 +33,28 @@ class PortraitNumberedCanvas(canvas.Canvas):
         for state in self._saved_page_states:
             self.__dict__.update(state)
             self.draw_decorations(num_pages)
-            super(PortraitNumberedCanvas, self).showPage()
-        super(PortraitNumberedCanvas, self).save()
+            super(MonochromeNumberedCanvas, self).showPage()
+        super(MonochromeNumberedCanvas, self).save()
 
     def draw_decorations(self, total_pages):
         W, H = A4
         if self._pageNumber == 1:
-            # Suppress header/footer on cover/first page
             return
 
         self.saveState()
-        # Top Running Header
+        # Top Running Header (Black & Charcoal)
         self.setFont("Helvetica-Bold", 8)
         self.setFillColor(colors.HexColor("#0f172a"))
         self.drawString(54, H - 36, "AUTONOMOUS MOBILITY SYSTEM: PERCEPTION, PREDICTION & PATH PLANNING")
         self.setFont("Helvetica", 8)
-        self.setFillColor(colors.HexColor("#ea580c"))
+        self.setFillColor(colors.HexColor("#475569"))
         self.drawRightString(W - 54, H - 36, "TECHNICAL RESEARCH REPORT")
 
-        self.setStrokeColor(colors.HexColor("#cbd5e1"))
+        self.setStrokeColor(colors.HexColor("#94a3b8"))
         self.setLineWidth(0.6)
         self.line(54, H - 42, W - 54, H - 42)
 
-        # Bottom Running Footer
+        # Bottom Running Footer (Black & Gray)
         self.setFont("Helvetica", 8)
         self.setFillColor(colors.HexColor("#64748b"))
         self.drawString(54, 34, "Indian Driving Dataset (IDD) & nuScenes Benchmarks  •  Author: Hari Prasad")
@@ -64,7 +62,7 @@ class PortraitNumberedCanvas(canvas.Canvas):
         self.setFillColor(colors.HexColor("#0f172a"))
         self.drawRightString(W - 54, 34, f"Page {self._pageNumber} of {total_pages}")
 
-        self.setStrokeColor(colors.HexColor("#e2e8f0"))
+        self.setStrokeColor(colors.HexColor("#cbd5e1"))
         self.setLineWidth(0.6)
         self.line(54, 44, W - 54, 44)
 
@@ -74,8 +72,8 @@ class PortraitNumberedCanvas(canvas.Canvas):
 # ==============================================================================
 # DOCUMENT BUILDER
 # ==============================================================================
-def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
-    print(f"[*] Building Standard Portrait A4 PDF: {output_pdf}")
+def generate_monochrome_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
+    print(f"[*] Compiling Strict Black & White Portrait PDF: {output_pdf}")
     
     doc = SimpleDocTemplate(
         output_pdf,
@@ -88,14 +86,14 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
 
     styles = getSampleStyleSheet()
 
-    # Typography
+    # Typography - Pure Black & Charcoal Slate
     doc_title_style = ParagraphStyle(
         'DocTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=20,
-        leading=25,
-        textColor=colors.HexColor("#0f172a"),
+        fontSize=19,
+        leading=24,
+        textColor=colors.HexColor("#000000"),
         spaceAfter=8
     )
 
@@ -103,9 +101,9 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
         'DocSub',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=11,
-        leading=16,
-        textColor=colors.HexColor("#ea580c"),
+        fontSize=10.5,
+        leading=15,
+        textColor=colors.HexColor("#334155"),
         spaceAfter=14
     )
 
@@ -113,11 +111,11 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
         'SecH1',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=13.5,
-        leading=17,
-        textColor=colors.HexColor("#0f172a"),
+        fontSize=13,
+        leading=16,
+        textColor=colors.HexColor("#000000"),
         spaceBefore=14,
-        spaceAfter=6,
+        spaceAfter=5,
         keepWithNext=True
     )
 
@@ -125,9 +123,9 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
         'SecH2',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=10.5,
-        leading=14,
-        textColor=colors.HexColor("#c2410c"),
+        fontSize=10,
+        leading=13,
+        textColor=colors.HexColor("#1e293b"),
         spaceBefore=10,
         spaceAfter=4,
         keepWithNext=True
@@ -162,9 +160,9 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
         fontName='Courier-Bold',
         fontSize=8.5,
         leading=12,
-        textColor=colors.HexColor("#9a3412"),
-        backColor=colors.HexColor("#fff7ed"),
-        borderColor=colors.HexColor("#fdba74"),
+        textColor=colors.HexColor("#000000"),
+        backColor=colors.HexColor("#f8fafc"), # Neutral Off-White / Light Gray
+        borderColor=colors.HexColor("#94a3b8"), # Charcoal Border
         borderWidth=0.8,
         borderPadding=5,
         spaceBefore=4,
@@ -178,7 +176,7 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
         fontName='Helvetica',
         fontSize=7.5,
         leading=10,
-        textColor=colors.HexColor("#1e293b")
+        textColor=colors.HexColor("#0f172a")
     )
 
     tbl_hdr = ParagraphStyle(
@@ -195,9 +193,9 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
     # ==============================================================================
     # HEADER / COVER TITLE SECTION
     # ==============================================================================
-    story.append(Paragraph("PROJECT TECHNICAL DISSERTATION & RESEARCH REPORT", ParagraphStyle('CoverPre', fontName='Helvetica-Bold', fontSize=9, textColor=colors.HexColor("#ea580c"), spaceAfter=6)))
+    story.append(Paragraph("PROJECT TECHNICAL DISSERTATION &amp; RESEARCH REPORT", ParagraphStyle('CoverPre', fontName='Helvetica-Bold', fontSize=9, textColor=colors.HexColor("#475569"), spaceAfter=5)))
     story.append(Paragraph("Autonomous Mobility System: Perception, Prediction &amp; Path Planning for Unstructured Indian Road Conditions", doc_title_style))
-    story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor("#ea580c"), spaceAfter=10, spaceBefore=2))
+    story.append(HRFlowable(width="100%", thickness=1.5, color=colors.HexColor("#0f172a"), spaceAfter=10, spaceBefore=2))
     story.append(Paragraph("A Unified Offline ADAS Architecture Combining Multimodal Fusion, Solid-State LiDAR, Physics-Based 77 GHz FMCW Radar Synthesis, and 3-Zone Frenet Evasion Planning", doc_sub_style))
 
     meta_table_data = [
@@ -210,9 +208,9 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
     ]
     t_meta = Table(meta_table_data, colWidths=[110, 160, 105, 112])
     t_meta.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#fff7ed")),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#fdba74")),
-        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#fed7aa")),
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#f8fafc")),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#94a3b8")),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#e2e8f0")),
         ('PADDING', (0,0), (-1,-1), 5),
     ]))
     story.append(t_meta)
@@ -231,8 +229,8 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
     )
     t_abs = Table([[Paragraph(abstract_p, body_txt)]], colWidths=[487])
     t_abs.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#f8fafc")),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#cbd5e1")),
+        ('BACKGROUND', (0,0), (-1,-1), colors.HexColor("#ffffff")),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#0f172a")),
         ('PADDING', (0,0), (-1,-1), 8),
     ]))
     story.append(t_abs)
@@ -277,11 +275,11 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
     ]
     t_arch = Table(arch_layers, colWidths=[120, 125, 122, 120])
     t_arch.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#ea580c")),
-        ('BACKGROUND', (0,1), (-1,1), colors.HexColor("#fff7ed")),
-        ('BACKGROUND', (0,2), (-1,2), colors.HexColor("#ffedd5")),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#fdba74")),
-        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#fed7aa")),
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#0f172a")), # Clean Black/Navy Header
+        ('BACKGROUND', (0,1), (-1,1), colors.HexColor("#f8fafc")),
+        ('BACKGROUND', (0,2), (-1,2), colors.HexColor("#e2e8f0")),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#64748b")),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#cbd5e1")),
         ('PADDING', (0,0), (-1,-1), 5),
     ]))
     story.append(t_arch)
@@ -331,7 +329,7 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
         body_txt
     ))
 
-    # Benchmark Comparison Table
+    # Benchmark Comparison Table (Monochrome)
     story.append(Paragraph("Quantitative Comparison: Our Stack vs. Existing Standard Systems", sec_h2))
     bench_table = [
         [Paragraph("<b>Modality</b>", tbl_hdr), Paragraph("<b>Existing Standard</b>", tbl_hdr), Paragraph("<b>Baseline Limitations</b>", tbl_hdr), Paragraph("<b>Our System (PPD-II)</b>", tbl_hdr), Paragraph("<b>Quantitative Gain</b>", tbl_hdr)],
@@ -366,11 +364,10 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
     ]
     t_bench = Table(bench_table, colWidths=[65, 105, 125, 125, 67])
     t_bench.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#ea580c")),
-        ('BACKGROUND', (0,1), (-1,-1), colors.HexColor("#fff7ed")),
-        ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.HexColor("#ffffff"), colors.HexColor("#fff7ed")]),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#fdba74")),
-        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#fed7aa")),
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#0f172a")),
+        ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.HexColor("#ffffff"), colors.HexColor("#f8fafc")]),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#64748b")),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#cbd5e1")),
         ('PADDING', (0,0), (-1,-1), 4),
     ]))
     story.append(t_bench)
@@ -455,11 +452,10 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
     ]
     t_res = Table(results_table, colWidths=[120, 115, 100, 105, 47])
     t_res.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#ea580c")),
-        ('BACKGROUND', (0,1), (-1,-1), colors.HexColor("#fff7ed")),
-        ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.HexColor("#ffffff"), colors.HexColor("#fff7ed")]),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#fdba74")),
-        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#fed7aa")),
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#0f172a")),
+        ('ROWBACKGROUNDS', (0,1), (-1,-1), [colors.HexColor("#ffffff"), colors.HexColor("#f8fafc")]),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#64748b")),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#cbd5e1")),
         ('PADDING', (0,0), (-1,-1), 4),
     ]))
     story.append(t_res)
@@ -486,12 +482,11 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
     ]
     t_bom = Table(bom_table, colWidths=[90, 115, 60, 60, 162])
     t_bom.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#ea580c")),
-        ('BACKGROUND', (0,1), (-1,-1), colors.HexColor("#fff7ed")),
-        ('ROWBACKGROUNDS', (0,1), (-1,-2), [colors.HexColor("#ffffff"), colors.HexColor("#fff7ed")]),
-        ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor("#fed7aa")),
-        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#fdba74")),
-        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#fed7aa")),
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor("#0f172a")),
+        ('ROWBACKGROUNDS', (0,1), (-1,-2), [colors.HexColor("#ffffff"), colors.HexColor("#f8fafc")]),
+        ('BACKGROUND', (0,-1), (-1,-1), colors.HexColor("#e2e8f0")),
+        ('BOX', (0,0), (-1,-1), 1, colors.HexColor("#64748b")),
+        ('INNERGRID', (0,0), (-1,-1), 0.5, colors.HexColor("#cbd5e1")),
         ('PADDING', (0,0), (-1,-1), 3.5),
     ]))
     story.append(t_bom)
@@ -531,10 +526,10 @@ def generate_standard_pdf(output_pdf="Autonomous_Mobility_System_Document.pdf"):
         story.append(Paragraph(r, ParagraphStyle('RefTxt', parent=body_txt, fontSize=7.5, leading=10.5, textColor=colors.HexColor("#475569"))))
 
     # Build
-    print("[*] Generating Standard Portrait A4 PDF Document...")
-    doc.build(story, canvasmaker=PortraitNumberedCanvas)
+    print("[*] Generating Strict Monochrome Portrait A4 PDF...")
+    doc.build(story, canvasmaker=MonochromeNumberedCanvas)
     print(f"[+] Document Generation Complete! Saved to: {output_pdf}")
     return output_pdf
 
 if __name__ == "__main__":
-    generate_standard_pdf()
+    generate_monochrome_pdf()
